@@ -12,13 +12,14 @@ export default function Home() {
         <div className="text-center flex-grow">
           <h1 className="text-6xl font-bold" style={{ fontFamily: "'Merienda One', cursive", color: "#333" }}>Au Roi Lion</h1>
         </div>
-        <div style={{ width: "80px" }}></div> {/* Placeholder pour l'équilibre visuel */}
+        <div style={{ width: "80px" }}></div> 
       </div>
-      {/* <p className="text-xl mt-4" style={{ color: "#555" }}>Tourné vers les amoureux de l'histoire, du patrimoine et des passionnés de la gastronomie et du vin, 
-      ce logement affiche un style résolument unique. 
-      En plein coeur de Dijon, cet endroit de charme vous séduira par son authenticité, son confort et ses prestations raffinées. 
-      Chaque pièce invite à la rêverie et aux souvenirs d'antan dans ce lieu chargé d'histoire.</p> */}
-      {/* Inclure d'autres éléments ici, comme des images ou des informations */}
+      <div className="max-w-6xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg">
+        <p className="text-xl text-center text-gray-700">Tourné vers les amoureux de l'histoire, du patrimoine et des passionnés de la gastronomie et du vin, 
+        ce logement affiche un style résolument unique. 
+        En plein coeur de Dijon, cet endroit de charme vous séduira par son authenticité, son confort et ses prestations raffinées. 
+        Chaque pièce invite à la rêverie et aux souvenirs d'antan dans ce lieu chargé d'histoire.</p>
+      </div>
     </div>
   );
 }
