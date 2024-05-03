@@ -6,6 +6,8 @@ import { useState } from "react";
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentImg, setCurrentImg] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(true);
+
   const images = [
     "/assets/logo.png",
     "/assets/couloir.jpeg",
@@ -33,13 +35,17 @@ export default function Home() {
     if (currentImg < images.length - 1) {
       setCurrentImg(currentImg + 1);
     }
+    setIsZoomed(true);
   };
-
+  
   const prevImage = () => {
     if (currentImg > 0) {
       setCurrentImg(currentImg - 1);
     }
-  };
+    setIsZoomed(true);
+  }
+    
+
 
   return (
     <div
@@ -125,21 +131,23 @@ export default function Home() {
           dans ce lieu chargé d'histoire.
         </p>
       </div>
-      <div className="mt-4 p-20 flex justify-center items-center relative">
-  <button onClick={prevImage} className="absolute left-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10">
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
-    </svg>
-  </button>
-  <img src={images[currentImg]} className="object-cover object-center w-100 h-80 rounded-lg shadow-lg transition duration-300 ease-in-out" alt="image du carousel" />
-  <button onClick={nextImage} className="absolute right-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10">
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-    </svg>
-  </button>
-</div>
-
-
+      <div className="mt-4 p-60 flex justify-center items-center relative">
+        <button onClick={prevImage} className="absolute left-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <img
+          src={images[currentImg]}
+          className={`relative object-cover object-center w-100 h-80 rounded-lg shadow-lg transition duration-300 ease-in-out transform ${isZoomed ? 'scale-200' : ''}`}
+          alt="image du carousel"
+        />
+        <button onClick={nextImage} className="absolute right-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
