@@ -3,10 +3,10 @@
 import Head from "next/head";
 import { useState, useRef } from "react";
 import emailjs from "emailjs-com";
-import { Toast } from 'primereact/toast'; 
-import 'primereact/resources/themes/saga-blue/theme.css'; 
-import 'primereact/resources/primereact.min.css'; 
-import 'primeicons/primeicons.css'; 
+import { Toast } from "primereact/toast";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
 import {
   KeyIcon,
   SunIcon,
@@ -19,8 +19,7 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentImg, setCurrentImg] = useState(0);
   const [isZoomed, setIsZoomed] = useState(true);
-  const toast = useRef(null); 
-
+  const toast = useRef(null);
 
   const handleSendEmail = (e) => {
     e.preventDefault();
@@ -35,21 +34,37 @@ export default function Home() {
       .then(
         (result) => {
           console.log("Email sent:", result.text);
-          toast.current.show({ severity: 'success', summary: 'Succès', detail: 'Message envoyé avec succès!', life: 3000 });
+          toast.current.show({
+            severity: "success",
+            summary: "Succès",
+            detail: "Message envoyé avec succès!",
+            life: 3000,
+          });
         },
         (error) => {
           console.log("Failed to send email:", error.text);
-          toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Échec de l\'envoi du message', life: 3000 });
+          toast.current.show({
+            severity: "error",
+            summary: "Erreur",
+            detail: "Échec de l'envoi du message",
+            life: 3000,
+          });
         }
       );
   };
 
   const handleAirbnbClick = () => {
-    window.open("https://www.airbnb.fr/rooms/1020299057539782769?source_impression_id=p3_1710485830_Mm8/NF+02HL5BJcH", "_blank");
+    window.open(
+      "https://www.airbnb.fr/rooms/1020299057539782769?source_impression_id=p3_1710485830_Mm8/NF+02HL5BJcH",
+      "_blank"
+    );
   };
 
   const handleBookingClick = () => {
-    window.open("https://www.booking.com/hotel/fr/au-roi-lion-place-saint-michel.fr.html", "_blank");
+    window.open(
+      "https://www.booking.com/hotel/fr/au-roi-lion-place-saint-michel.fr.html",
+      "_blank"
+    );
   };
 
   const images = [
@@ -76,17 +91,15 @@ export default function Home() {
   ];
 
   const nextImage = () => {
-    if (currentImg < images.length - 1) {
-      setCurrentImg(currentImg + 1);
-    }
-    setIsZoomed(true);
+    setCurrentImg((prevCurrentImg) => {
+      return (prevCurrentImg + 1) % images.length;
+    });
   };
 
   const prevImage = () => {
-    if (currentImg > 0) {
-      setCurrentImg(currentImg - 1);
-    }
-    setIsZoomed(true);
+    setCurrentImg((prevCurrentImg) => {
+      return (prevCurrentImg - 1 + images.length) % images.length;
+    });
   };
 
   return (
@@ -354,33 +367,43 @@ export default function Home() {
         </p>
       </div>
       <div className="flex justify-center items-center mt-10 space-x-10 p-6 ">
-        <div 
+        <div
           className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105"
           onClick={handleAirbnbClick}
         >
-          <img 
-            src="/assets/airbnb_logo.jpeg" 
-            alt="Airbnb Logo" 
+          <img
+            src="/assets/airbnb_logo.jpeg"
+            alt="Airbnb Logo"
             className="w-40 h-40 object-contain"
           />
         </div>
-        <div 
+        <div
           className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105"
           onClick={handleBookingClick}
         >
-          <img 
-            src="/assets/booking_logo.png" 
-            alt="Booking Logo" 
+          <img
+            src="/assets/booking_logo.png"
+            alt="Booking Logo"
             className="w-40 h-40 object-contain"
           />
         </div>
       </div>
-        <footer className="bg-gray-800 text-white p-50">
+      <footer className="bg-gray-800 text-white p-50">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
             <p className="text-lg font-semibold">Coordonnées de contact : </p>
-            <p className="text-sm">Email: <a href="mailto:séverine.jahan@free.fr" className="underline">séverine.jahan@free.fr</a></p>
-            <p className="text-sm">Tel: <a href="tel:076100601" className="underline">076100601</a></p>
+            <p className="text-sm">
+              Email:{" "}
+              <a href="mailto:séverine.jahan@free.fr" className="underline">
+                séverine.jahan@free.fr
+              </a>
+            </p>
+            <p className="text-sm">
+              Tel:{" "}
+              <a href="tel:076100601" className="underline">
+                076100601
+              </a>
+            </p>
           </div>
         </div>
       </footer>
