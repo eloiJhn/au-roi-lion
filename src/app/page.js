@@ -353,7 +353,7 @@ export default function Home() {
           « possibilité de louer en direct sur Airbnb ou Booking »
         </p>
       </div>
-      <div className="flex justify-center items-center mt-10 space-x-10">
+      <div className="flex justify-center items-center mt-10 space-x-10 p-6 ">
         <div 
           className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105"
           onClick={handleAirbnbClick}
@@ -375,6 +375,15 @@ export default function Home() {
           />
         </div>
       </div>
+        <footer className="bg-gray-800 text-white p-50">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <div>
+            <p className="text-lg font-semibold">Coordonnées de contact : </p>
+            <p className="text-sm">Email: <a href="mailto:séverine.jahan@free.fr" className="underline">séverine.jahan@free.fr</a></p>
+            <p className="text-sm">Tel: <a href="tel:076100601" className="underline">076100601</a></p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
