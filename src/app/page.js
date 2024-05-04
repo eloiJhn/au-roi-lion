@@ -1,14 +1,48 @@
 "use client";
 
 import Head from "next/head";
-import { useState } from "react";
-import {KeyIcon, SunIcon, MoonIcon, ShoppingBagIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
-
+import { useState, useRef } from "react";
+import emailjs from "emailjs-com";
+import { Toast } from 'primereact/toast'; 
+import 'primereact/resources/themes/saga-blue/theme.css'; 
+import 'primereact/resources/primereact.min.css'; 
+import 'primeicons/primeicons.css'; 
+import {
+  KeyIcon,
+  SunIcon,
+  MoonIcon,
+  ShoppingBagIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/solid";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentImg, setCurrentImg] = useState(0);
   const [isZoomed, setIsZoomed] = useState(true);
+  const toast = useRef(null); 
+
+
+  const handleSendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_ijvgm4b",
+        "template_wi0dtrj",
+        e.target,
+        "1D-fmppuB9IBXLMHv"
+      )
+      .then(
+        (result) => {
+          console.log("Email sent:", result.text);
+          toast.current.show({ severity: 'success', summary: 'Succès', detail: 'Message envoyé avec succès!', life: 3000 });
+        },
+        (error) => {
+          console.log("Failed to send email:", error.text);
+          toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Échec de l\'envoi du message', life: 3000 });
+        }
+      );
+  };
 
   const images = [
     "/assets/logo.png",
@@ -39,15 +73,13 @@ export default function Home() {
     }
     setIsZoomed(true);
   };
-  
+
   const prevImage = () => {
     if (currentImg > 0) {
       setCurrentImg(currentImg - 1);
     }
     setIsZoomed(true);
-  }
-    
-
+  };
 
   return (
     <div
@@ -57,10 +89,17 @@ export default function Home() {
       }}
     >
       <Head>
-      <title>Au Roi Lion</title>
-        <link href="https://fonts.googleapis.com/css2?family=Merienda+One&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&display=swap" rel="stylesheet" /> {/* Polices élégantes pour le texte */}
+        <title>Au Roi Lion</title>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Merienda+One&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&display=swap"
+          rel="stylesheet"
+        />{" "}
       </Head>
+      <Toast ref={toast} />
       <div className="pt-4 px-4 flex justify-between items-center">
         <img
           src="/assets/logo.png"
@@ -133,64 +172,174 @@ export default function Home() {
         </p>
       </div>
       <div className="mt-4 p-60 flex justify-center items-center relative">
-        <button onClick={prevImage} className="absolute left-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+        <button
+          onClick={prevImage}
+          className="absolute left-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M15 19l-7-7 7-7"
+            ></path>
           </svg>
         </button>
         <img
           src={images[currentImg]}
-          className={`relative object-cover object-center w-100 h-80 rounded-lg shadow-lg transition duration-300 ease-in-out transform ${isZoomed ? 'scale-200' : ''}`}
+          className={`relative object-cover object-center w-100 h-80 rounded-lg shadow-lg transition duration-300 ease-in-out transform ${
+            isZoomed ? "scale-200" : ""
+          }`}
           alt="image du carousel"
         />
-        <button onClick={nextImage} className="absolute right-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+        <button
+          onClick={nextImage}
+          className="absolute right-10 p-2 text-white bg-black bg-opacity-50 rounded-full z-10"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 5l7 7-7 7"
+            ></path>
           </svg>
         </button>
       </div>
       <div className="p-8">
-    <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">Bienvenue "Au Roi Lion" !</h2>
-    <p className="text-lg font-lora text-gray-600 mb-4">
-        Sa majesté vous invite à contempler l'église Saint Michel du XVIe siècle, célèbre par sa façade Renaissance et considérée comme l'une des plus belles de France, classée monument historique. Plongez dans une expérience unique où le confort moderne se conjugue au charme de l'ancien dans notre logement soigneusement décoré qui vous transporte dans un monde inspiré par la majesté et le raffiné.
-    </p>
-    <div className="flex flex-col space-y-6">
-        <div className="flex items-center space-x-4">
+        <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+          Bienvenue "Au Roi Lion" !
+        </h2>
+        <p className="text-lg font-lora text-gray-600 mb-4">
+          Sa majesté vous invite à contempler l'église Saint Michel du XVIe
+          siècle, célèbre par sa façade Renaissance et considérée comme l'une
+          des plus belles de France, classée monument historique. Plongez dans
+          une expérience unique où le confort moderne se conjugue au charme de
+          l'ancien dans notre logement soigneusement décoré qui vous transporte
+          dans un monde inspiré par la majesté et le raffiné. Chaque pièce
+          invite à la rêverie et aux souvenirs d'antan dans ce lieu chargé
+          d'histoire.
+        </p>
+        <div className="flex flex-col space-y-6">
+          <div className="flex items-center space-x-4">
             <KeyIcon className="h-6 w-6 text-gray-700" />
             <p className="text-gray-600 text-lg font-lora">
-                Dès que vous franchissez la porte, vous êtes accueilli par des touches de décoration élégantes intégrées à un magnifique appartement du 17ème siècle.
+              Dès que vous franchissez la porte, vous êtes accueilli par des
+              touches de décoration élégantes intégrées à un magnifique
+              appartement du 17ème siècle.
             </p>
-        </div>
-        <div className="flex items-center space-x-4">
+          </div>
+          <div className="flex items-center space-x-4">
             <InformationCircleIcon className="h-6 w-6 text-gray-700" />
             <p className="text-gray-600 text-lg font-lora">
-                La cuisine moderne, toute équipée, vous permettra de concocter des spécialités dijonnaises et de découvrir les meilleurs vins de la région et des crémants de Bourgogne.
+              La cuisine moderne, toute équipée, vous permettra de concocter des
+              spécialités dijonnaises et de découvrir les meilleurs vins de la
+              région et des crémants de Bourgogne.
             </p>
-        </div>
-        <div className="flex items-center space-x-4">
+          </div>
+          <div className="flex items-center space-x-4">
             <SunIcon className="h-6 w-6 text-gray-700" />
             <p className="text-gray-600 text-lg font-lora">
-                Un superbe salon du 17ème, lumineux et chaleureux, vous attend pour vous laisser aller à la rêverie et au repos.
+              Un superbe salon du 17ème, lumineux et chaleureux, vous attend
+              pour vous laisser aller à la rêverie et au repos.
             </p>
-        </div>
-        <div className="flex items-center space-x-4">
+          </div>
+          <div className="flex items-center space-x-4">
             <MoonIcon className="h-6 w-6 text-gray-700" />
             <p className="text-gray-600 text-lg font-lora">
-                La chambre avec un grand lit double ainsi qu'un vaste dressing et sa salle de bain attenante équipée d'une grande douche à l'italienne, sauront vous replonger dans le monde féérique du XVIIe siècle.
+              La chambre avec un grand lit double ainsi qu'un vaste dressing et
+              sa salle de bain attenante équipée d'une grande douche à
+              l'italienne, sauront vous replonger dans le monde féérique du
+              XVIIe siècle.
             </p>
-        </div>
-        <div className="flex items-center space-x-4">
+          </div>
+          <div className="flex items-center space-x-4">
             <ShoppingBagIcon className="h-6 w-6 text-gray-700" />
             <p className="text-gray-600 text-lg font-lora">
-                Idéalement situé en plein cœur historique de Dijon, "Au Roi Lion" offre un accès facile aux boutiques et commerces locaux tout en étant un refuge paisible après une journée d'exploration et de visites.
+              Idéalement situé en plein cœur historique de Dijon, "Au Roi Lion"
+              offre un accès facile aux boutiques et commerces locaux tout en
+              étant un refuge paisible après une journée d'exploration et de
+              visites.
             </p>
+          </div>
         </div>
-    </div>
-    <p className="mt-8 text-gray-600 text-lg font-semibold font-lora">
-        Réservez dès maintenant et vivez une expérience locative qui éveillera vos sens et émerveillera votre esprit. "Au Roi Lion" est bien plus qu'un logement, c'est une aventure mémorable, un voyage au cœur de la cité historique Dijonnaise.
-    </p>
-</div>
-
+        <p className="mt-8 text-gray-600 text-lg font-semibold font-lora">
+          Réservez dès maintenant et vivez une expérience locative qui éveillera
+          vos sens et émerveillera votre esprit. "Au Roi Lion" est bien plus
+          qu'un logement, c'est une aventure mémorable, un voyage au cœur de la
+          cité historique Dijonnaise.
+        </p>
+      </div>
+      <div className="p-8 mx-auto max-w-4xl">
+        <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+          Contactez le Propriétaire
+        </h2>
+        <form onSubmit={handleSendEmail} className="space-y-6">
+          <div className="flex flex-col">
+            <label
+              htmlFor="from_name"
+              className="text-sm font-medium text-gray-700"
+            >
+              Votre Nom:
+            </label>
+            <input
+              type="text"
+              name="from_name"
+              id="from_name"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="reply_to"
+              className="text-sm font-medium text-gray-700"
+            >
+              Votre Email:
+            </label>
+            <input
+              type="email"
+              name="reply_to"
+              id="reply_to"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="message"
+              className="text-sm font-medium text-gray-700"
+            >
+              Message:
+            </label>
+            <textarea
+              name="message"
+              id="message"
+              rows="4"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            ></textarea>
+          </div>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Envoyer
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
