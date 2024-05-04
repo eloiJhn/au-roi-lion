@@ -2,6 +2,8 @@
 
 import Head from "next/head";
 import { useState } from "react";
+import {KeyIcon, SunIcon, MoonIcon, ShoppingBagIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
+
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,10 +57,9 @@ export default function Home() {
       }}
     >
       <Head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Merienda+One&display=swap"
-          rel="stylesheet"
-        />
+      <title>Au Roi Lion</title>
+        <link href="https://fonts.googleapis.com/css2?family=Merienda+One&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&display=swap" rel="stylesheet" /> {/* Polices élégantes pour le texte */}
       </Head>
       <div className="pt-4 px-4 flex justify-between items-center">
         <img
@@ -148,6 +149,48 @@ export default function Home() {
           </svg>
         </button>
       </div>
+      <div className="p-8">
+    <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">Bienvenue "Au Roi Lion" !</h2>
+    <p className="text-lg font-lora text-gray-600 mb-4">
+        Sa majesté vous invite à contempler l'église Saint Michel du XVIe siècle, célèbre par sa façade Renaissance et considérée comme l'une des plus belles de France, classée monument historique. Plongez dans une expérience unique où le confort moderne se conjugue au charme de l'ancien dans notre logement soigneusement décoré qui vous transporte dans un monde inspiré par la majesté et le raffiné.
+    </p>
+    <div className="flex flex-col space-y-6">
+        <div className="flex items-center space-x-4">
+            <KeyIcon className="h-6 w-6 text-gray-700" />
+            <p className="text-gray-600 text-lg font-lora">
+                Dès que vous franchissez la porte, vous êtes accueilli par des touches de décoration élégantes intégrées à un magnifique appartement du 17ème siècle.
+            </p>
+        </div>
+        <div className="flex items-center space-x-4">
+            <InformationCircleIcon className="h-6 w-6 text-gray-700" />
+            <p className="text-gray-600 text-lg font-lora">
+                La cuisine moderne, toute équipée, vous permettra de concocter des spécialités dijonnaises et de découvrir les meilleurs vins de la région et des crémants de Bourgogne.
+            </p>
+        </div>
+        <div className="flex items-center space-x-4">
+            <SunIcon className="h-6 w-6 text-gray-700" />
+            <p className="text-gray-600 text-lg font-lora">
+                Un superbe salon du 17ème, lumineux et chaleureux, vous attend pour vous laisser aller à la rêverie et au repos.
+            </p>
+        </div>
+        <div className="flex items-center space-x-4">
+            <MoonIcon className="h-6 w-6 text-gray-700" />
+            <p className="text-gray-600 text-lg font-lora">
+                La chambre avec un grand lit double ainsi qu'un vaste dressing et sa salle de bain attenante équipée d'une grande douche à l'italienne, sauront vous replonger dans le monde féérique du XVIIe siècle.
+            </p>
+        </div>
+        <div className="flex items-center space-x-4">
+            <ShoppingBagIcon className="h-6 w-6 text-gray-700" />
+            <p className="text-gray-600 text-lg font-lora">
+                Idéalement situé en plein cœur historique de Dijon, "Au Roi Lion" offre un accès facile aux boutiques et commerces locaux tout en étant un refuge paisible après une journée d'exploration et de visites.
+            </p>
+        </div>
+    </div>
+    <p className="mt-8 text-gray-600 text-lg font-semibold font-lora">
+        Réservez dès maintenant et vivez une expérience locative qui éveillera vos sens et émerveillera votre esprit. "Au Roi Lion" est bien plus qu'un logement, c'est une aventure mémorable, un voyage au cœur de la cité historique Dijonnaise.
+    </p>
+</div>
+
     </div>
   );
 }
