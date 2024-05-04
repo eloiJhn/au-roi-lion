@@ -44,6 +44,14 @@ export default function Home() {
       );
   };
 
+  const handleAirbnbClick = () => {
+    window.open("https://www.airbnb.fr/rooms/1020299057539782769?source_impression_id=p3_1710485830_Mm8/NF+02HL5BJcH", "_blank");
+  };
+
+  const handleBookingClick = () => {
+    window.open("https://www.booking.com/hotel/fr/au-roi-lion-place-saint-michel.fr.html", "_blank");
+  };
+
   const images = [
     "/assets/logo.png",
     "/assets/couloir.jpeg",
@@ -339,6 +347,33 @@ export default function Home() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="text-center mt-10">
+        <p className="text-lg font-bold italic">
+          « possibilité de louer en direct sur Airbnb ou Booking »
+        </p>
+      </div>
+      <div className="flex justify-center items-center mt-10 space-x-10">
+        <div 
+          className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105"
+          onClick={handleAirbnbClick}
+        >
+          <img 
+            src="/assets/airbnb_logo.jpeg" 
+            alt="Airbnb Logo" 
+            className="w-40 h-40 object-contain"
+          />
+        </div>
+        <div 
+          className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105"
+          onClick={handleBookingClick}
+        >
+          <img 
+            src="/assets/booking_logo.png" 
+            alt="Booking Logo" 
+            className="w-40 h-40 object-contain"
+          />
+        </div>
       </div>
     </div>
   );
