@@ -103,61 +103,57 @@ export default function Home() {
   };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%)",
-      }}
-    >
-      <Head>
-        <title>Au Roi Lion</title>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Merienda+One&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&display=swap"
-          rel="stylesheet"
-        />{" "}
-      </Head>
+    <div className="min-h-screen">
       <Toast ref={toast} />
-      <div className="pt-4 px-4 flex justify-between items-center">
-        <img
-          src="/assets/logo.png"
-          alt="logo site"
-          className="w-20 h-20 rounded-full"
-        ></img>
-        <div className="hidden md:flex space-x-4">
-          <a href="#photos" className="text-gray-500">
-            Photos
-          </a>
-          <a href="#histoire" className="text-gray-500">
-            Histoire
-          </a>
-          <a href="#lien" className="text-gray-500">
-            Lien
-          </a>
-          <a href="#contact" className="text-gray-500">
-            Contact
-          </a>
-        </div>
-        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="black"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+      <nav className="bg-gray-800 p-4">
+        <div className="flex justify-between items-center">
+          <img
+            src="/assets/logo.png"
+            alt="logo site"
+            className="w-20 h-20 rounded-full"
+          ></img>
+          <div className="hidden md:flex space-x-4 text-white">
+            <a href="#photos">Photos</a>
+            <a href="#histoire">Histoire</a>
+            <a href="#lien">Lien</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <button
+            className="md:hidden text-white"
+            onClick={() => setIsOpen(!isOpen)}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16m-7 6h7"
-            ></path>
-          </svg>
-        </button>
-      </div>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        {isOpen && (
+          <div className="md:hidden absolute top-18 right-2 bg-white shadow-lg rounded-lg p-2">
+            <a href="#photos" className="block p-2 text-gray-500">
+              Photos
+            </a>
+            <a href="#histoire" className="block p-2 text-gray-500">
+              Histoire
+            </a>
+            <a href="#lien" className="block p-2 text-gray-500">
+              Lien
+            </a>
+            <a href="#contact" className="block p-2 text-gray-500">
+              Contact
+            </a>
+          </div>
+        )}
+      </nav>
       {isOpen && (
         <div className="md:hidden absolute top-18 right-2 bg-white shadow-lg rounded-lg p-2">
           <a href="#photos" className="block p-2 text-gray-500">
@@ -174,12 +170,19 @@ export default function Home() {
           </a>
         </div>
       )}
-<div className="max-w-6xl mx-auto mt-10 p-4 text-center md:text-left md:w-full">
-          <h1 className="text-3xl font-bold" style={{ fontFamily: "'Merienda One', cursive", color: "#333" }}>
-            Au Roi Lion, magnifique appartement de 60 m2 en location dans le centre historique de Dijon !
-          </h1>
-        </div>
-      <div className="max-w-6xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg">
+      <div className="max-w-6xl mx-auto mt-10 p-4 text-center md:text-left md:w-full">
+        <h1
+          className="text-3xl font-bold"
+          style={{ fontFamily: "'Merienda One', cursive", color: "#333" }}
+        >
+          Au Roi Lion, magnifique appartement de 60 m2 en location dans le
+          centre historique de Dijon !
+        </h1>
+      </div>
+      <div
+        className="max-w-6xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg border border-5 border-double"
+        style={{ borderColor: "#003E50 #5AA088" }}
+      >
         <p className="text-xl text-center text-gray-700">
           Tourné vers les amoureux de l'histoire, du patrimoine et des
           passionnés de la gastronomie et du vin, ce logement affiche un style
@@ -189,6 +192,7 @@ export default function Home() {
           dans ce lieu chargé d'histoire.
         </p>
       </div>
+
       <div className="mt-4 p-60 flex justify-center items-center relative">
         <button
           onClick={prevImage}
@@ -235,9 +239,6 @@ export default function Home() {
         </button>
       </div>
       <div className="p-8">
-        <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
-          Bienvenue "Au Roi Lion" !
-        </h2>
         <p className="text-lg font-lora text-gray-600 mb-4">
           Sa majesté vous invite à contempler l'église Saint Michel du XVIe
           siècle, célèbre par sa façade Renaissance et considérée comme l'une
@@ -385,25 +386,41 @@ export default function Home() {
           />
         </div>
       </div>
-      <footer className="bg-gray-800 text-white p-50">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div>
-            <p className="text-lg font-semibold">Coordonnées de contact : </p>
-            <p className="text-sm">
-              Email:{" "}
-              <a href="mailto:séverine.jahan@free.fr" className="underline">
-                séverine.jahan@free.fr
-              </a>
-            </p>
-            <p className="text-sm">
-              Tel:{" "}
-              <a href="tel:076100601" className="underline">
-                076100601
-              </a>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <footer className="bg-gray-800 text-white">
+  <div className="max-w-6xl mx-auto py-8 px-4 md:flex md:justify-between md:items-center">
+    <div className="md:w-1/2">
+      <p className="text-lg font-semibold">Coordonnées de contact :</p>
+      <p className="text-sm">
+        Email:{" "}
+        <a href="mailto:severine.jahan@free.fr" className="underline">
+          severine.jahan@free.fr
+        </a>
+      </p>
+      <p className="text-sm">
+        Tel:{" "}
+        <a href="tel:076100601" className="underline">
+          076100601
+        </a>
+      </p>
+    </div>
+    <div className="md:w-1/2 mt-4 md:mt-0 flex justify-center md:justify-end">
+      <div className="flex space-x-4">
+        <a href="#photos" className="text-gray-300 hover:text-white">
+          Photos
+        </a>
+        <a href="#histoire" className="text-gray-300 hover:text-white">
+          Histoire
+        </a>
+        <a href="#lien" className="text-gray-300 hover:text-white">
+          Lien
+        </a>
+        <a href="#contact" className="text-gray-300 hover:text-white">
+          Contact
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
     </div>
   );
 }
