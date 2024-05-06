@@ -127,14 +127,6 @@ export default function Home() {
           alt="logo site"
           className="w-20 h-20 rounded-full"
         ></img>
-        <div className="text-center md:text-left md:w-full">
-          <h1
-            className="text-6xl font-bold"
-            style={{ fontFamily: "'Merienda One', cursive", color: "#333" }}
-          >
-            Au Roi Lion
-          </h1>
-        </div>
         <div className="hidden md:flex space-x-4">
           <a href="#photos" className="text-gray-500">
             Photos
@@ -182,6 +174,11 @@ export default function Home() {
           </a>
         </div>
       )}
+<div className="max-w-6xl mx-auto mt-10 p-4 text-center md:text-left md:w-full">
+          <h1 className="text-3xl font-bold" style={{ fontFamily: "'Merienda One', cursive", color: "#333" }}>
+            Au Roi Lion, magnifique appartement de 60 m2 en location dans le centre historique de Dijon !
+          </h1>
+        </div>
       <div className="max-w-6xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg">
         <p className="text-xl text-center text-gray-700">
           Tourné vers les amoureux de l'histoire, du patrimoine et des
