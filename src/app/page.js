@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import emailjs from "emailjs-com";
 import { Toast } from "primereact/toast";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -16,6 +16,7 @@ import {
   ShoppingBagIcon,
   InformationCircleIcon,
   ArrowsPointingOutIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/24/solid";
 
 export default function Home() {
@@ -23,7 +24,9 @@ export default function Home() {
   const [currentImg, setCurrentImg] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const toast = useRef(null);
+
   const settings = {
     className: "center",
     centerMode: true,
@@ -119,30 +122,66 @@ export default function Home() {
   };
 
   const prevImage = () => {
-    setCurrentImg((prevCurrentImg) => {
-      return (prevCurrentImg - 1 + images.length) % images.length;
-    });
+    setCurrentImg((prevCurrentImg - 1 + images.length) % images.length);
   };
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
   };
 
+  const handleScroll = () => {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 10
+    ) {
+      setShowBackToTop(true);
+    } else {
+      setShowBackToTop(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 10
+      ) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen">
       <Toast ref={toast} />
-      <nav className="bg-[#003D4D] p-2">
-        <div className="flex justify-between items-center">
+      <nav className="bg-gradient-to-r from-[#003E50] to-[#5AA088] p-4 shadow-lg">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
           <img
             src="/assets/logo.png"
             alt="logo site"
             className="w-28 h-28 rounded-full"
-          ></img>
-          <div className="hidden md:flex space-x-4 text-white">
-            <a href="#photos">Photos</a>
-            <a href="#histoire">Histoire</a>
-            <a href="#lien">Lien</a>
-            <a href="#contact">Contact</a>
+          />
+          <div className="hidden md:flex space-x-6 text-white font-semibold">
+            <a href="#photos-section" className="hover:underline">
+              Photos
+            </a>
+            <a href="#history-section" className="hover:underline">
+              Histoire
+            </a>
+            <a href="#link-section" className="hover:underline">
+              Lien
+            </a>
+            <a href="#contact-form" className="hover:underline">
+              Contact
+            </a>
           </div>
           <button
             className="md:hidden text-white"
@@ -164,36 +203,65 @@ export default function Home() {
           </button>
         </div>
         {isOpen && (
-          <div className="md:hidden absolute top-18 right-2 bg-white shadow-lg rounded-lg p-2">
-            <a href="#photos" className="block p-2 text-gray-500">
+          <div className="md:hidden absolute top-16 right-4 bg-white shadow-lg rounded-lg p-4">
+            <a
+              href="#photos-section"
+              className="block p-2 text-gray-700 hover:bg-gray-200"
+            >
               Photos
             </a>
-            <a href="#histoire" className="block p-2 text-gray-500">
+            <a
+              href="#history-section"
+              className="block p-2 text-gray-700 hover:bg-gray-200"
+            >
               Histoire
             </a>
-            <a href="#lien" className="block p-2 text-gray-500">
+            <a
+              href="#link-section"
+              className="block p-2 text-gray-700 hover:bg-gray-200"
+            >
               Lien
             </a>
-            <a href="#contact" className="block p-2 text-gray-500">
+            <a
+              href="#contact-form"
+              className="block p-2 text-gray-700 hover:bg-gray-200"
+            >
               Contact
             </a>
           </div>
         )}
       </nav>
+
       <div className="max-w-6xl mx-auto mt-10 p-4 text-center md:text-left md:w-full">
         <h1
           className="text-3xl font-bold"
-          style={{ fontFamily: "'Merienda One', cursive", color: "#333" }}
+          style={{
+            fontFamily: "'Merienda One', cursive",
+            background: "linear-gradient(to right, #003E50, #5AA088)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            textDecoration: "underline",
+            textDecorationColor: "#003E50",
+          }}
         >
           Au Roi Lion, magnifique appartement de 60 m2 en location dans le
           centre historique de Dijon !
         </h1>
       </div>
+
       <div
-        className="max-w-6xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg border border-5 border-double"
+        id="photos-section"
+        className="max-w-6xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg border border-8 border-double"
         style={{ borderColor: "#003E50 #5AA088" }}
       >
-        <p className="text-xl text-center text-gray-700">
+        <p
+          className="text-lg font-lora mb-4 text-center"
+          style={{
+            background: "linear-gradient(to right, #003E50, #5AA088)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
           Tourné vers les amoureux de l'histoire, du patrimoine et des
           passionnés de la gastronomie et du vin, ce logement affiche un style
           résolument unique. En plein coeur de Dijon, cet endroit de charme vous
@@ -202,34 +270,35 @@ export default function Home() {
           dans ce lieu chargé d'histoire.
         </p>
       </div>
+
       <div
         className={`mt-4 p-20 flex justify-center items-center relative ${
           isFullscreen ? "fixed inset-0 z-50 bg-black" : ""
         }`}
       >
         <Slider
-  {...settings}
-  className={isFullscreen ? "w-full h-full" : "w-11/12 mx-auto"}
->
-  {images.map((image, index) => (
-    <div
-      key={index}
-      className={`relative ${
-        index === currentSlide ? "z-30 p-6" : "z-10 px-6"
-      }`} // Add padding to central image and equal margin to non-central images
-    >
-      <img
-        src={image}
-        alt={`Slide ${index}`}
-        className={`object-cover w-full h-96 md:h-128 lg:h-144 rounded-lg shadow-lg ${
-          index === currentSlide
-            ? "transform scale-125 shadow-2xl brightness-110"
-            : "transform scale-100"
-        } transition-transform duration-300`}
-      />
-    </div>
-  ))}
-</Slider>
+          {...settings}
+          className={isFullscreen ? "w-full h-full" : "w-11/12 mx-auto"}
+        >
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className={`relative ${
+                index === currentSlide ? "z-30 p-6" : "z-10 px-6"
+              }`} // Add padding to central image and equal margin to non-central images
+            >
+              <img
+                src={image}
+                alt={`Slide ${index}`}
+                className={`object-cover w-full h-96 md:h-128 lg:h-144 rounded-lg shadow-lg ${
+                  index === currentSlide
+                    ? "transform scale-125 shadow-2xl brightness-110"
+                    : "transform scale-100"
+                } transition-transform duration-300`}
+              />
+            </div>
+          ))}
+        </Slider>
         <button
           onClick={toggleFullscreen}
           className={`absolute ${
@@ -245,76 +314,148 @@ export default function Home() {
           )}
         </button>
       </div>
-      <div className="p-4">
-        <p className="text-lg font-lora text-gray-600 mb-4">
-          Sa majesté vous invite à contempler l'église Saint Michel du XVIe
-          siècle, célèbre par sa façade Renaissance et considérée comme l'une
-          des plus belles de France, classée monument historique. Plongez dans
-          une expérience unique où le confort moderne se conjugue au charme de
-          l'ancien dans notre logement soigneusement décoré qui vous transporte
-          dans un monde inspiré par la majesté et le raffiné. Chaque pièce
-          invite à la rêverie et aux souvenirs d'antan dans ce lieu chargé
-          d'histoire.
-        </p>
-        <div className="flex flex-col space-y-6">
-          <div className="flex items-center space-x-4">
-            <KeyIcon className="h-6 w-6 text-gray-700" />
-            <p className="text-gray-600 text-lg font-lora">
-              Dès que vous franchissez la porte, vous êtes accueilli par des
-              touches de décoration élégantes intégrées à un magnifique
-              appartement du 17ème siècle.
-            </p>
+
+      <div
+        id="history-section"
+        className="max-w-6xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg border border-8 border-double"
+        style={{ borderColor: "#003E50 #5AA088" }}
+      >
+        <div className="p-4">
+          <p
+            className="text-lg font-lora mb-4"
+            style={{
+              background: "linear-gradient(to right, #003E50, #5AA088)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Sa majesté vous invite à contempler l'église Saint Michel du XVIe
+            siècle, célèbre par sa façade Renaissance et considérée comme l'une
+            des plus belles de France, classée monument historique. Plongez dans
+            une expérience unique où le confort moderne se conjugue au charme de
+            l'ancien dans notre logement soigneusement décoré qui vous
+            transporte dans un monde inspiré par la majesté et le raffiné.
+            Chaque pièce invite à la rêverie et aux souvenirs d'antan dans ce
+            lieu chargé d'histoire.
+          </p>
+          <div className="flex flex-col space-y-6">
+            <div className="flex items-center space-x-4">
+              <KeyIcon className="h-6 w-6 text-gray-700" />
+              <p
+                className="text-gray-600 text-lg font-lora"
+                style={{
+                  background: "linear-gradient(to right, #003E50, #5AA088)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Dès que vous franchissez la porte, vous êtes accueilli par des
+                touches de décoration élégantes intégrées à un magnifique
+                appartement du 17ème siècle.
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <InformationCircleIcon className="h-6 w-6 text-gray-700" />
+              <p
+                className="text-gray-600 text-lg font-lora"
+                style={{
+                  background: "linear-gradient(to right, #003E50, #5AA088)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                La cuisine moderne, toute équipée, vous permettra de concocter
+                des spécialités dijonnaises et de découvrir les meilleurs vins
+                de la région et des crémants de Bourgogne.
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <SunIcon className="h-6 w-6 text-gray-700" />
+              <p
+                className="text-gray-600 text-lg font-lora"
+                style={{
+                  background: "linear-gradient(to right, #003E50, #5AA088)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Un superbe salon du 17ème, lumineux et chaleureux, vous attend
+                pour vous laisser aller à la rêverie et au repos.
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <MoonIcon className="h-6 w-6 text-gray-700" />
+              <p
+                className="text-gray-600 text-lg font-lora"
+                style={{
+                  background: "linear-gradient(to right, #003E50, #5AA088)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                La chambre avec un grand lit double ainsi qu'un vaste dressing
+                et sa salle de bain attenante équipée d'une grande douche à
+                l'italienne, sauront vous replonger dans le monde féérique du
+                XVIIe siècle.
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <ShoppingBagIcon className="h-6 w-6 text-gray-700" />
+              <p
+                className="text-gray-600 text-lg font-lora"
+                style={{
+                  background: "linear-gradient(to right, #003E50, #5AA088)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Idéalement situé en plein cœur historique de Dijon, "Au Roi
+                Lion" offre un accès facile aux boutiques et commerces locaux
+                tout en étant un refuge paisible après une journée d'exploration
+                et de visites.
+              </p>
+            </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <InformationCircleIcon className="h-6 w-6 text-gray-700" />
-            <p className="text-gray-600 text-lg font-lora">
-              La cuisine moderne, toute équipée, vous permettra de concocter des
-              spécialités dijonnaises et de découvrir les meilleurs vins de la
-              région et des crémants de Bourgogne.
-            </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <SunIcon className="h-6 w-6 text-gray-700" />
-            <p className="text-gray-600 text-lg font-lora">
-              Un superbe salon du 17ème, lumineux et chaleureux, vous attend
-              pour vous laisser aller à la rêverie et au repos.
-            </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <MoonIcon className="h-6 w-6 text-gray-700" />
-            <p className="text-gray-600 text-lg font-lora">
-              La chambre avec un grand lit double ainsi qu'un vaste dressing et
-              sa salle de bain attenante équipée d'une grande douche à
-              l'italienne, sauront vous replonger dans le monde féérique du
-              XVIIe siècle.
-            </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <ShoppingBagIcon className="h-6 w-6 text-gray-700" />
-            <p className="text-gray-600 text-lg font-lora">
-              Idéalement situé en plein cœur historique de Dijon, "Au Roi Lion"
-              offre un accès facile aux boutiques et commerces locaux tout en
-              étant un refuge paisible après une journée d'exploration et de
-              visites.
-            </p>
-          </div>
+          <p
+            className="mt-8 text-gray-600 text-lg font-semibold font-lora"
+            style={{
+              background: "linear-gradient(to right, #003E50, #5AA088)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Réservez dès maintenant et vivez une expérience locative qui
+            éveillera vos sens et émerveillera votre esprit. "Au Roi Lion" est
+            bien plus qu'un logement, c'est une aventure mémorable, un voyage au
+            cœur de la cité historique Dijonnaise.
+          </p>
         </div>
-        <p className="mt-8 text-gray-600 text-lg font-semibold font-lora">
-          Réservez dès maintenant et vivez une expérience locative qui éveillera
-          vos sens et émerveillera votre esprit. "Au Roi Lion" est bien plus
-          qu'un logement, c'est une aventure mémorable, un voyage au cœur de la
-          cité historique Dijonnaise.
-        </p>
       </div>
-      <div className="p-8 mx-auto max-w-4xl">
-        <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+
+      <div id="contact-form" className="mt-20 p-8 mx-auto max-w-4xl">
+      <h1
+          className="text-3xl font-bold mb-6 text-center"
+          style={{
+            fontFamily: "'Merienda One', cursive",
+            background: "linear-gradient(to right, #003E50, #5AA088)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            textDecoration: "underline",
+            textDecorationColor: "#003E50",
+          }}
+        >
           Contactez le Propriétaire
-        </h2>
+        </h1>
         <form onSubmit={handleSendEmail} className="space-y-6">
           <div className="flex flex-col">
             <label
               htmlFor="from_name"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium"
+              style={{
+                background: "linear-gradient(to right, #003E50, #5AA088)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
               Votre Nom:
             </label>
@@ -329,7 +470,12 @@ export default function Home() {
           <div className="flex flex-col">
             <label
               htmlFor="reply_to"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium"
+              style={{
+                background: "linear-gradient(to right, #003E50, #5AA088)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
               Votre Email:
             </label>
@@ -344,7 +490,12 @@ export default function Home() {
           <div className="flex flex-col">
             <label
               htmlFor="message"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium"
+              style={{
+                background: "linear-gradient(to right, #003E50, #5AA088)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
               Message:
             </label>
@@ -359,19 +510,47 @@ export default function Home() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-6 py-2 border text-base font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2"
+              style={{
+                background: "linear-gradient(to right, #003E50, #5AA088)",
+                border: "none",
+                color: "white",
+                padding: "1px" /* Inner padding to show border */,
+              }}
             >
-              Envoyer
+              <span
+                style={{
+                  display: "block",
+                  background: "linear-gradient(to right, #003E50, #5AA088)",
+                  borderRadius: "inherit",
+                  padding:
+                    "10px 24px" /* Adjust according to the padding of the button */,
+                  color: "white",
+                }}
+              >
+                Envoyer
+              </span>
             </button>
           </div>
         </form>
       </div>
       <div className="text-center mt-10">
-        <p className="text-lg font-bold italic">
-          « possibilité de louer en direct sur Airbnb ou Booking »
-        </p>
+        <h1
+          className="text-2xl font-bold"
+          style={{
+            fontFamily: "'Merienda One', cursive",
+            background: "linear-gradient(to right, #003E50, #5AA088)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            textDecoration: "underline",
+            textDecorationColor: "#003E50",
+          }}
+        >
+          « Location également disponible sur airbnb ou booking »
+        </h1>
       </div>
-      <div className="flex justify-center items-center mt-10 space-x-10 p-8">
+
+      <div className="relative flex justify-center items-center mt-10 p-8">
         <div
           className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105"
           onClick={handleAirbnbClick}
@@ -383,7 +562,7 @@ export default function Home() {
           />
         </div>
         <div
-          className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105"
+          className="cursor-pointer rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105 ml-10 relative"
           onClick={handleBookingClick}
         >
           <img
@@ -392,10 +571,29 @@ export default function Home() {
             className="w-40 h-40 object-contain"
           />
         </div>
+        {showBackToTop && (
+          <div
+            className={`absolute top-1/2 right-8 transform -translate-y-1/2 transform transition-opacity duration-500 ${
+              showBackToTop ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <a href="#top">
+              <div
+                className="h-12 w-12 rounded-full flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(to right, #003E50, #5AA088)",
+                }}
+              >
+                <ChevronUpIcon className="h-5 w-5 text-white" />
+              </div>
+            </a>
+          </div>
+        )}
       </div>
-      <footer className="bg-[#003D4D] p-2 text-white">
-        <div className="max-w-6xl mx-auto py-8 px-4 md:flex md:justify-between md:items-center">
-          <div className="md:w-1/2">
+
+      <footer className="bg-gradient-to-r from-[#003E50] to-[#5AA088] p-8 text-white">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+          <div className="md:w-1/2 text-center md:text-left mb-6 md:mb-0">
             <p className="text-lg font-semibold">Coordonnées de contact :</p>
             <p className="text-sm">
               Email:{" "}
@@ -410,21 +608,25 @@ export default function Home() {
               </a>
             </p>
           </div>
-          <div className="md:w-1/2 mt-4 md:mt-0 flex justify-center md:justify-end">
-            <div className="flex space-x-4">
-              <a href="#photos" className="text-gray-300 hover:text-white">
-                Photos
-              </a>
-              <a href="#histoire" className="text-gray-300 hover:text-white">
-                Histoire
-              </a>
-              <a href="#lien" className="text-gray-300 hover:text-white">
-                Lien
-              </a>
-              <a href="#contact" className="text-gray-300 hover:text-white">
-                Contact
-              </a>
-            </div>
+          <div className="md:w-1/2 flex justify-center md:justify-end space-x-6">
+            <a
+              href="#photos-section"
+              className="text-gray-200 hover:text-white"
+            >
+              Photos
+            </a>
+            <a
+              href="#history-section"
+              className="text-gray-200 hover:text-white"
+            >
+              Histoire
+            </a>
+            <a href="#link-section" className="text-gray-200 hover:text-white">
+              Lien
+            </a>
+            <a href="#contact-form" className="text-gray-200 hover:text-white">
+              Contact
+            </a>
           </div>
         </div>
       </footer>

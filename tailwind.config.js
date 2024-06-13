@@ -13,8 +13,8 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       scale: {
-        '200': '2',  // Ajoute une mise à l'échelle de 200%
-        '250': '2.5' // Ajoute une mise à l'échelle de 250% si nécessaire
+        '200': '2', 
+        '250': '2.5'
       },
     },
   },
