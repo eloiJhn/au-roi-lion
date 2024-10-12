@@ -8,9 +8,9 @@ export function HeaderNavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isActivated, setIsActivated] = useState(false); // Pour le mode mobile
-  const [isDesktopActivated, setIsDesktopActivated] = useState(false); // Nouvel état pour le mode desktop
   const [isMobile, setIsMobile] = useState(false);
-  const audioRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const audioSourceRef = useRef(null);
   const fadeOutTimerRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -21,7 +21,7 @@ export function HeaderNavBar() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Ajustez le breakpoint si nécessaire
+      setIsMobile(window.innerWidth <= 768); // Ajuster le breakpoint si nécessaire
     };
 
     if (typeof window !== "undefined") {
@@ -36,96 +36,59 @@ export function HeaderNavBar() {
     };
   }, []);
 
-  const startMusic = () => {
-    if (audioRef.current) {
-      clearInterval(fadeOutTimerRef.current);
-      audioRef.current.volume = 0.5;
+  const playMusicWithWebAudio = async () => {
+    if (!audioContextRef.current) {
+      // Créer un nouveau contexte audio
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
 
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log("Audio started successfully.");
-          })
-          .catch((error) => {
-            console.error("Audio play failed:", error);
-          });
+      try {
+        // Charger le fichier audio
+        const response = await fetch("/lion.mp3"); // Remplacer par le chemin du fichier audio
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+
+        // Créer une source audio
+        audioSourceRef.current = audioContextRef.current.createBufferSource();
+        audioSourceRef.current.buffer = audioBuffer;
+        audioSourceRef.current.connect(audioContextRef.current.destination);
+
+        // Jouer l'audio
+        audioSourceRef.current.start(0);
+        setIsActivated(true);
+
+        // Stopper automatiquement la musique quand elle se termine
+        audioSourceRef.current.onended = () => {
+          stopMusicWithWebAudio();
+        };
+
+      } catch (error) {
+        console.error("Erreur lors de la lecture audio avec l'API Web Audio :", error);
       }
     }
   };
 
-  
-  const stopMusic = () => {
-    if (audioRef.current && !audioRef.current.paused) {
-      const fadeOutDuration = 1000;
-      const intervalDuration = 50;
-      const steps = fadeOutDuration / intervalDuration;
-      const volumeStep = audioRef.current.volume / steps;
-  
-      fadeOutTimerRef.current = setInterval(() => {
-        if (audioRef.current.volume > volumeStep) {
-          audioRef.current.volume -= volumeStep;
-        } else {
-          clearInterval(fadeOutTimerRef.current);
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;  // Réinitialiser le temps de lecture
-          audioRef.current.src = "";  // Effacer la source audio pour l'enlever du centre de notifications iOS
-          console.log("Audio stopped and source cleared.");
-          
-          // Rafraîchir la page de manière cachée
-          setTimeout(() => {
-            window.location.reload(true);
-          },); // Délai pour éviter un rechargement brutal
-        }
-      }, intervalDuration);
+  const stopMusicWithWebAudio = () => {
+    if (audioSourceRef.current && audioContextRef.current) {
+      audioSourceRef.current.stop();
+      audioContextRef.current.close();  // Fermer le contexte audio
+      audioSourceRef.current = null;
+      audioContextRef.current = null;
+      setIsActivated(false);
+      console.log("Musique arrêtée via l'API Web Audio.");
     }
   };
-  
-  
-  
 
   const handleLogoClick = (event) => {
     event.stopPropagation();
 
     if (isMobile) {
       if (isActivated) {
-        stopMusic();
-        setIsActivated(false);
+        stopMusicWithWebAudio();
       } else {
-        startMusic();
-        setIsActivated(true);
-      }
-    } else {
-      if (!isDesktopActivated) {
-        setIsDesktopActivated(true);
-        setIsHovering(true);
-        startMusic();
+        playMusicWithWebAudio();
       }
     }
   };
-
-  const handleMouseEnter = () => {
-    if (!isMobile && isDesktopActivated) {
-      setIsHovering(true);
-      startMusic();
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!isMobile && isDesktopActivated) {
-      setIsHovering(false);
-      stopMusic();
-    }
-  };
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.5;
-    }
-    return () => {
-      clearInterval(fadeOutTimerRef.current);
-    };
-  }, []);
 
   const navItems = [
     {
@@ -143,7 +106,7 @@ export function HeaderNavBar() {
     },
   ];
 
-  const shouldAnimate = isMobile ? isActivated : isDesktopActivated && isHovering;
+  const shouldAnimate = isMobile && isActivated;
 
   return (
     <nav className="bg-gradient-to-r from-[#003E50] to-[#5AA088] p-4 shadow-lg">
@@ -151,8 +114,6 @@ export function HeaderNavBar() {
         <div
           className="logo-container relative w-28 h-28 group cursor-pointer"
           onClick={handleLogoClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           <div
             className={`absolute inset-0 transition-transform duration-500 ${
@@ -251,43 +212,38 @@ export function HeaderNavBar() {
           ))}
         </div>
       )}
-      <audio ref={audioRef} loop>
-        <source src="/lion.mp3" type="audio/mpeg" />
-        Votre navigateur ne supporte pas l'élément audio.
-      </audio>
       <style jsx>{`
-      @keyframes rotate360 {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+        @keyframes rotate360 {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
 
-.rotate-360 {
-  animation: rotate360 2s linear infinite;
-}
+        .rotate-360 {
+          animation: rotate360 2s linear infinite;
+        }
 
-.logo-container img {
-  transition: transform 0.5s ease-out;
-}
+        .logo-container img {
+          transition: transform 0.5s ease-out;
+        }
 
-@keyframes notes {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.3);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
-  }
-}
-
+        @keyframes notes {
+          0% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.3);
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+          }
+        }
       `}</style>
     </nav>
   );
