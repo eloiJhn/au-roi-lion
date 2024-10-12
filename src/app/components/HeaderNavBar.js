@@ -60,27 +60,24 @@ export function HeaderNavBar() {
       const intervalDuration = 50;
       const steps = fadeOutDuration / intervalDuration;
       const volumeStep = audioRef.current.volume / steps;
-
+  
       fadeOutTimerRef.current = setInterval(() => {
         if (audioRef.current.volume > volumeStep) {
           audioRef.current.volume -= volumeStep;
         } else {
-          const pausePromise = audioRef.current.pause();
-          if (pausePromise !== undefined) {
-            pausePromise
-              .then(() => {
-                console.log("Audio stopped successfully.");
-              })
-              .catch((error) => {
-                console.error("Audio pause failed:", error);
-              });
-          }
-          audioRef.current.volume = 0.5;
           clearInterval(fadeOutTimerRef.current);
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;  // Réinitialisation du temps de lecture
+          if (!audioRef.current.paused) {
+            console.error("Failed to pause the audio");
+          } else {
+            console.log("Audio stopped successfully.");
+          }
         }
       }, intervalDuration);
     }
   };
+  
 
   const handleLogoClick = (event) => {
     event.stopPropagation();
