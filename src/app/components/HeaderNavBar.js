@@ -20,22 +20,21 @@ export function HeaderNavBar() {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Ajustez le breakpoint si nécessaire
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", handleResize);
-      handleResize(); // Initialiser la valeur
+    if (audioRef.current) {
+      const handleEnded = () => {
+        audioRef.current.currentTime = 0;
+        audioRef.current.load();
+        console.log("Audio ended and reloaded.");
+      };
+      
+      audioRef.current.addEventListener("ended", handleEnded);
+  
+      return () => {
+        audioRef.current.removeEventListener("ended", handleEnded);
+      };
     }
-
-    return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("resize", handleResize);
-      }
-    };
   }, []);
-
+  
   const startMusic = () => {
     if (audioRef.current) {
       clearInterval(fadeOutTimerRef.current);
