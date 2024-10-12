@@ -7,8 +7,8 @@ import { TranslationContext } from "../utils/TranslationContext";
 export function HeaderNavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [isActivated, setIsActivated] = useState(false); // Pour le mode mobile
-  const [isDesktopActivated, setIsDesktopActivated] = useState(false); // Nouvel état pour le mode desktop
+  const [isActivated, setIsActivated] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const audioRef = useRef(null);
   const fadeOutTimerRef = useRef(null);
@@ -19,95 +19,98 @@ export function HeaderNavBar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Ajustez le breakpoint si nécessaire
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", handleResize);
-      handleResize(); // Initialiser la valeur
-    }
-
-    return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("resize", handleResize);
-      }
-    };
-  }, []);
-
-  const startMusic = () => {
-    if (audioRef.current) {
-      clearInterval(fadeOutTimerRef.current);
-      audioRef.current.volume = 0.5;
-      audioRef.current.play().catch((error) => {
-        console.error("La lecture audio a échoué :", error);
-      });
-    }
-  };
-
-  const stopMusic = () => {
-    if (audioRef.current && !audioRef.current.paused) {
-      const fadeOutDuration = 1000;
-      const intervalDuration = 50;
-      const steps = fadeOutDuration / intervalDuration;
-      const volumeStep = audioRef.current.volume / steps;
-
-      fadeOutTimerRef.current = setInterval(() => {
-        if (audioRef.current.volume > volumeStep) {
-          audioRef.current.volume -= volumeStep;
-        } else {
-          audioRef.current.pause();
-          audioRef.current.volume = 0.5;
-          clearInterval(fadeOutTimerRef.current);
-        }
-      }, intervalDuration);
-    }
-  };
-
   const handleLogoClick = (event) => {
-    event.stopPropagation();
+    event.stopPropagation(); // Empêche la propagation de l'événement
+    if (isActivated) {
+      // Débute la réduction progressive du volume pour arrêter la musique
+      if (audioRef.current && !audioRef.current.paused) {
+        setIsFadingOut(true);
+        const fadeOutDuration = 1000;
+        const intervalDuration = 50;
+        const steps = fadeOutDuration / intervalDuration;
+        const volumeStep = audioRef.current.volume / steps;
 
-    if (isMobile) {
-      // Comportement en mode mobile
-      if (isActivated) {
-        stopMusic();
-        setIsActivated(false);
-      } else {
-        startMusic();
-        setIsActivated(true);
+        fadeOutTimerRef.current = setInterval(() => {
+          if (audioRef.current.volume > volumeStep) {
+            audioRef.current.volume -= volumeStep;
+          } else {
+            audioRef.current.pause();
+            clearInterval(fadeOutTimerRef.current);
+            setIsFadingOut(false);
+          }
+        }, intervalDuration);
       }
+
+      setIsActivated(false);
+      setIsHovering(false);
     } else {
-      // Comportement en mode desktop
-      if (!isDesktopActivated) {
-        // Premier clic : activer les animations et la musique
-        setIsDesktopActivated(true);
-        setIsHovering(true); // Démarre les animations
-        startMusic();
+      // Active et joue la musique à partir du dernier point
+      setIsActivated(true);
+      setIsHovering(true);
+      if (audioRef.current) {
+        clearInterval(fadeOutTimerRef.current);
+        audioRef.current.volume = 0.5;
+        audioRef.current.play().catch((error) => {
+          console.error("Audio playback failed:", error);
+        });
       }
     }
   };
 
   const handleMouseEnter = () => {
-    if (!isMobile && isDesktopActivated) {
+    if (isActivated) {
       setIsHovering(true);
-      startMusic();
+      if (audioRef.current) {
+        clearInterval(fadeOutTimerRef.current);
+        if (audioRef.current.paused) {
+          audioRef.current.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+        } else {
+          audioRef.current.volume = 0.5;
+        }
+      }
     }
   };
 
   const handleMouseLeave = () => {
-    if (!isMobile && isDesktopActivated) {
+    if (isActivated) {
       setIsHovering(false);
-      stopMusic();
+      if (audioRef.current) {
+        const fadeOutDuration = 1000;
+        const intervalDuration = 50;
+        const steps = fadeOutDuration / intervalDuration;
+        const volumeStep = audioRef.current.volume / steps;
+
+        fadeOutTimerRef.current = setInterval(() => {
+          if (audioRef.current.volume > volumeStep) {
+            audioRef.current.volume -= volumeStep;
+          } else {
+            audioRef.current.pause();
+            audioRef.current.volume = 0.5;
+            clearInterval(fadeOutTimerRef.current);
+          }
+        }, intervalDuration);
+      }
     }
   };
 
+
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Ajustez le breakpoint si nécessaire
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Set initial value
+
     if (audioRef.current) {
       audioRef.current.volume = 0.5;
     }
+
     return () => {
       clearInterval(fadeOutTimerRef.current);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -128,11 +131,6 @@ export function HeaderNavBar() {
     },
   ];
 
-  // Mise à jour de shouldAnimate
-  const shouldAnimate = isMobile
-    ? isActivated
-    : isDesktopActivated && isHovering;
-
   return (
     <nav className="bg-gradient-to-r from-[#003E50] to-[#5AA088] p-4 shadow-lg">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -144,7 +142,7 @@ export function HeaderNavBar() {
         >
           <div
             className={`absolute inset-0 transition-transform duration-500 ${
-              shouldAnimate ? "rotate-360" : ""
+              isActivated && isHovering ? "group-hover:rotate-360" : ""
             }`}
           >
             <img
@@ -152,30 +150,33 @@ export function HeaderNavBar() {
               alt="Logo"
               className="w-full h-full rounded-full"
             />
-            {shouldAnimate &&
-              [...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute transition-opacity duration-300 opacity-100"
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className={`absolute transition-opacity duration-300 ${
+                  isActivated && isHovering ? "opacity-100" : "opacity-0"
+                }`}
+                style={{
+                  animation: "notes 2s infinite linear",
+                  animationDelay: `${i * 0.5}s`,
+                  fontSize: "24px",
+                  top: ["45%", "25%", "75%", "55%"][i],
+                  left: ["20%", "40%", "60%", "80%"][i],
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <Music
+                  size={34}
                   style={{
-                    animation: "notes 2s infinite linear",
-                    animationDelay: `${i * 0.5}s`,
-                    fontSize: "24px",
-                    top: ["45%", "25%", "75%", "55%"][i],
-                    left: ["20%", "40%", "60%", "80%"][i],
-                    transform: "translate(-50%, -50%)",
+                    color: "white",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    visibility:
+                      isActivated && isHovering ? "visible" : "hidden",
                   }}
-                >
-                  <Music
-                    size={34}
-                    style={{
-                      color: "white",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  />
-                </div>
-              ))}
+                />
+              </div>
+            ))}
           </div>
         </div>
         <div className="hidden md:flex items-center space-x-6 text-white font-semibold">
@@ -240,22 +241,9 @@ export function HeaderNavBar() {
       )}
       <audio ref={audioRef} loop>
         <source src="/lion.mp3" type="audio/mpeg" />
-        Votre navigateur ne supporte pas l'élément audio.
+        Your browser does not support the audio element.
       </audio>
       <style jsx>{`
-        @keyframes rotate360 {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        .rotate-360 {
-          animation: rotate360 2s linear infinite;
-        }
-
         @keyframes notes {
           0% {
             transform: translate(-50%, -50%) scale(1);
