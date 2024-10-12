@@ -1,0 +1,46 @@
+{
+  "HeaderNavBar": {
+    "photos": "Photos",
+    "history": "Histoire",
+    "links": "Liens",
+    "contact": "Contact"
+  },
+  "Section1": {
+    "title": "Au Roi Lion, magnifique appartement de 60 m2 en location dans le centre historique de Dijon !",
+    "description": "Tourné vers les amoureux de l'histoire, du patrimoine et des passionnés de la gastronomie et du vin, ce logement affiche un style résolument unique. En plein coeur de Dijon, cet endroit de charme vous séduira par son authenticité, son confort et ses prestations raffinées. Chaque pièce invite à la rêverie et aux souvenirs d'antan dans ce lieu chargé d'histoire."
+  },
+  "ContactForm": {
+    "honeypot_detected": "Honeypot détecté, soumission bloquée",
+    "recaptcha_not_available": "Exécution de recaptcha non disponible pour le moment",
+    "wait_one_minute": "Vous devez attendre une minute avant d'envoyer un autre message.",
+    "recaptcha_failed": "La validation reCAPTCHA a échoué",
+    "email_sent": "Message envoyé avec succès!",
+    "email_send_failed": "Échec de l'envoi du message",
+    "batched_email_sent": "Messages en attente envoyés avec succès!",
+    "batched_email_failed": "Échec de l'envoi des messages en attente",
+    "contact_owner": "Contacter le propriétaire !",
+    "name_label": "Votre Nom",
+    "email_label": "Votre Email",
+    "message_label": "Message",
+    "sending_in_progress": "Envoi en cours...",
+    "send_button": "Envoyer"
+  },
+  "Footer": {
+    "links": "Liens",
+    "history": "Histoire",
+    "contactInfo": "Coordonnées de contact"
+  },
+  "Section3": {
+    "title1": "Sa majesté vous invite à contempler l'église Saint Michel du XVIe siècle, célèbre par sa façade Renaissance et considérée comme l'une des plus belles de France, classée monument historique. Plongez dans une expérience unique où le confort moderne se conjugue au charme de l'ancien dans notre logement soigneusement décoré qui vous transporte dans un monde inspiré par la majesté et le raffiné. Chaque pièce invite à la rêverie et aux souvenirs d'antan dans ce lieu chargé d'histoire.",
+    "title2": "Dès que vous franchissez la porte, vous êtes accueilli par des touches de décoration élégantes intégrées à un magnifique appartement du 17ème siècle.",
+    "title3": "La cuisine moderne, toute équipée, vous permettra de concocter des spécialités dijonnaises et de découvrir les meilleurs vins de la région et des crémants de Bourgogne.",
+    "title4": "Un superbe salon du 17ème, lumineux et chaleureux, vous attend pour vous laisser aller à la rêverie et au repos.",
+    "title5": "La chambre avec un grand lit double ainsi qu'un vaste dressing et sa salle de bain attenante équipée d'une grande douche à l'italienne, sauront vous replonger dans le monde féérique du XVIIe siècle.",
+    "title6": "Idéalement situé en plein cœur historique de Dijon, \"Au Roi Lion\" offre un accès facile aux boutiques et commerces locaux tout en étant un refuge paisible après une journée d'exploration et de visites",
+    "title7": "Réservez dès maintenant et vivez une expérience locative qui éveillera vos sens et émerveillera votre esprit. \"Au Roi Lion\"  est bien plus qu'un logement, c'est une aventure mémorable, un voyage au cœur de la cité historique Dijonnaise."
+  },
+  "Section4": {
+    "title": "Location également disponible sur airbnb ou booking !"
+  }
+  
+}
