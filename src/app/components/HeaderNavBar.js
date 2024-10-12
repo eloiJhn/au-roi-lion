@@ -54,6 +54,7 @@ export function HeaderNavBar() {
     }
   };
 
+  
   const stopMusic = () => {
     if (audioRef.current && !audioRef.current.paused) {
       const fadeOutDuration = 1000;
@@ -67,13 +68,14 @@ export function HeaderNavBar() {
         } else {
           clearInterval(fadeOutTimerRef.current);
           audioRef.current.pause();
-          audioRef.current.currentTime = 0;
-          audioRef.current.load();
-  
+          audioRef.current.currentTime = 0;  // Réinitialiser le temps de lecture
+          audioRef.current.src = "";  // Effacer la source audio pour l'enlever du centre de notifications iOS
+          console.log("Audio stopped and source cleared.");
+          
           // Rafraîchir la page de manière cachée
           setTimeout(() => {
             window.location.reload(true);
-          }, 500); // Délai pour éviter un rechargement brutal
+          },); // Délai pour éviter un rechargement brutal
         }
       }, intervalDuration);
     }
