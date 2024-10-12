@@ -67,12 +67,9 @@ export function HeaderNavBar() {
         } else {
           clearInterval(fadeOutTimerRef.current);
           audioRef.current.pause();
-          audioRef.current.currentTime = 0;  // Réinitialisation du temps de lecture
-          if (!audioRef.current.paused) {
-            console.error("Failed to pause the audio");
-          } else {
-            console.log("Audio stopped successfully.");
-          }
+          audioRef.current.currentTime = 0;  // Réinitialiser le temps de lecture
+          audioRef.current.load();  // Réinitialiser complètement l'élément audio
+          console.log("Audio stopped and reloaded.");
         }
       }, intervalDuration);
     }
