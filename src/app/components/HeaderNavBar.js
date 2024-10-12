@@ -8,6 +8,7 @@ export function HeaderNavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isActivated, setIsActivated] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const audioRef = useRef(null);
   const fadeOutTimerRef = useRef(null);
   const router = useRouter();
@@ -16,19 +17,48 @@ export function HeaderNavBar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const handleClick = () => {
-    if (!isActivated) {
-      setIsActivated(true);
-      setIsHovering(true);
-      if (audioRef.current && audioRef.current.paused) {
-        audioRef.current.play().catch((error) => {
-          console.error("Audio playback failed:", error);
-        });
+  const handleClick = (event) => {
+    // Vérifie si l'élément cliqué est bien le logo
+    if (event.target.closest(".logo-container")) {
+      if (isActivated) {
+        // Débute la réduction progressive du volume pour arrêter la musique
+        if (audioRef.current && !audioRef.current.paused) {
+          setIsFadingOut(true); // Commence le fade-out
+          const fadeOutDuration = 1000; // 1 seconde pour réduire le volume
+          const intervalDuration = 50; // Réduction toutes les 50ms
+          const steps = fadeOutDuration / intervalDuration;
+          const volumeStep = audioRef.current.volume / steps;
+
+          fadeOutTimerRef.current = setInterval(() => {
+            if (audioRef.current.volume > volumeStep) {
+              audioRef.current.volume -= volumeStep;
+            } else {
+              audioRef.current.pause();
+              clearInterval(fadeOutTimerRef.current);
+              setIsFadingOut(false); // Fin du fade-out
+            }
+          }, intervalDuration);
+        }
+
+        setIsActivated(false);
+        setIsHovering(false);
+      } else {
+        // Active et joue la musique à partir du dernier point
+        setIsActivated(true);
+        setIsHovering(true);
+        if (audioRef.current) {
+          clearInterval(fadeOutTimerRef.current); // Arrête le fade-out en cours, si existant
+          audioRef.current.volume = 0.5; // Remettre le volume initial
+          audioRef.current.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+        }
       }
     }
   };
 
   const handleMouseEnter = () => {
+    // Ne démarre l'animation ou la musique que si isActivated est true
     if (isActivated) {
       setIsHovering(true);
       if (audioRef.current) {
@@ -45,6 +75,7 @@ export function HeaderNavBar() {
   };
 
   const handleMouseLeave = () => {
+    // Si la musique est activée, faire le fade-out au survol
     if (isActivated) {
       setIsHovering(false);
       if (audioRef.current) {
@@ -87,7 +118,7 @@ export function HeaderNavBar() {
     <nav className="bg-gradient-to-r from-[#003E50] to-[#5AA088] p-4 shadow-lg">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         <div
-          className="relative w-28 h-28 group cursor-pointer"
+          className="logo-container relative w-28 h-28 group cursor-pointer"
           onClick={handleClick}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
