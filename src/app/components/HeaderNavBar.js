@@ -67,13 +67,13 @@ export function HeaderNavBar() {
         } else {
           clearInterval(fadeOutTimerRef.current);
           audioRef.current.pause();
-          audioRef.current.currentTime = 0;  // Réinitialiser le temps de lecture
-          audioRef.current.load();  // Réinitialiser complètement l'élément audio
-          console.log("Audio stopped and reloaded.");
+          audioRef.current.src = "";  // Supprimer la source audio pour stopper complètement
+          console.log("Audio stopped and source cleared.");
         }
       }, intervalDuration);
     }
   };
+  
   
 
   const handleLogoClick = (event) => {
