@@ -40,9 +40,17 @@ export function HeaderNavBar() {
     if (audioRef.current) {
       clearInterval(fadeOutTimerRef.current);
       audioRef.current.volume = 0.5;
-      audioRef.current.play().catch((error) => {
-        console.error("La lecture audio a échoué :", error);
-      });
+
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log("Audio started successfully.");
+          })
+          .catch((error) => {
+            console.error("Audio play failed:", error);
+          });
+      }
     }
   };
 
@@ -57,7 +65,16 @@ export function HeaderNavBar() {
         if (audioRef.current.volume > volumeStep) {
           audioRef.current.volume -= volumeStep;
         } else {
-          audioRef.current.pause();
+          const pausePromise = audioRef.current.pause();
+          if (pausePromise !== undefined) {
+            pausePromise
+              .then(() => {
+                console.log("Audio stopped successfully.");
+              })
+              .catch((error) => {
+                console.error("Audio pause failed:", error);
+              });
+          }
           audioRef.current.volume = 0.5;
           clearInterval(fadeOutTimerRef.current);
         }
@@ -69,7 +86,6 @@ export function HeaderNavBar() {
     event.stopPropagation();
 
     if (isMobile) {
-      // Comportement en mode mobile
       if (isActivated) {
         stopMusic();
         setIsActivated(false);
@@ -78,11 +94,9 @@ export function HeaderNavBar() {
         setIsActivated(true);
       }
     } else {
-      // Comportement en mode desktop
       if (!isDesktopActivated) {
-        // Premier clic : activer les animations et la musique
         setIsDesktopActivated(true);
-        setIsHovering(true); // Démarre les animations
+        setIsHovering(true);
         startMusic();
       }
     }
@@ -111,7 +125,6 @@ export function HeaderNavBar() {
     };
   }, []);
 
-  // Gestion des éléments de navigation traduits
   const navItems = [
     {
       href: "#photos-section",
@@ -128,10 +141,7 @@ export function HeaderNavBar() {
     },
   ];
 
-  // Mise à jour de shouldAnimate
-  const shouldAnimate = isMobile
-    ? isActivated
-    : isDesktopActivated && isHovering;
+  const shouldAnimate = isMobile ? isActivated : isDesktopActivated && isHovering;
 
   return (
     <nav className="bg-gradient-to-r from-[#003E50] to-[#5AA088] p-4 shadow-lg">
@@ -150,7 +160,8 @@ export function HeaderNavBar() {
             <img
               src="/assets/logo.png"
               alt="Logo"
-              className="w-full h-full rounded-full"
+              className="w-full h-full rounded-full transition-transform duration-500 ease-out"
+              style={{ transform: shouldAnimate ? "rotate(360deg)" : "rotate(0deg)" }}
             />
             {shouldAnimate &&
               [...Array(4)].map((_, i) => (
@@ -243,33 +254,38 @@ export function HeaderNavBar() {
         Votre navigateur ne supporte pas l'élément audio.
       </audio>
       <style jsx>{`
-        @keyframes rotate360 {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
+      @keyframes rotate360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-        .rotate-360 {
-          animation: rotate360 2s linear infinite;
-        }
+.rotate-360 {
+  animation: rotate360 2s linear infinite;
+}
 
-        @keyframes notes {
-          0% {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1.3);
-          }
-          100% {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 0;
-          }
-        }
+.logo-container img {
+  transition: transform 0.5s ease-out;
+}
+
+@keyframes notes {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
       `}</style>
     </nav>
   );
