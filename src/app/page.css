@@ -1,0 +1,253 @@
+/* Swiper pagination styles */
+.swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction {
+  bottom: -30px; 
+  z-index: 10;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+/* Swiper button styles */
+.swiper-button-prev,
+.swiper-button-next {
+  background: rgba(255, 255, 255, 0.9x);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+  color: black;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  transform: scale(1.1);
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 20px;
+  color: white;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.swiper-button-prev {
+  left: -4px;
+  background: linear-gradient(to right, #003E50, #5AA088);
+  color: white;
+}
+
+.swiper-button-next {
+  right: -4px;
+  background: linear-gradient(to right, #003E50, #5AA088);
+  color: white;
+}
+
+/* Modal specific button styles */
+.modal-swiper-button-prev::after,
+.modal-swiper-button-next::after {
+  color: white; 
+}
+
+/* Override Swiper default styles */
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: all;
+}
+
+.swiper-button-prev.swiper-button-disabled::after,
+.swiper-button-next.swiper-button-disabled::after {
+  color: white;
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  max-width: 80%;
+  max-height: 80%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px; 
+  right: 25px;
+  transform: translate(0, 0); 
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  transition: transform 0.3s;
+  background: linear-gradient(to right, #003E50, #5AA088);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+/* Fullscreen icon styles */
+.fullscreen-icon-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.fullscreen-icon {
+  background: linear-gradient(to right, #003E50, #5AA088);
+  border-radius: 10%;
+  padding: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: -40px; 
+  right: -6px; 
+}
+
+/* Modal Swiper button styles */
+.modal-swiper-button-prev,
+.modal-swiper-button-next {
+  background: linear-gradient(to right, #003E50, #5AA088);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+  color: black;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.modal-swiper-button-prev {
+  left: 30px;
+}
+
+.modal-swiper-button-next {
+  right: 30px;
+}
+
+.modal-swiper-button-prev:hover,
+.modal-swiper-button-next:hover {
+  transform: scale(1.1) translateY(-50%);
+}
+
+.modal-swiper-button-prev:after,
+.modal-swiper-button-next:after {
+  font-size: 20px;
+  color: white;
+}
+
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-width: 1000px; 
+  max-height: 1000px; 
+}
+
+body {
+  cursor: none;
+}
+
+
+body, a, button, [role="button"], input[type="submit"], input[type="button"], input[type="reset"] {
+  cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOSIgaGVpZ2h0PSIyOSIgdmlld0JveD0iMCAwIDI5IDI5Ij4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iY3Vyc29yLWdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDNFNTA7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzVBQTA4ODtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGZpbGw9InVybCgjY3Vyc29yLWdyYWRpZW50KSIgZD0iTTUsMS41IEw1LDIzLjUgTDExLjUsMTcgTDE1LDI1LjUgTDE5LjUsMjIuNSBMMTYsMTQuNSBMMjMuNSwxNC41IFoiIC8+CiAgPHBhdGggZmlsbD0id2hpdGUiIGQ9Ik03LDUgTDcsMjAgTDExLjUsMTUuNSBMMTQuNSwyMiBMMTYuNSwyMC41IEwxMy41LDE0LjUgTDIwLDE0LjUgWiIgLz4KPC9zdmc+") 5 0, auto;
+}
+a:hover ~ #custom-cursor,
+button:hover ~ #custom-cursor,
+[role="button"]:hover ~ #custom-cursor,
+input[type="submit"]:hover ~ #custom-cursor,
+input[type="button"]:hover ~ #custom-cursor,
+input[type="reset"]:hover ~ #custom-cursor {
+  width: 30px;
+  height: 30px;
+}
+
+/* Styles pour le slider de défilement de page */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #003E50, #5AA088);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {  
+  background: linear-gradient(to right, #003E50, #5AA088);
+}
+
+/* Pour Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #003E50 #f1f1f1;
+}
+
+@keyframes rotate360 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.group-hover\:rotate-360:hover {
+  animation: rotate360 2s linear infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float-0 { animation: float 2s ease-in-out infinite; }
+.animate-float-1 { animation: float 2s ease-in-out 0.25s infinite; }
+.animate-float-2 { animation: float 2s ease-in-out 0.5s infinite; }
+.animate-float-3 { animation: float 2s ease-in-out 0.75s infinite; }
+.animate-float-4 { animation: float 2s ease-in-out 1s infinite; }
+.animate-float-5 { animation: float 2s ease-in-out 1.25s infinite; }
+.animate-float-6 { animation: float 2s ease-in-out 1.5s infinite; }
+.animate-float-7 { animation: float 2s ease-in-out 1.75s infinite; }

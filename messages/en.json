@@ -1,0 +1,45 @@
+{
+  "HeaderNavBar": {
+    "photos": "Photos",
+    "history": "History",
+    "links": "Links",
+    "contact": "Contact"
+  },
+  "Section1": {
+    "title": "The Lion King, a magnificent 60 m2 apartment for rent in the historic center of Dijon !",
+    "description": "Oriented towards lovers of history, heritage, and enthusiasts of gastronomy and wine, this accommodation has a truly unique style. In the heart of Dijon, this charming place will seduce you with its authenticity, comfort, and refined services. Each room invites you to daydream and remember the past in this place steeped in history."
+  },
+  "ContactForm": {
+    "honeypot_detected": "Honeypot detected, submission blocked",
+    "recaptcha_not_available": "Execute recaptcha not yet available",
+    "wait_one_minute": "You must wait one minute before sending another message.",
+    "recaptcha_failed": "reCAPTCHA validation failed",
+    "email_sent": "Message sent successfully!",
+    "email_send_failed": "Failed to send message",
+    "batched_email_sent": "Pending messages sent successfully!",
+    "batched_email_failed": "Failed to send pending messages",
+    "contact_owner": "Contact the owner !",
+    "name_label": "Your Name",
+    "email_label": "Your Email",
+    "message_label": "Message",
+    "sending_in_progress": "Sending in progress...",
+    "send_button": "Send"
+  },
+  "Footer": {
+    "links": "Links",
+    "history": "History",
+    "contactInfo": "Contact information"
+  },
+  "Section3": {
+    "title1": "His Majesty invites you to contemplate the 16th-century Saint Michel church, famous for its Renaissance facade and considered one of the most beautiful in France, classified as a historical monument. Immerse yourself in a unique experience where modern comfort combines with the charm of the old in our carefully decorated accommodation that transports you to a world inspired by majesty and refinement. Each room invites you to daydream and remember the past in this place steeped in history.",
+    "title2": "As soon as you walk through the door, you are greeted by elegant decorative touches integrated into a magnificent 17th-century apartment.",
+    "title3": "The modern, fully equipped kitchen will allow you to prepare Dijon specialties and discover the best wines in the region and Burgundy crémants.",
+    "title4": "A superb 17th-century living room, bright and warm, awaits you to let you daydream and rest.",
+    "title5": "The bedroom with a large double bed as well as a large dressing room and its adjoining bathroom equipped with a large walk-in shower, will immerse you in the fairy-tale world of the 17th century.",
+    "title6": "Ideally located in the heart of historic Dijon, \"The Lion King\" offers easy access to local shops and businesses while being a peaceful refuge after a day of exploration and visits",
+    "title7": "Book now and experience a rental experience that will awaken your senses and delight your mind. \"The Lion King\" is more than just accommodation, it is a memorable adventure, a journey to the heart of the historic city of Dijon."
+  },
+  "Section4": {
+    "title": "Location also available on airbnb or booking !"
+  }
+}
