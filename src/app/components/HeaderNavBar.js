@@ -67,12 +67,18 @@ export function HeaderNavBar() {
         } else {
           clearInterval(fadeOutTimerRef.current);
           audioRef.current.pause();
-          audioRef.current.src = "";  // Supprimer la source audio pour stopper complètement
-          console.log("Audio stopped and source cleared.");
+          audioRef.current.currentTime = 0;
+          audioRef.current.load();
+  
+          // Rafraîchir la page de manière cachée
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 500); // Délai pour éviter un rechargement brutal
         }
       }, intervalDuration);
     }
   };
+  
   
   
 
