@@ -67,19 +67,29 @@ export function HeaderNavBar() {
           audioRef.current.volume -= volumeStep;
         } else {
           clearInterval(fadeOutTimerRef.current);
+          
+          // Mettre en pause l'audio et réinitialiser son état
           audioRef.current.pause();
-          audioRef.current.currentTime = 0;  // Réinitialiser le temps de lecture
-          audioRef.current.src = "";  // Effacer la source audio pour l'enlever du centre de notifications iOS
+          audioRef.current.currentTime = 0;
+          audioRef.current.src = '';  // Vider la source audio pour forcer l'arrêt dans le lecteur système
+          
           console.log("Audio stopped and source cleared.");
           
-          // Rafraîchir la page de manière cachée
-          setTimeout(() => {
-            window.location.reload(true);
-          },); // Délai pour éviter un rechargement brutal
+          // Utilisation de getAudioTracks() pour arrêter les pistes audio dans le système
+          navigator.mediaDevices.getUserMedia({ audio: true })
+            .then((mediaStream) => {
+              const tracks = mediaStream.getAudioTracks();
+              tracks.forEach(track => track.stop());  // Arrêter chaque piste audio
+              console.log("All audio tracks stopped.");
+            })
+            .catch((error) => {
+              console.error("Error stopping audio tracks:", error);
+            });
         }
       }, intervalDuration);
     }
   };
+  
   
   
   
