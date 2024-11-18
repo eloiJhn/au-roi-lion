@@ -18,7 +18,6 @@ const escapeSpecialChars = (str) => {
     
     if (sanitized.length < minLength || sanitized.length > maxLength) return false;
     
-    // Liste blanche de caractères autorisés
     const allowedChars = /^[a-zA-Z0-9 .,!?@-]+$/;
     return allowedChars.test(sanitized);
   };

@@ -9,14 +9,16 @@ const rateLimit = (options) => {
   return {
     check: (request, limit, token) =>
       new Promise((resolve, reject) => {
-        const tokenCount = tokenCache.get(token) || [0];
+        let tokenCount = tokenCache.get(token) || [0];
+        
         if (tokenCount[0] === 0) {
           tokenCache.set(token, tokenCount);
         }
         tokenCount[0] += 1;
 
         const currentUsage = tokenCount[0];
-        const isRateLimited = currentUsage >= limit;
+        const isRateLimited = currentUsage > limit;
+
 
         if (isRateLimited) {
           reject(new Error('Too Many Requests'));
