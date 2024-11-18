@@ -41,7 +41,7 @@ export const TranslationProvider = ({ children }) => {
   };
 
   if (currentLocale === null) {
-    return null; // or a loading indicator
+    return null;
   }
 
   return (

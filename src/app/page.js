@@ -1,17 +1,14 @@
 "use client";
-
-import { useState, useRef, useEffect } from "react";
-import { Toast } from "primereact/toast";
-import { ArrowsPointingInIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { HeaderNavBar } from "./components/HeaderNavBar";
-import { Section1 } from "./components/Section1";
+import { Section1 } from "./components/Introduction";
 import { Carousel } from "./components/Carroussel";
-import { Section3 } from "./components/Section3";
+import { Section3 } from "./components/History";
 import { ContactForm } from "./components/ContactForm";
-import { Section4 } from "./components/Section4";
+import { Section4 } from "./components/Link";
 import { Footer } from "./components/Footer";
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import { TranslationProvider } from "./utils/TranslationContext";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { TranslationProvider, TranslationContext } from "./utils/TranslationContext";
 
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -22,14 +19,15 @@ import "./page.css";
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [modalImage, setModalImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [initialSlide, setInitialSlide] = useState(0);
   const [lastEmailSentTime, setLastEmailSentTime] = useState(null);
   const [isSending, setIsSending] = useState(false);
   const [emailQueue, setEmailQueue] = useState([]);
-  const toast = useRef(null);
   const autoClickRef = useRef(null);
+  const [showPriceInfo, setShowPriceInfo] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   const images = [
     "/assets/logo.png",
@@ -54,6 +52,11 @@ export default function Home() {
   ];
 
   useEffect(() => {
+    const timer = setTimeout(() => setShowPriceInfo(false), 6000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       if (
         window.innerHeight + window.scrollY >=
@@ -72,6 +75,18 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const moveCursor = (e) => {
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", moveCursor);
+
+    return () => {
+      window.removeEventListener("mousemove", moveCursor);
+    };
+  }, []);
+
   const openModal = (index) => {
     setInitialSlide(index);
     setModalOpen(true);
@@ -85,9 +100,9 @@ export default function Home() {
     setInitialSlide((prevSlide) => {
       let newSlide = prevSlide + direction;
       if (newSlide >= images.length) {
-        newSlide = 0; // Revient à la première image
+        newSlide = 0;
       } else if (newSlide < 0) {
-        newSlide = images.length - 1; // Va à la dernière image
+        newSlide = images.length - 1;
       }
       return newSlide;
     });
@@ -107,68 +122,126 @@ export default function Home() {
     );
   };
 
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const togglePriceInfo = () => {
+    setShowPriceInfo((prev) => !prev);
+  };
+
+  return (
+    <TranslationProvider>
+      <HomeContent
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        showBackToTop={showBackToTop}
+        setShowBackToTop={setShowBackToTop}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        initialSlide={initialSlide}
+        setInitialSlide={setInitialSlide}
+        lastEmailSentTime={lastEmailSentTime}
+        setLastEmailSentTime={setLastEmailSentTime}
+        isSending={isSending}
+        setIsSending={setIsSending}
+        emailQueue={emailQueue}
+        setEmailQueue={setEmailQueue}
+        autoClickRef={autoClickRef}
+        showPriceInfo={showPriceInfo}
+        setShowPriceInfo={setShowPriceInfo}
+        isHovering={isHovering}
+        setIsHovering={setIsHovering}
+        cursorPosition={cursorPosition}
+        images={images}
+        openModal={openModal}
+        closeModal={closeModal}
+        navigateSlide={navigateSlide}
+        handleAirbnbClick={handleAirbnbClick}
+        handleBookingClick={handleBookingClick}
+        togglePriceInfo={togglePriceInfo}
+      />
+    </TranslationProvider>
+  );
+}
+
+function HomeContent(props) {
+  const { messages } = useContext(TranslationContext);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
-    const moveCursor = (e) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
+    const handleScroll = () => {
+      setIsAtTop(window.scrollY === 0);
     };
 
-    window.addEventListener("mousemove", moveCursor);
+    window.addEventListener('scroll', handleScroll);
+
+    handleScroll();
 
     return () => {
-      window.removeEventListener("mousemove", moveCursor);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
-    <TranslationProvider>
-      <GoogleReCaptchaProvider
-        reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        scriptProps={{
-          async: false,
-          defer: false,
-          appendTo: 'head',
-          nonce: undefined,
-        }}
-      >
-        <div className="min-h-screen">
-          <div
-            id="custom-cursor"
-            style={{
-              left: `${cursorPosition.x}px`,
-              top: `${cursorPosition.y}px`,
-            }}
-          />
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+      scriptProps={{
+        async: false,
+        defer: false,
+        appendTo: "head",
+        nonce: undefined,
+      }}
+    >
+      <div className="min-h-screen">
+        <div
+          id="custom-cursor"
+          style={{
+            left: `${props.cursorPosition.x}px`,
+            top: `${props.cursorPosition.y}px`,
+          }}
+        />
 
-          <HeaderNavBar isOpen={isOpen} setIsOpen={setIsOpen} />
-          <Section1 />
-          <Carousel
-            images={images}
-            openModal={openModal}
-            modalOpen={modalOpen}
-            closeModal={closeModal}
-            initialSlide={initialSlide}
-            navigateSlide={navigateSlide}
-          />
-          <Section3 />
-          <ContactForm
-            lastEmailSentTime={lastEmailSentTime}
-            setLastEmailSentTime={setLastEmailSentTime}
-            isSending={isSending}
-            setIsSending={setIsSending}
-            emailQueue={emailQueue}
-            setEmailQueue={setEmailQueue}
-          />
-          <Section4
-            handleAirbnbClick={handleAirbnbClick}
-            handleBookingClick={handleBookingClick}
-            showBackToTop={showBackToTop}
-          />
-          <Footer />
-          <button ref={autoClickRef} style={{ display: 'none' }} />
-        </div>
-      </GoogleReCaptchaProvider>
-    </TranslationProvider>
+        <HeaderNavBar isOpen={props.isOpen} setIsOpen={props.setIsOpen} />
+
+        {isAtTop && (
+  <div
+    className="floating-icon text-white bg-gradient-to-r from-[#003E50] to-[#5AA088] p-2 rounded-full"
+    onClick={props.togglePriceInfo}
+  >
+    <i className="pi pi-info-circle"></i>
+  </div>
+        )}
+
+        {props.showPriceInfo && (
+          <div className="price-info-box">
+            {messages?.HeaderNavBar?.floating_icon_text ||
+              "Entre 80 et 120€ la nuit, selon les périodes."}
+          </div>
+        )}
+
+        <Section1 />
+        <Carousel
+          images={props.images}
+          openModal={props.openModal}
+          modalOpen={props.modalOpen}
+          closeModal={props.closeModal}
+          initialSlide={props.initialSlide}
+          navigateSlide={props.navigateSlide}
+        />
+        <Section3 />
+        <ContactForm
+          lastEmailSentTime={props.lastEmailSentTime}
+          setLastEmailSentTime={props.setLastEmailSentTime}
+          isSending={props.isSending}
+          setIsSending={props.setIsSending}
+          emailQueue={props.emailQueue}
+          setEmailQueue={props.setEmailQueue}
+        />
+        <Section4
+          handleAirbnbClick={props.handleAirbnbClick}
+          handleBookingClick={props.handleBookingClick}
+          showBackToTop={props.showBackToTop}
+        />
+        <Footer />
+        <button ref={props.autoClickRef} style={{ display: "none" }} />
+      </div>
+    </GoogleReCaptchaProvider>
   );
 }

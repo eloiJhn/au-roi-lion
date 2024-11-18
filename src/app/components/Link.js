@@ -6,9 +6,11 @@ export function Section4({ handleAirbnbClick, handleBookingClick, showBackToTop 
   const handleBackToTop = (e) => {
     e.preventDefault();
     window.scrollTo({
-      top: 0, 
+      top: 0,
+      behavior: "smooth", 
     });
   };
+  
   const { currentLocale, messages } = useContext(TranslationContext);
 
   return (
@@ -52,18 +54,18 @@ export function Section4({ handleAirbnbClick, handleBookingClick, showBackToTop 
         </div>
         {showBackToTop && (
           <div
-          className={`absolute top-1/2 -right-1.5 md:right-11 transform -translate-y-1/2 transition-opacity duration-500 ${
+          className={`absolute top-1/2 right-4 md:right-11 transform -translate-y-1/2 transition-opacity duration-500 ${
             showBackToTop ? "opacity-100" : "opacity-0"
           }`}
-          >
-            <button onClick={handleBackToTop}>
-              <div
-                className="h-12 w-12 rounded-full flex items-center justify-center shadow-md bg-gradient-to-r from-[#003E50] to-[#5AA088] hover:shadow-lg"
-              >
-                <ChevronUpIcon className="h-6 w-6 text-white" />
-              </div>
-            </button>
-          </div>
+        >
+          <button onClick={handleBackToTop}>
+            <div
+              className="h-12 w-12 rounded-full flex items-center justify-center shadow-md bg-gradient-to-r from-[#003E50] to-[#5AA088] hover:shadow-lg"
+            >
+              <ChevronUpIcon className="h-6 w-6 text-white" />
+            </div>
+          </button>
+        </div>
         )}
       </div>
     </div>

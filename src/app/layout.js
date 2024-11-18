@@ -1,3 +1,4 @@
+import React from 'react';
 import './globals.css';
 import {NextIntlClientProvider} from 'next-intl';
 import {getLocale, getMessages} from 'next-intl/server';
