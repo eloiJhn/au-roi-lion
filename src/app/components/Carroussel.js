@@ -144,7 +144,13 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                   strokeLinejoin="round"
                 />
                 <defs>
-                  <linearGradient id="gradient-left" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient
+                    id="gradient-left"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
                     <stop offset="0%" stopColor="#003E50" />
                     <stop offset="100%" stopColor="#5AA088" />
                   </linearGradient>
@@ -172,7 +178,13 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                   strokeLinejoin="round"
                 />
                 <defs>
-                  <linearGradient id="gradient-right" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient
+                    id="gradient-right"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
                     <stop offset="0%" stopColor="#003E50" />
                     <stop offset="100%" stopColor="#5AA088" />
                   </linearGradient>
