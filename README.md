@@ -9,7 +9,6 @@ Bienvenue dans notre appartement de charme "Au Roi Lion", un joyau architectural
 - 60m² au cœur de Dijon
 - Architecture du 17ème siècle
 - Entièrement rénové
-- Situation privilégiée
 - Proche des commerces et transports
 
 ## 🛠 Technologies Utilisées
