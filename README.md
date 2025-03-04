@@ -21,9 +21,15 @@ Bienvenue dans notre appartement de charme "Au Roi Lion", un joyau architectural
 - **Hero Icons** - Collection d'icônes SVG
 
 ### Backend & API
-- **SendGrid** - Service d'envoi d'emails
+- **Nodemailer avec Brevo** - Service d'envoi d'emails via l'infrastructure SMTP de Brevo
 - **Next.js API Routes** - Points d'API serverless
-- **Google ReCaptcha** - Protection anti-spam
+- **Google ReCaptcha V3** - Protection anti-spam
+
+### Sécurité & Protection
+- **Honeypot** - Protection anti-spam pour le formulaire de contact
+- **Rate Limiting** - Limitation des requêtes API
+- **Content Analysis** - Filtrage du contenu suspect
+- **Input Validation** - Validation des entrées utilisateur
 
 ### Tests & Qualité
 - **Jest** - Framework de test

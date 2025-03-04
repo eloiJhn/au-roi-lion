@@ -9,14 +9,11 @@ export function ContactForm({
   setLastEmailSentTime,
   isSending,
   setIsSending,
-  emailQueue,
-  setEmailQueue,
   hideHoneypot = true,
 }) {
   const toast = useRef(null);
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [formData, setFormData] = useState({
-    to_email: "",
     from_name: "",
     reply_to: "",
     message: "",
@@ -60,10 +57,9 @@ export function ContactForm({
     const delay = 60000;
 
     if (lastEmailSentTime && currentTime - lastEmailSentTime < delay) {
-      setEmailQueue((prevQueue) => [...prevQueue, formData]);
       toast.current?.show({
-        severity: "error",
-        summary: "Erreur",
+        severity: "info",
+        summary: "Information ",
         detail: messages.ContactForm?.wait_one_minute || "Vous devez attendre une minute avant d'envoyer un autre message.",
         life: 3000,
       });
@@ -74,6 +70,7 @@ export function ContactForm({
 
     try {
       const token = await executeRecaptcha("submit_form");
+
       const recaptchaResponse = await fetch("/api/validate-recaptcha", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,7 +81,7 @@ export function ContactForm({
         throw new Error(messages.ContactForm?.recaptcha_failed || "La validation reCAPTCHA a échoué");
       }
 
-      const emailResponse = await fetch("/api/send-email", {
+      const emailResponse = await fetch("/api/send-email-nodemailer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -102,10 +99,6 @@ export function ContactForm({
       });
 
       setLastEmailSentTime(currentTime);
-      if (emailQueue.length > 0) {
-        sendBatchedEmails();
-      }
-
       setFormData({
         from_name: "",
         reply_to: "",
@@ -113,7 +106,6 @@ export function ContactForm({
         honeypot: "",
       });
     } catch (error) {
-      console.error("handleSendEmail - Échec de l'envoi de l'email:", error);
       toast.current?.show({
         severity: "error",
         summary: "Erreur",
@@ -122,38 +114,6 @@ export function ContactForm({
       });
     } finally {
       setIsSending(false);
-    }
-  };
-
-  const sendBatchedEmails = async () => {
-    try {
-      const response = await fetch("/api/send-batch-emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(emailQueue),
-      });
-
-      if (!response.ok) {
-        throw new Error(messages.ContactForm?.batched_email_failed || "Échec de l'envoi des messages en attente");
-      }
-
-      toast.current?.show({
-        severity: "success",
-        summary: currentLocale === "fr" ? "Succès" : "Success",
-        detail: messages.ContactForm?.batched_email_sent || "Messages en attente envoyés avec succès!",
-        life: 3000,
-      });
-      setEmailQueue([]);
-    } catch (error) {
-      console.error("Failed to send batched emails:", error);
-      toast.current?.show({
-        severity: "error",
-        summary: "Erreur",
-        detail: messages.ContactForm?.batched_email_failed || "Échec de l'envoi des messages en attente",
-        life: 3000,
-      });
     }
   };
 
@@ -173,7 +133,7 @@ export function ContactForm({
         {messages.ContactForm?.contact_owner || "Contacter le propriétaire !"}
       </h1>
       <form onSubmit={handleSendEmail} className="space-y-6">
-      <input
+        <input
           type="text"
           name="honeypot"
           aria-label="honeypot"
