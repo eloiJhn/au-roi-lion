@@ -7,8 +7,8 @@ export function Footer() {
   const contactDetails = [
     {
       label: messages.Footer?.email || "Email",
-      value: "au-roi-lion@outlook.com",
-      href: "mailto:au-roi-lion@outlook.com",
+      value: "severine.jahan@free.fr",
+      href: "mailto:severine.jahan@free.fr",
     },
     {
       label: messages.Footer?.phone || "Tél",
