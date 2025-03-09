@@ -27,7 +27,7 @@ Bienvenue dans notre appartement de charme "Au Roi Lion", un joyau architectural
 
 ### Sécurité & Protection
 - **Honeypot** - Protection anti-spam pour le formulaire de contact
-- **Rate Limiting** - Limitation des requêtes API
+- **Rate Limiting** - Limitation des requêtes API via Redis sur Upstash
 - **Content Analysis** - Filtrage du contenu suspect
 - **Input Validation** - Validation des entrées utilisateur
 
@@ -90,7 +90,7 @@ au-roi-lion/
 - [Booking.com](https://www.booking.com/hotel/fr/au-roi-lion-place-saint-michel.fr.html)
 
 ## 📞 Contact
-- **Site Web**: [www.au-roi-lion.fr](https://www.auroi-lion.fr)
+- **Site Web**: [auroilion.com](auroilion.com)
 - **Email**: au-roi-lion@outlook.com
 
 ## 📄 License

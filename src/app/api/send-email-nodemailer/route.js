@@ -90,7 +90,7 @@ async function sendEmailWithNodemailer(reply_to, from_name, message) {
       to: toEmail,
       replyTo: reply_to,
       subject: `Nouveau message de ${from_name}`,
-      text: `Message de: ${from_name}\nEmail de contact: ${reply_to}\n\n${message}`,
+      text: `Nouveau message de ${from_name} (${reply_to}):\n\n${message}\n\n—\nEnvoyé via le formulaire de contact de Au Roi Lion`,      
       html: `
         <html><body>
           <p><strong>Message de:</strong> ${from_name}</p>
