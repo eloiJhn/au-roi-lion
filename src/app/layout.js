@@ -2,6 +2,8 @@ import React from 'react';
 import './globals.css';
 import {NextIntlClientProvider} from 'next-intl';
 import {getLocale, getMessages} from 'next-intl/server';
+import { Analytics } from '@vercel/analytics/react';
+
 
 export const metadata = {
   title: 'My Next.js App',
@@ -17,6 +19,7 @@ export default async function RootLayout({ children }) {
       <body>
         <NextIntlClientProvider messages={messages}>
           {children}
+          <Analytics />
         </NextIntlClientProvider>
       </body>
     </html>
