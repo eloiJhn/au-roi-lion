@@ -1,32 +1,48 @@
-import { LRUCache } from 'lru-cache';
+import { Redis } from '@upstash/redis';
 
-const rateLimit = (options) => {
-  const tokenCache = new LRUCache({
-    max: options.uniqueTokenPerInterval || 500,
-    ttl: options.interval || 60000,
-  });
+// Initialiser Redis client
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+export function rateLimit(options = {}) {
+  const {
+    interval = 60 * 1000, // 1 minute par défaut
+    uniqueTokenPerInterval = 500,
+  } = options;
+
+  // Convertir l'intervalle en secondes pour Redis
+  const intervalSeconds = Math.ceil(interval / 1000);
 
   return {
-    check: (request, limit, token) =>
-      new Promise((resolve, reject) => {
-        let tokenCount = tokenCache.get(token) || [0];
-        
-        if (tokenCount[0] === 0) {
-          tokenCache.set(token, tokenCount);
-        }
-        tokenCount[0] += 1;
-
-        const currentUsage = tokenCount[0];
-        const isRateLimited = currentUsage > limit;
-
-
-        if (isRateLimited) {
-          reject(new Error('Too Many Requests'));
-        } else {
-          resolve();
-        }
-      }),
+    check: async (request, limit, token) => {
+      // Identifier l'utilisateur (par IP ou token)
+      const identifier = token || request.headers.get('x-forwarded-for') || 'anonymous';
+      
+      // Clé unique pour Redis
+      const key = `ratelimit:${identifier}`;
+      
+      // Récupérer le compteur actuel
+      let currentRequests = await redis.get(key);
+      
+      // Première requête
+      if (!currentRequests) {
+        await redis.set(key, 1, { ex: intervalSeconds });
+        return;
+      }
+      
+      currentRequests = parseInt(currentRequests, 10);
+      
+      // Vérifier la limite
+      if (currentRequests >= limit) {
+        throw new Error('Too Many Requests');
+      }
+      
+      // Incrémenter le compteur
+      await redis.incr(key);
+      
+      return;
+    }
   };
-};
-
-export { rateLimit };
+}
