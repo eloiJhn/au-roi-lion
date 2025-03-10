@@ -11,25 +11,23 @@ export const metadata = {
   description: 'Appartement de charme de 60m² du XVIIe siècle au centre historique de Dijon, vue sur l\'église Saint Michel',
   keywords: 'location, Dijon, appartement, charme, centre ville, vacances',
   icons: {
-    icon: '/assets/logo-rounded.png', // This will be used as favicon
-    apple: '/assets/logo-rounded.png', // For Apple devices
+    icon: '/logo-rounded.png', // Chemin depuis public/, pas besoin de /public/
+    apple: '/logo-rounded.png',
   },
   openGraph: {
-    images: ['/assets/logo-rounded.png'], // Fixed the path
+    images: ['/logo-rounded.png'],
     type: 'website',
     locale: 'fr_FR',
     url: 'https://www.auroilion.com',
   },
 };
 
-// Configuration du cache pour améliorer le TTFB - Format corrigé pour App Router
 export function generateHeaders() {
   return {
     'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
   };
 }
 
-// Configuration statique pour améliorer le TTFB
 export const dynamic = 'force-static';
 export const revalidate = 86400; // 24h
 
@@ -40,16 +38,13 @@ export default async function RootLayout({ children }) {
   return (
     <html lang={locale}>
     <head>
-      {/* DNS Prefetch et Preconnect pour les domaines externes */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       
-      {/* Favicon configuration */}
       <link rel="icon" href="/assets/logo.png" />
-      <link rel="apple-touch-icon" href="/assets/logo-rounded.png" />
+      <link rel="apple-touch-icon" href="/logo-rounded.png" />
       
-      {/* Préchargement des ressources critiques */}
-      <link rel="preload" href="/assets/logo-rounded.png" as="image" />
+      <link rel="preload" href="/logo-rounded.png" as="image" />
     </head>
       <body>
         <NextIntlClientProvider messages={messages}>
@@ -57,7 +52,6 @@ export default async function RootLayout({ children }) {
           <Analytics />
           <SpeedInsights />
           
-          {/* Scripts tiers chargés en différé */}
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX" 
             strategy="lazyOnload"
