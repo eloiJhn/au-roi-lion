@@ -7,8 +7,8 @@ export function Footer() {
   const contactDetails = [
     {
       label: messages.Footer?.email || "Email",
-      value: "severine.jahan@free.fr",
-      href: "mailto:severine.jahan@free.fr",
+      value: "au-roi-lion@outlook.com",
+      href: "mailto:au-roi-lion@outlook.com",
     },
     {
       label: messages.Footer?.phone || "Tél",
@@ -20,8 +20,8 @@ export function Footer() {
   const navigationLinks = [
     { href: "#photos-section", label: messages.Footer?.photos || "Photos" },
     { href: "#history-section", label: messages.Footer?.history || "Histoire" },
-    { href: "#link-section", label: messages.Footer?.links || "Lien" },
     { href: "#contact-form", label: messages.Footer?.contact || "Contact" },
+    { href: "#link-section", label: messages.Footer?.links || "Lien" },
   ];
 
   return (
