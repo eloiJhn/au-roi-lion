@@ -45,9 +45,7 @@ export default async function RootLayout({ children }) {
       <link rel="icon" href="/logo.ico" />
       <link rel="shortcut icon" href="/logo.ico" />
       <link rel="apple-touch-icon" href="/logo.ico" />
-      
-      <link rel="preload" href="/logo.ico" as="image" />
-    </head>
+      </head>
       <body>
         <NextIntlClientProvider messages={messages}>
           {children}
