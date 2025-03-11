@@ -11,11 +11,12 @@ export const metadata = {
   description: 'Appartement de charme de 60m² du XVIIe siècle au centre historique de Dijon, vue sur l\'église Saint Michel',
   keywords: 'location, Dijon, appartement, charme, centre ville, vacances',
   icons: {
-    icon: '/logo-rounded.png', // Chemin depuis public/, pas besoin de /public/
-    apple: '/logo-rounded.png',
+    icon: '/logo.ico', // Mettre à jour ici
+    apple: '/logo.ico', // Et ici
+    shortcut: '/logo.ico', // Ajouter cette ligne aussi
   },
   openGraph: {
-    images: ['/logo-rounded.png'],
+    images: ['/logo.ico'],
     type: 'website',
     locale: 'fr_FR',
     url: 'https://www.auroilion.com',
@@ -41,10 +42,11 @@ export default async function RootLayout({ children }) {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       
-      <link rel="icon" href="/assets/logo.png" />
-      <link rel="apple-touch-icon" href="/logo-rounded.png" />
+      <link rel="icon" href="/logo.ico" />
+      <link rel="shortcut icon" href="/logo.ico" />
+      <link rel="apple-touch-icon" href="/logo.ico" />
       
-      <link rel="preload" href="/logo-rounded.png" as="image" />
+      <link rel="preload" href="/logo.ico" as="image" />
     </head>
       <body>
         <NextIntlClientProvider messages={messages}>
