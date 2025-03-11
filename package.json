@@ -14,7 +14,7 @@
     "@upstash/redis": "^1.34.5",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
-    "axios": "^1.7.7",
+    "axios": "^1.8.2",
     "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",
     "express-rate-limit": "^7.4.0",
