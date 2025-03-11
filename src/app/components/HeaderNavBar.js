@@ -174,41 +174,26 @@ export function HeaderNavBar() {
     };
   }, []);
 
-  // Fonction pour gérer le clic sur un lien de navigation (ex: Photos)
-  const handleClick = (e) => {
-    e.preventDefault();
-    const href = e.currentTarget.getAttribute("href");
-    if (!href) {
-      return;
-    }
-    const targetId = href.slice(1);
-  
-    // Si mobile et menu ouvert, fermer immédiatement
-    if (isMobile && isOpen) {
-      setIsOpen(false);
-    }
-  
-    // Procéder directement au défilement sans délai
-    const targetElement = document.getElementById(targetId);
-    if (!targetElement) {
-      return;
-    }
-    
-    const navbarElement = document.querySelector(".navbar-mobile");
-    const navbarHeight = navbarElement
-      ? navbarElement.offsetHeight
-      : (isMobile ? 70 : 100);
-  
-    const rect = targetElement.getBoundingClientRect();
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const targetTop = rect.top + scrollTop;
-    const scrollToPosition = targetTop - navbarHeight;
-  
-    window.scrollTo({
-      top: scrollToPosition,
-      behavior: "smooth",
-    });
-  };
+const handleClick = (e) => {
+  e.preventDefault();
+  const href = e.currentTarget.getAttribute("href");
+  if (!href) return;
+  const targetId = href.slice(1);
+  if (isMobile && isOpen) {
+    setIsOpen(false);
+  }
+  const targetElement = document.getElementById(targetId);
+  if (!targetElement) return;
+  const navbarElement = document.querySelector(".navbar-mobile");
+  const navbarHeight = navbarElement ? navbarElement.offsetHeight : (isMobile ? 70 : 100);
+  const rect = targetElement.getBoundingClientRect();
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const targetTop = rect.top + scrollTop;
+  window.scrollTo({
+    top: targetTop - navbarHeight,
+    behavior: "smooth",
+  });
+};
 
   const navItems = [
     { href: "#photos-section", label: messages.HeaderNavBar?.photos || "Photos" },

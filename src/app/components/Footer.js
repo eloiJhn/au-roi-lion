@@ -58,6 +58,22 @@ const NavigationLinks = ({ links }) => (
       <a
         key={index}
         href={href}
+        onClick={(e) => {
+          e.preventDefault();
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            const navbarElement = document.querySelector(".navbar-mobile");
+            const navbarHeight = navbarElement ? navbarElement.offsetHeight : 70;
+            const rect = targetElement.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetTop = rect.top + scrollTop;
+            window.scrollTo({
+              top: targetTop - navbarHeight,
+              behavior: "smooth",
+            });
+          }
+        }}
         className="text-gray-200 hover:text-[#FFD700] transition duration-300 ease-in-out tracking-wide uppercase"
         style={{ letterSpacing: "1.5px" }}
       >
