@@ -14,7 +14,7 @@
     "@upstash/redis": "^1.34.5",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
-    "axios": "^1.7.7",
+    "axios": ">=1.8.2",
     "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",
     "express-rate-limit": "^7.4.0",
@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.25.9",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
@@ -72,5 +72,35 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.6.2",
     "whatwg-fetch": "^3.6.20"
+  },
+  "overrides": {
+    "@babel/runtime": "7.26.10",
+    "@testing-library/dom": {
+      "@babel/runtime": "7.26.10"
+    },
+    "@testing-library/react": {
+      "@babel/runtime": "7.26.10" 
+    },
+    "dom-helpers": {
+      "@babel/runtime": "7.26.10"
+    },
+    "i18next": {
+      "@babel/runtime": "7.26.10"
+    },
+    "i18next-browser-languagedetector": {
+      "@babel/runtime": "7.26.10"
+    },
+    "next-i18next": {
+      "@babel/runtime": "7.26.10"
+    },
+    "react-i18next": {
+      "@babel/runtime": "7.26.10"
+    },
+    "react-transition-group": {
+      "@babel/runtime": "7.26.10"
+    },
+    "regenerator-transform": {
+      "@babel/runtime": "7.26.10"
+    }
   }
 }
