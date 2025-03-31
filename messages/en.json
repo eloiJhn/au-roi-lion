@@ -29,7 +29,10 @@
   "Footer": {
     "links": "Links",
     "history": "History",
-    "contactInfo": "Contact information"
+    "contactInfo": "Contact information",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone"
   },
   "Section3": {
     "title1": "His Majesty invites you to contemplate the 16th-century Saint Michel church, famous for its Renaissance facade and considered one of the most beautiful in France, classified as a historical monument. Immerse yourself in a unique experience where modern comfort combines with the charm of the old in our carefully decorated accommodation that transports you to a world inspired by majesty and refinement. Each room invites you to daydream and remember the past in this place steeped in history.",

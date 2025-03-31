@@ -52,7 +52,7 @@ export function HeaderNavBar() {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || window.AudioContext)();
       try {
-        const response = await fetch("/lion.mp3");
+        const response = await fetch("/canon.mp3");
         const arrayBuffer = await response.arrayBuffer();
         const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
         audioBufferRef.current = audioBuffer;
@@ -249,7 +249,7 @@ const handleClick = (e) => {
                 </div>
               ))}
           </div>
-          <audio ref={audioRef} src="/lion.mp3" preload="auto" />
+          <audio ref={audioRef} src="/canon.mp3" preload="auto" />
         </div>
 
         <div className="hidden md:flex items-center space-x-6 text-white font-semibold">
@@ -307,11 +307,6 @@ const handleClick = (e) => {
           </div>
         </div>
       )}
-
-      <audio ref={audioRef} loop>
-        <source src="/lion.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
 
       <style>{`
         @keyframes rotate360 {

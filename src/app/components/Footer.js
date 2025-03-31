@@ -6,14 +6,19 @@ export function Footer() {
 
   const contactDetails = [
     {
+      label: messages.Footer?.name || "Nom",
+      value: "Severine",
+      href: "https://www.linkedin.com/in/s%C3%A9verine-jahan-b3890831"
+    },
+    {
       label: messages.Footer?.email || "Email",
       value: "au-roi-lion@outlook.com",
       href: "mailto:au-roi-lion@outlook.com",
     },
     {
       label: messages.Footer?.phone || "Tél",
-      value: "076100601",
-      href: "tel:076100601",
+      value: "0761006014",
+      href: "tel:0761006014",
     },
   ];
 
@@ -21,7 +26,7 @@ export function Footer() {
     { href: "#photos-section", label: messages.Footer?.photos || "Photos" },
     { href: "#history-section", label: messages.Footer?.history || "Histoire" },
     { href: "#contact-form", label: messages.Footer?.contact || "Contact" },
-    { href: "#link-section", label: messages.Footer?.links || "Lien" },
+    { href: "#link-section", label: messages.Footer?.links || "test" },
   ];
 
   return (
@@ -41,12 +46,16 @@ const ContactDetails = ({ details, title }) => (
     {details.map(({ label, value, href }, index) => (
       <p key={index} className="text-sm mb-1">
         {label}:{" "}
-        <a
-          href={href}
-          className="underline text-[#FFD700] hover:text-white transition duration-300 ease-in-out"
-        >
-          {value}
-        </a>
+        {href ? (
+          <a
+            href={href}
+            className="underline text-[#FFD700] hover:text-white transition duration-300 ease-in-out"
+          >
+            {value}
+          </a>
+        ) : (
+          <span className="text-[#FFD700]">{value}</span>
+        )}
       </p>
     ))}
   </div>
