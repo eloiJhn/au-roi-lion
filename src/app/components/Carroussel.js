@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { EffectCoverflow, Pagination, Navigation } from "swiper";
+import SwiperCore, { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper";
 import { ArrowsPointingInIcon } from "@heroicons/react/24/solid";
 import "swiper/swiper-bundle.min.css";
 
-SwiperCore.use([EffectCoverflow, Pagination, Navigation]);
+SwiperCore.use([EffectCoverflow, Pagination, Navigation, Autoplay]);
 
 export function Carousel({ images, openModal, modalOpen, closeModal }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [slidesPerView, setSlidesPerView] = useState(getSlidesPerView());
   const [modalIndex, setModalIndex] = useState(0);
+  const [autoplayEnabled, setAutoplayEnabled] = useState(true);
   const swiperRef = useRef(null);
 
   function getSlidesPerView() {
@@ -28,7 +29,20 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
     swiperRef.current?.swiper?.update();
   }, [slidesPerView]);
 
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [modalOpen]);
+
   const handleSlideChange = (swiper) => setActiveIndex(swiper.realIndex);
+  
   const handleModalNavigation = (direction) => {
     setModalIndex((prev) => (prev + direction + images.length) % images.length);
   };
@@ -36,6 +50,13 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
   const handleOpenModal = (index) => {
     setModalIndex(index);
     openModal(index);
+  };
+
+  const handleUserInteraction = () => {
+    setAutoplayEnabled(false);
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.autoplay.stop();
+    }
   };
 
   return (
@@ -70,7 +91,17 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         }}
+        autoplay={{
+          delay: 2000,
+          disableOnInteraction: true,
+        }}
         onSlideChange={handleSlideChange}
+        onTouchStart={handleUserInteraction}
+        onReachEnd={() => {
+          if (autoplayEnabled && swiperRef.current && swiperRef.current.swiper) {
+            swiperRef.current.swiper.autoplay.start();
+          }
+        }}
         className="mySwiper"
       >
         {images.map((src, index) => (
@@ -79,17 +110,26 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
               src={src}
               alt={`Slide ${index}`}
               className="w-full h-96 object-cover cursor-pointer"
-              onClick={() => handleOpenModal(index)}
+              onClick={() => {
+                handleUserInteraction();
+                handleOpenModal(index);
+              }}
             />
           </SwiperSlide>
         ))}
       </Swiper>
       <div className="custom-swiper-pagination"></div>
 
-      <div className="absolute inset-y-0 left-2 custom-swiper-button-prev flex items-center hidden sm:flex">
+      <div 
+        className="absolute inset-y-0 left-2 custom-swiper-button-prev flex items-center hidden sm:flex"
+        onClick={handleUserInteraction}
+      >
         <div className="swiper-button-prev"></div>
       </div>
-      <div className="absolute inset-y-0 right-2 custom-swiper-button-next flex items-center hidden sm:flex">
+      <div 
+        className="absolute inset-y-0 right-2 custom-swiper-button-next flex items-center hidden sm:flex"
+        onClick={handleUserInteraction}
+      >
         <div className="swiper-button-next"></div>
       </div>
 
@@ -105,6 +145,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
             <div
               className="modal-close absolute top-4 right-4 text-white text-2xl cursor-pointer"
               onClick={closeModal}
+              style={{ position: "fixed" }}
             >
               &times;
             </div>
@@ -122,6 +163,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
               src={images[modalIndex]}
               alt={`Image ${modalIndex}`}
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full max-h-full object-contain"
+              style={{ position: "fixed" }}
             />
             <button
               className="absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer"
@@ -129,6 +171,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                 e.stopPropagation();
                 handleModalNavigation(-1);
               }}
+              style={{ position: "fixed" }}
             >
               <svg
                 width="40"
@@ -163,6 +206,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                 e.stopPropagation();
                 handleModalNavigation(1);
               }}
+              style={{ position: "fixed" }}
             >
               <svg
                 width="40"
