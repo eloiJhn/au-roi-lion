@@ -77,7 +77,7 @@ export function Section3() {
 
 const SectionItem = ({ Icon, text }) => (
   <div className="flex items-center space-x-4">
-    <Icon className="h-6 w-6 text-gray-700" />
+    <Icon className="h-6 w-6 text-gray-700 hover:text-[#FFD700] transition-colors duration-300" />
     <GradientText text={text} additionalClasses="text-gray-600 text-lg font-lora" />
   </div>
 );

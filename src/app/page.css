@@ -24,6 +24,7 @@
 .swiper-button-prev:hover,
 .swiper-button-next:hover {
   transform: scale(1.1);
+  background: linear-gradient(to right, #003E50, #FFD700);
 }
 
 .swiper-button-prev::after,
@@ -142,6 +143,7 @@ body.modal-open {
 
 .floating-icon:hover {
   transform: scale(1.1);
+  background-color: #FFD700;
 }
 
 .floating-icon i {
@@ -176,10 +178,11 @@ body.modal-open {
 
 .modal-close:hover,
 .modal-close:focus {
-  color: black;
+  color: #FFD700;
   text-decoration: none;
   cursor: pointer;
   transform: scale(1.1);
+  background: linear-gradient(to right, #003E50, #FFD700);
 }
 
 .fullscreen-icon-wrapper {
@@ -196,6 +199,11 @@ body.modal-open {
   position: absolute;
   top: -40px; 
   right: -6px; 
+  transition: background 0.3s ease;
+}
+
+.fullscreen-icon:hover {
+  background: linear-gradient(to right, #003E50, #FFD700);
 }
 
 .modal-swiper-button-prev,
@@ -226,6 +234,7 @@ body.modal-open {
 .modal-swiper-button-prev:hover,
 .modal-swiper-button-next:hover {
   transform: scale(1.1) translateY(-50%);
+  background: linear-gradient(to right, #003E50, #FFD700);
 }
 
 .modal-swiper-button-prev:after,
@@ -281,7 +290,7 @@ input[type="reset"]:hover ~ #custom-cursor {
 }
 
 ::-webkit-scrollbar-thumb:hover {  
-  background: linear-gradient(to right, #003E50, #5AA088);
+  background: linear-gradient(to right, #003E50, #FFD700);
 }
 
 * {
@@ -347,4 +356,21 @@ input[type="reset"]:hover ~ #custom-cursor {
 .swiper-slide-next, 
 .swiper-slide-prev {
   opacity: 0.8;
+}
+
+/* Ajout d'une classe générique pour tous les éléments survolables */
+a:hover, button:hover, 
+[role="button"]:hover,
+input[type="submit"]:hover, 
+input[type="button"]:hover, 
+input[type="reset"]:hover,
+.hover-effect:hover {
+  color: #FFD700 !important;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Règle pour les boutons avec gradient au survol */
+.btn-gradient:hover {
+  background: linear-gradient(to right, #003E50, #FFD700) !important;
+  transition: background 0.3s ease;
 }

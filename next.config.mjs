@@ -13,7 +13,7 @@ const nextConfig = {
   // Optimisation du JavaScript
   swcMinify: true,
   // Compression Gzip
-  compress: true,
+  compress: process.env.NODE_ENV === 'production',
   // Cache des pages statiques
   staticPageGenerationTimeout: 120,
   // Optimisation des polices
@@ -34,7 +34,7 @@ const nextConfig = {
       headers: [
         {
           key: 'Cache-Control',
-          value: 'public, max-age=3600, must-revalidate',
+          value: 'no-store, must-revalidate',
         },
       ],
     },

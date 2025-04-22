@@ -202,7 +202,7 @@ function HomeContent(props) {
 
         {isAtTop && (
   <div
-    className="floating-icon text-white bg-gradient-to-r from-[#003E50] to-[#5AA088] p-2 rounded-full"
+    className="floating-icon text-white bg-gradient-to-r from-[#003E50] to-[#5AA088] p-2 rounded-full hover:bg-gradient-to-r hover:from-[#FFD700] hover:to-[#FFA500] transition-colors duration-300"
     onClick={props.togglePriceInfo}
   >
     <i className="pi pi-info-circle"></i>

@@ -6,6 +6,16 @@ import "swiper/swiper-bundle.min.css";
 
 SwiperCore.use([EffectCoverflow, Pagination, Navigation, Autoplay]);
 
+// Define the gradient for SVG strokes
+const svgGradient = (
+  <defs>
+    <linearGradient id="arrow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stopColor="#003E50" />
+      <stop offset="100%" stopColor="#FFD700" />
+    </linearGradient>
+  </defs>
+);
+
 export function Carousel({ images, openModal, modalOpen, closeModal }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [slidesPerView, setSlidesPerView] = useState(getSlidesPerView());
@@ -63,7 +73,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
     <div className="max-w-6xl mx-auto mt-20 relative">
       <div className="flex justify-end mb-4">
         <div
-          className="fullscreen-icon mr-4 mb-4 sm:mr-2 sm:mb-2"
+          className="fullscreen-icon mr-4 mb-4 sm:mr-2 sm:mb-2 hover:bg-gradient-to-r hover:from-[#003E50] hover:to-[#FFD700] transition-all duration-300 p-2 rounded-full cursor-pointer"
           onClick={() => handleOpenModal(activeIndex)}
           id="photos-section"
         >
@@ -87,10 +97,6 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
           slideShadows: true,
         }}
         pagination={{ clickable: true, el: ".custom-swiper-pagination" }}
-        navigation={{
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        }}
         autoplay={{
           delay: 2000,
           disableOnInteraction: true,
@@ -109,7 +115,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
             <img
               src={src}
               alt={`Slide ${index}`}
-              className="w-full h-96 object-cover cursor-pointer"
+              className="w-full h-96 object-cover cursor-pointer hover:ring-2 hover:ring-[#FFD700] transition-all duration-300"
               onClick={() => {
                 handleUserInteraction();
                 handleOpenModal(index);
@@ -117,21 +123,61 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
             />
           </SwiperSlide>
         ))}
+        <svg width="0" height="0" style={{ position: 'absolute' }}>{svgGradient}</svg>
       </Swiper>
       <div className="custom-swiper-pagination"></div>
 
-      <div 
-        className="absolute inset-y-0 left-2 custom-swiper-button-prev flex items-center hidden sm:flex"
-        onClick={handleUserInteraction}
+      <button 
+        className="custom-arrow custom-arrow-prev absolute inset-y-0 left-2 my-auto flex items-center justify-center hidden sm:flex z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
+        style={{ height: '40px', width: '40px' }}
+        onClick={() => {
+          handleUserInteraction();
+          swiperRef.current?.swiper?.slidePrev();
+        }}
       >
-        <div className="swiper-button-prev"></div>
-      </div>
-      <div 
-        className="absolute inset-y-0 right-2 custom-swiper-button-next flex items-center hidden sm:flex"
-        onClick={handleUserInteraction}
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="arrow-svg"
+        >
+          <path 
+            d="M15 18L9 12L15 6" 
+            stroke="white"
+            strokeWidth="3"
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+
+      <button 
+        className="custom-arrow custom-arrow-next absolute inset-y-0 right-2 my-auto flex items-center justify-center hidden sm:flex z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
+        style={{ height: '40px', width: '40px' }}
+        onClick={() => {
+          handleUserInteraction();
+          swiperRef.current?.swiper?.slideNext();
+        }}
       >
-        <div className="swiper-button-next"></div>
-      </div>
+         <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="arrow-svg"
+        >
+          <path 
+            d="M9 18L15 12L9 6" 
+            stroke="white"
+            strokeWidth="3"
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
 
       {modalOpen && (
         <div
@@ -143,13 +189,13 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="modal-close absolute top-4 right-4 text-white text-2xl cursor-pointer"
+              className="modal-close absolute top-4 right-4 text-white text-2xl cursor-pointer z-10"
               onClick={closeModal}
               style={{ position: "fixed" }}
             >
               &times;
             </div>
-            <div className="flex w-full h-full">
+            <div className="absolute inset-0 flex w-full h-full">
               <div
                 className="w-1/2 h-full cursor-pointer"
                 onClick={() => handleModalNavigation(-1)}
@@ -166,78 +212,59 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
               style={{ position: "fixed" }}
             />
             <button
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer"
+              className="custom-arrow custom-arrow-prev absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 focus:outline-none z-10"
+              style={{ position: "fixed", height: '40px', width: '40px' }}
               onClick={(e) => {
                 e.stopPropagation();
                 handleModalNavigation(-1);
               }}
-              style={{ position: "fixed" }}
             >
               <svg
-                width="40"
-                height="40"
+                width="24" 
+                height="24"
                 viewBox="0 0 24 24"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className="arrow-svg"
               >
-                <path
-                  d="M15 18l-6-6 6-6"
-                  stroke="url(#gradient-left)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <defs>
-                  <linearGradient
-                    id="gradient-left"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor="#003E50" />
-                    <stop offset="100%" stopColor="#5AA088" />
-                  </linearGradient>
-                </defs>
+                <path d="M15 18L9 12L15 6" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
             <button
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+              className="custom-arrow custom-arrow-next absolute top-1/2 right-8 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 focus:outline-none z-10"
+              style={{ position: "fixed", height: '40px', width: '40px' }}
               onClick={(e) => {
                 e.stopPropagation();
                 handleModalNavigation(1);
               }}
-              style={{ position: "fixed" }}
             >
               <svg
-                width="40"
-                height="40"
+                width="24" 
+                height="24"
                 viewBox="0 0 24 24"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className="arrow-svg"
               >
-                <path
-                  d="M9 18l6-6-6-6"
-                  stroke="url(#gradient-right)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <defs>
-                  <linearGradient
-                    id="gradient-right"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor="#003E50" />
-                    <stop offset="100%" stopColor="#5AA088" />
-                  </linearGradient>
-                </defs>
+                <path d="M9 18L15 12L9 6" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
           </div>
         </div>
       )}
+      <style jsx>{`
+        .custom-arrow:hover .arrow-svg path {
+          stroke: url(#arrow-gradient);
+          transition: stroke 0.3s ease;
+        }
+        .fullscreen-icon {
+          background-color: rgba(0, 0, 0, 0.5);
+          border-radius: 9999px;
+        }
+        .fullscreen-icon:hover {
+           background-color: rgba(0, 0, 0, 0.75);
+        }
+      `}</style>
     </div>
   );
 }

@@ -4,10 +4,52 @@ import { logger } from '../../utils/logger';
 import { rateLimit } from '../../utils/rateLimiter';
 import { validateEmail, validateName, validateMessage } from '../../utils/Validator';
 
+// Création d'un pool de connexions SMTP optimisé
+const transporter = nodemailer.createTransport({
+  pool: true,
+  host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
+  port: process.env.SMTP_PORT || 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+  maxConnections: 5,
+  maxMessages: 100,
+  rateDelta: 1000,
+  rateLimit: 3,
+  // Optimisations pour la vitesse
+  socketTimeout: 5000,
+  connectionTimeout: 5000,
+  greetingTimeout: 5000,
+  dnsTimeout: 5000,
+  debug: false,
+  logger: false
+});
+
+// Pré-établir les connexions
+transporter.verify().catch(console.error);
+
 const limiter = rateLimit({
   uniqueTokenPerInterval: 500,
   interval: 60000,
 });
+
+// Fonction d'échappement HTML optimisée
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Validation de la longueur du message
+function validateMessageLength(message) {
+  const MAX_MESSAGE_LENGTH = 5000;
+  return message.length <= MAX_MESSAGE_LENGTH;
+}
 
 export async function POST(request) {
   try {
@@ -21,10 +63,8 @@ export async function POST(request) {
     const body = await request.json();
     const { from_name, reply_to, message } = body;
 
-    logger.info("POST - Données reçues", { from_name, reply_to });
-
+    // Validation rapide
     if (!from_name || !reply_to || !message) {
-      logger.error("POST - Champs requis manquants");
       return new Response(JSON.stringify({ message: "Champs requis manquants" }), { status: 400 });
     }
 
@@ -37,14 +77,24 @@ export async function POST(request) {
     if (!validateMessage(message)) {
       return new Response(JSON.stringify({ message: "Message invalide" }), { status: 400 });
     }
+    if (!validateMessageLength(message)) {
+      return new Response(JSON.stringify({ message: "Le message est trop long" }), { status: 400 });
+    }
 
-    const spamCheck = analyzeContent(message);
+    // Vérification de spam en parallèle avec la préparation de l'email
+    const [spamCheck, escapedMessage, escapedName, escapedEmail] = await Promise.all([
+      analyzeContent(message),
+      Promise.resolve(escapeHtml(message)),
+      Promise.resolve(escapeHtml(from_name)),
+      Promise.resolve(escapeHtml(reply_to))
+    ]);
+
     if (spamCheck === 'spam') {
       return new Response(JSON.stringify({ message: "Le contenu est détecté comme spam" }), { status: 400 });
     }
 
     try {
-      const response = await sendEmailWithNodemailer(reply_to, from_name, message);
+      const response = await sendEmailWithNodemailer(escapedEmail, escapedName, escapedMessage);
       return new Response(JSON.stringify({ message: "Email envoyé avec succès" }), { status: 200 });
     } catch (error) {
       logger.error("POST - Échec de l'envoi de l'email", { error: error.message });
@@ -60,31 +110,14 @@ export async function POST(request) {
 }
 
 async function sendEmailWithNodemailer(reply_to, from_name, message) {
-  // Variables d'environnement SMTP
-  const smtpHost = process.env.SMTP_HOST;
-  const smtpPort = process.env.SMTP_PORT;
-  const smtpUser = process.env.SMTP_USER;
-  const smtpPass = process.env.SMTP_PASS;
   const toEmail = process.env.TO_EMAIL;
   const fromEmail = process.env.FROM_EMAIL;
 
-  if (!smtpUser || !smtpPass || !toEmail) {
-    throw new Error("Les informations de configuration SMTP sont requises");
+  if (!toEmail) {
+    throw new Error("L'adresse email de destination est requise");
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: smtpHost || "smtp-relay.brevo.com",
-      port: smtpPort || 587,
-      secure: false,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    });
-
-    await transporter.verify();
-
     const mailOptions = {
       from: `"Le Roi Lion" <${fromEmail || toEmail}>`,
       to: toEmail,

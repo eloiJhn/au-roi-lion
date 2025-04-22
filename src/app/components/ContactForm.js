@@ -171,7 +171,7 @@ export function ContactForm({
             id="from_name"
             value={formData.from_name}
             onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300"
             required
           />
         </div>
@@ -193,7 +193,7 @@ export function ContactForm({
             id="reply_to"
             value={formData.reply_to}
             onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300"
             required
           />
         </div>
@@ -215,14 +215,14 @@ export function ContactForm({
             rows="4"
             value={formData.message}
             onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300"
             required
           ></textarea>
         </div>
         <div className="flex justify-center">
           <button
             type="submit"
-            className="px-6 py-2 border text-base font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2"
+            className="px-6 py-2 border text-base font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 hover:ring-2 hover:ring-[#FFD700] transition-all duration-300"
             style={{
               background: "linear-gradient(to right, #003E50, #5AA088)",
               border: "none",
@@ -239,6 +239,7 @@ export function ContactForm({
                 padding: "10px 24px",
                 color: "white",
               }}
+              className="hover:bg-gradient-to-r hover:from-[#003E50] hover:to-[#FFD700] transition-all duration-300"
             >
               {isSending
                 ? messages.ContactForm?.sending_in_progress || "Envoi en cours..."

@@ -60,7 +60,7 @@ export function Section4({ handleAirbnbClick, handleBookingClick, showBackToTop 
         >
           <button onClick={handleBackToTop}>
             <div
-              className="h-12 w-12 rounded-full flex items-center justify-center shadow-md bg-gradient-to-r from-[#003E50] to-[#5AA088] hover:shadow-lg"
+              className="h-12 w-12 rounded-full flex items-center justify-center shadow-md bg-gradient-to-r from-[#003E50] to-[#5AA088] hover:bg-gradient-to-r hover:from-[#003E50] hover:to-[#FFD700] transition-all duration-300 hover:shadow-lg"
             >
               <ChevronUpIcon className="h-6 w-6 text-white" />
             </div>

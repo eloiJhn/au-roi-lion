@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Music } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
@@ -11,11 +11,31 @@ export function HeaderNavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const logoRef = useRef(null);
+  const rotationAnimation = useRef(null);
   
   const router = useRouter();
   const pathname = usePathname();
   const { currentLocale, messages, switchLanguage } = useContext(TranslationContext);
 
+  useEffect(() => {
+    if (!logoRef.current) return;
+  
+    if (musicPlaying) {
+      if (rotationAnimation.current) {
+        rotationAnimation.current.play();
+      } else {
+        rotationAnimation.current = logoRef.current.animate(
+          [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
+          { duration: 3000, iterations: Infinity, easing: 'linear' }
+        );
+      }
+    } else if (rotationAnimation.current) {
+      rotationAnimation.current.pause();
+    }
+  
+  }, [musicPlaying]);
+  
   // Fonction pour indiquer que la musique est en cours de lecture
   const onMusicStatusChange = (isPlaying) => {
     setMusicPlaying(isPlaying);
@@ -81,19 +101,16 @@ export function HeaderNavBar() {
     <nav className="navbar-mobile bg-gradient-to-r from-[#003E50] to-[#5AA088] p-4 shadow-lg">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <div
-            className="logo-container relative w-28 h-28 group"
-          >
+          <div className="logo-container relative w-28 h-28 group">
             <div
-              className={`absolute inset-0 transition-transform duration-500 ${
-                musicPlaying ? "rotate-360" : ""
-              }`}
+              className="absolute inset-0"
+              ref={logoRef}
+              data-testid="logo-element"
             >
               <img
                 src="/assets/logo.png"
                 alt="Logo"
-                className={`w-full h-full rounded-full transition-transform duration-500 ease-out ${musicPlaying ? 'ring-2 ring-[#FFD700]' : ''}`}
-                style={{ transform: musicPlaying ? "rotate(360deg)" : "rotate(0deg)" }}
+                className={`w-full h-full rounded-full ${musicPlaying ? 'ring-2 ring-[#FFD700]' : ''}`}
               />
               {musicPlaying &&
                 [...Array(4)].map((_, i) => (
@@ -112,19 +129,20 @@ export function HeaderNavBar() {
                     <Music
                       size={34}
                       style={{
-                        color: musicPlaying ? "#FFD700" : "white",
+                        color: "#FFD700",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                       }}
+                      className="hover:text-[#FFD700] transition-colors duration-300"
                     />
                   </div>
                 ))}
             </div>
           </div>
           
-          {/* Lecteur audio placé à droite du logo */}
+          {/* Lecteur audio placé à droite du logo - visible en version desktop */}
           <div className="hidden md:flex ml-4" style={{ width: '240px' }}>
-            <AudioPlayer onStatusChange={onMusicStatusChange} />
+            <AudioPlayer onStatusChange={onMusicStatusChange} id="shared-player" />
           </div>
         </div>
 
@@ -164,16 +182,16 @@ export function HeaderNavBar() {
           </button>
           <button
             onClick={toggleMenu}
-            className="text-white p-2 focus:outline-none"
+            className="text-white p-2 focus:outline-none hover:text-[#FFD700]"
           >
-            {isOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
+            {isOpen ? <XMarkIcon className="h-6 w-6 hover:text-[#FFD700] transition-colors duration-300" /> : <Bars3Icon className="h-6 w-6 hover:text-[#FFD700] transition-colors duration-300" />}
           </button>
         </div>
       </div>
 
-      {/* Lecteur audio fixe pour mobile (visible même quand le menu est fermé) */}
+      {/* Lecteur audio fixe pour mobile - même instance que desktop mais visible en mobile */}
       <div className="md:hidden w-full px-4 mt-2">
-        <AudioPlayer onStatusChange={onMusicStatusChange} />
+        <AudioPlayer onStatusChange={onMusicStatusChange} id="shared-player" />
       </div>
 
       {isOpen && (
@@ -197,16 +215,6 @@ export function HeaderNavBar() {
       )}
 
       <style>{`
-        @keyframes rotate360 {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .rotate-360 {
-          animation: rotate360 3s linear infinite;
-        }
-        .logo-container img {
-          transition: transform 0.5s ease-out;
-        }
         @keyframes notes {
           0% {
             transform: translate(-50%, -50%) scale(1);
