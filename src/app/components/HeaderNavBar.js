@@ -11,12 +11,26 @@ export function HeaderNavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [ringColor, setRingColor] = useState("#FFD700"); // Store the ring color in state
   const logoRef = useRef(null);
   const rotationAnimation = useRef(null);
   
   const router = useRouter();
   const pathname = usePathname();
   const { currentLocale, messages, switchLanguage } = useContext(TranslationContext);
+
+  // Function to reset ring color to original
+  const resetRingColor = () => {
+    setRingColor("#FFD700"); // Reset to the original gold color
+  };
+
+  // Function to handle logo click
+  const handleLogoClick = () => {
+    if (musicPlaying) {
+      // Toggle between yellow and the base blue color
+      setRingColor(ringColor === "#FFD700" ? "#003E50" : "#FFD700");
+    }
+  };
 
   useEffect(() => {
     if (!logoRef.current) return;
@@ -142,13 +156,17 @@ export function HeaderNavBar() {
               className="absolute inset-0"
               ref={logoRef}
               data-testid="logo-element"
+              onClick={handleLogoClick}
             >
               <img
                 src="/assets/logo.png"
                 alt="Logo"
-                className={`w-full h-full rounded-full ${musicPlaying ? 'ring-2 ring-[#FFD700]' : ''}`}
+                className={`w-full h-full rounded-full ${musicPlaying ? 'ring-4' : ''}`}
                 loading="eager"
-                style={{ willChange: musicPlaying ? 'transform' : 'auto' }}
+                style={{ 
+                  willChange: musicPlaying ? 'transform' : 'auto',
+                  ...(musicPlaying && { borderColor: `${ringColor} !important` })
+                }}
               />
               {musicPlaying &&
                 [...Array(noteCount)].map((_, i) => (

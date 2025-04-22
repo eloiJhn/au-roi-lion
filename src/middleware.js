@@ -15,7 +15,7 @@ export function middleware(request) {
     'X-Frame-Options': 'SAMEORIGIN',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   };
 
   // CSP différente pour production et développement
