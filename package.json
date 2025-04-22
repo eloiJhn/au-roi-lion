@@ -91,7 +91,9 @@
       "@babel/runtime": "7.26.10"
     },
     "@testing-library/react": {
-      "@babel/runtime": "7.26.10"
+      "@babel/runtime": "7.26.10",
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0"
     },
     "dom-helpers": {
       "@babel/runtime": "7.26.10"
