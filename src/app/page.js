@@ -183,9 +183,9 @@ function HomeContent(props) {
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
       scriptProps={{
-        async: false,
-        defer: false,
-        appendTo: "head",
+        async: true,
+        defer: true,
+        appendTo: "body",
         nonce: undefined,
       }}
     >

@@ -37,6 +37,7 @@ export function ContactForm({
       toast.current?.show({
         severity: "error",
         summary: messages.ContactForm?.recaptcha_not_available || "Exécution de recaptcha non disponible pour le moment",
+        detail: "Vérifiez que vous n'utilisez pas de bloqueur de publicités et réessayez.",
         life: 3000,
       });
       return;
@@ -69,7 +70,22 @@ export function ContactForm({
     setIsSending(true);
 
     try {
-      const token = await executeRecaptcha("submit_form");
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      let token;
+      try {
+        token = await executeRecaptcha("submit_form");
+      } catch (recaptchaError) {
+        console.error("ReCAPTCHA execution error:", recaptchaError);
+        toast.current?.show({
+          severity: "error",
+          summary: "Erreur ReCAPTCHA",
+          detail: "Erreur lors de la vérification ReCAPTCHA. Vérifiez que vous n'utilisez pas de bloqueur de publicités.",
+          life: 3000,
+        });
+        setIsSending(false);
+        return;
+      }
 
       const recaptchaResponse = await fetch("/api/validate-recaptcha", {
         method: "POST",
@@ -78,7 +94,8 @@ export function ContactForm({
       });
 
       if (!recaptchaResponse.ok) {
-        throw new Error(messages.ContactForm?.recaptcha_failed || "La validation reCAPTCHA a échoué");
+        const errorData = await recaptchaResponse.json();
+        throw new Error(errorData.error || messages.ContactForm?.recaptcha_failed || "La validation reCAPTCHA a échoué");
       }
 
       const emailResponse = await fetch("/api/send-email-nodemailer", {

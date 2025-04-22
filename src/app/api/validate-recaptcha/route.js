@@ -99,7 +99,7 @@ async function verifyRecaptcha(token) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: `secret=${secretKey}&response=${token}`,
-      signal: AbortSignal.timeout(3000) // Augmenté à 3 secondes
+      signal: AbortSignal.timeout(5000) // Augmenté à 5 secondes pour donner plus de temps
     });
 
     if (!response.ok) {
@@ -115,6 +115,7 @@ async function verifyRecaptcha(token) {
 
     // En mode développement ou en cas d'erreur réseau, on accepte le token
     if (process.env.NODE_ENV === 'development' || error.name === 'AbortError' || error.message.includes('fetch failed')) {
+      logger.warn("Bypassing reCAPTCHA verification due to network error or development environment");
       return {
         success: true,
         score: 0.7,
@@ -132,5 +133,11 @@ function jsonResponse(body, status = 200) {
 function handleError(error) {
   const status = error.message === "Token is missing" ? 400 : 500;
   logger.error("Error during reCAPTCHA verification", { error: error.message });
-  return jsonResponse({ success: false, error: error.message }, status);
+  
+  // En production, ne pas exposer les détails de l'erreur
+  const errorMessage = process.env.NODE_ENV === 'production' 
+    ? "Échec de la vérification de sécurité" 
+    : error.message;
+    
+  return jsonResponse({ success: false, error: errorMessage }, status);
 }

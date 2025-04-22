@@ -15,7 +15,7 @@ export function middleware(request) {
     'X-Frame-Options': 'SAMEORIGIN',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
   };
 
   // CSP différente pour production et développement
@@ -23,12 +23,12 @@ export function middleware(request) {
     // CSP plus stricte en production
     securityHeaders['Content-Security-Policy'] = `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://*.vercel-scripts.com https://*.vercel-analytics.com;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://*.vercel-scripts.com https://*.vercel-analytics.com https://*.vercel-insights.com https://va.vercel-analytics.com;
       style-src 'self' 'unsafe-inline';
       img-src 'self' data: https:;
       font-src 'self' data:;
-      connect-src 'self' https://*.vercel-scripts.com https://*.vercel-insights.com https://va.vercel-analytics.com;
-      frame-src 'self' https://www.google.com/recaptcha/;
+      connect-src 'self' https://www.google.com https://*.vercel-scripts.com https://*.vercel-insights.com https://va.vercel-analytics.com https://*.vercel-analytics.com;
+      frame-src 'self' https://www.google.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
       base-uri 'self';
       form-action 'self';
     `.replace(/\s+/g, ' ').trim();
