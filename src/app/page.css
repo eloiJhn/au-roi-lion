@@ -105,7 +105,7 @@ body.modal-open {
   color: white;
   font-size: 20px;
   font-weight: bold;
-  transition: transform 0.3s;
+  transition: transform 0.2s;
   background: linear-gradient(to right, #003E50, #5AA088);
   border-radius: 50%;
   width: 40px;
@@ -115,6 +115,7 @@ body.modal-open {
   justify-content: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  will-change: transform;
 }
 
 .navbar-mobile {
@@ -137,8 +138,9 @@ body.modal-open {
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 10 !important;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   z-index: 5; 
+  will-change: transform;
 }
 
 .floating-icon:hover {
@@ -162,7 +164,8 @@ body.modal-open {
   font-size: 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   z-index: 10000;
-  animation: slideDown 0.5s ease-out forwards;
+  animation: slideDown 0.3s ease-out forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes slideDown {
@@ -322,6 +325,7 @@ input[type="reset"]:hover ~ #custom-cursor {
 
 .group-hover\:rotate-360:hover {
   animation: rotate360 2s linear infinite;
+  will-change: transform;
 }
 
 @keyframes float {
@@ -329,28 +333,30 @@ input[type="reset"]:hover ~ #custom-cursor {
   50% { transform: translateY(-10px); }
 }
 
-.animate-float-0 { animation: float 2s ease-in-out infinite; }
-.animate-float-1 { animation: float 2s ease-in-out 0.25s infinite; }
-.animate-float-2 { animation: float 2s ease-in-out 0.5s infinite; }
-.animate-float-3 { animation: float 2s ease-in-out 0.75s infinite; }
-.animate-float-4 { animation: float 2s ease-in-out 1s infinite; }
-.animate-float-5 { animation: float 2s ease-in-out 1.25s infinite; }
-.animate-float-6 { animation: float 2s ease-in-out 1.5s infinite; }
-.animate-float-7 { animation: float 2s ease-in-out 1.75s infinite; }
+.animate-float-0 { animation: float 2s ease-in-out infinite; will-change: transform; }
+.animate-float-1 { animation: float 2s ease-in-out 0.25s infinite; will-change: transform; }
+.animate-float-2 { animation: float 2s ease-in-out 0.5s infinite; will-change: transform; }
+.animate-float-3 { animation: float 2s ease-in-out 0.75s infinite; will-change: transform; }
+.animate-float-4 { animation: float 2s ease-in-out 1s infinite; will-change: transform; }
+.animate-float-5 { animation: float 2s ease-in-out 1.25s infinite; will-change: transform; }
+.animate-float-6 { animation: float 2s ease-in-out 1.5s infinite; will-change: transform; }
+.animate-float-7 { animation: float 2s ease-in-out 1.75s infinite; will-change: transform; }
 
 .mySwiper {
-  transition-timing-function: ease-in-out;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .swiper-slide {
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   opacity: 0.7;
+  will-change: transform, opacity;
 }
 
 .swiper-slide-active {
   opacity: 1;
   transform: scale(1.05);
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
 .swiper-slide-next, 
@@ -366,7 +372,7 @@ input[type="button"]:hover,
 input[type="reset"]:hover,
 .hover-effect:hover {
   color: #FFD700 !important;
-  transition: color 0.3s ease, transform 0.3s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 /* Règle pour les boutons avec gradient au survol */

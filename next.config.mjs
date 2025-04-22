@@ -19,26 +19,6 @@ const nextConfig = {
   // Optimisation des polices
   optimizeFonts: true,
   // Configuration du cache
-  headers: async () => [
-    {
-      source: '/:all*(svg|jpg|png)',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=31536000, immutable',
-        },
-      ],
-    },
-    {
-      source: '/:path*',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'no-store, must-revalidate',
-        },
-      ],
-    },
-  ],
 };
 
 export default withNextIntl(nextConfig);

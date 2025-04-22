@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper";
 import { ArrowsPointingInIcon } from "@heroicons/react/24/solid";
 import "swiper/swiper-bundle.min.css";
+import Image from 'next/image';
 
 SwiperCore.use([EffectCoverflow, Pagination, Navigation, Autoplay]);
 
@@ -30,7 +31,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
   }
 
   useEffect(() => {
-    const handleResize = () => setSlidesPerView(getSlidesPerView());
+    const handleResize = debounce(() => setSlidesPerView(getSlidesPerView()), 100);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -69,6 +70,19 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
     }
   };
 
+  // Fonction debounce pour limiter les appels fréquents
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
   return (
     <div className="max-w-6xl mx-auto mt-20 relative">
       <div className="flex justify-end mb-4">
@@ -96,12 +110,27 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
           modifier: 1,
           slideShadows: true,
         }}
-        pagination={{ clickable: true, el: ".custom-swiper-pagination" }}
-        autoplay={{
-          delay: 2000,
-          disableOnInteraction: true,
-        }}
+        modules={[Navigation, Pagination, Autoplay]}
         onSlideChange={handleSlideChange}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: true,
+          pauseOnMouseEnter: true,
+        }}
+        onAutoplayStart={() => {
+          setAutoplayEnabled(true);
+        }}
+        onAutoplayStop={() => {
+          setAutoplayEnabled(false);
+        }}
+        navigation={{
+          nextEl: '.custom-arrow-next',
+          prevEl: '.custom-arrow-prev',
+        }}
+        pagination={{
+          el: '.custom-swiper-pagination',
+          clickable: true,
+        }}
         onTouchStart={handleUserInteraction}
         onReachEnd={() => {
           if (autoplayEnabled && swiperRef.current && swiperRef.current.swiper) {
@@ -112,15 +141,22 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       >
         {images.map((src, index) => (
           <SwiperSlide key={index} className="flex justify-center items-center">
-            <img
-              src={src}
-              alt={`Slide ${index}`}
-              className="w-full h-96 object-cover cursor-pointer hover:ring-2 hover:ring-[#FFD700] transition-all duration-300"
-              onClick={() => {
-                handleUserInteraction();
-                handleOpenModal(index);
-              }}
-            />
+            <div className="relative w-full h-96">
+              <Image
+                src={src}
+                alt={`Slide ${index}`}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                priority={index === 0}
+                loading={index === 0 ? "eager" : "lazy"}
+                className="object-cover cursor-pointer hover:ring-2 hover:ring-[#FFD700]"
+                onClick={() => {
+                  handleUserInteraction();
+                  handleOpenModal(index);
+                }}
+                style={{ transform: 'translate3d(0, 0, 0)' }}
+              />
+            </div>
           </SwiperSlide>
         ))}
         <svg width="0" height="0" style={{ position: 'absolute' }}>{svgGradient}</svg>

@@ -61,33 +61,49 @@ const ContactDetails = ({ details, title }) => (
   </div>
 );
 
-const NavigationLinks = ({ links }) => (
-  <div className="md:w-1/2 flex justify-center md:justify-end space-x-6">
-    {links.map(({ href, label }, index) => (
-      <a
-        key={index}
-        href={href}
-        onClick={(e) => {
-          e.preventDefault();
-          const targetId = href.substring(1);
-          const targetElement = document.getElementById(targetId);
-          if (targetElement) {
-            const navbarElement = document.querySelector(".navbar-mobile");
-            const navbarHeight = navbarElement ? navbarElement.offsetHeight : 70;
-            const rect = targetElement.getBoundingClientRect();
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const targetTop = rect.top + scrollTop;
-            window.scrollTo({
-              top: targetTop - navbarHeight,
-              behavior: "smooth",
-            });
-          }
-        }}
-        className="text-gray-200 hover:text-[#FFD700] transition duration-300 ease-in-out tracking-wide uppercase"
-        style={{ letterSpacing: "1.5px" }}
-      >
-        {label}
-      </a>
-    ))}
-  </div>
-);
+const NavigationLinks = ({ links }) => {
+  // Optimisation du défilement avec throttle pour éviter les calculs excessifs
+  const throttledScroll = (fn, delay) => {
+    let lastCall = 0;
+    return function(...args) {
+      const now = new Date().getTime();
+      if (now - lastCall < delay) {
+        return;
+      }
+      lastCall = now;
+      return fn(...args);
+    };
+  };
+
+  const handleNavClick = throttledScroll((e, href) => {
+    e.preventDefault();
+    const targetId = href.substring(1);
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      const navbarElement = document.querySelector(".navbar-mobile");
+      const navbarHeight = navbarElement ? navbarElement.offsetHeight : 70;
+      
+      // Calculer la position avec transform pour améliorer les performances
+      window.scrollTo({
+        top: targetElement.offsetTop - navbarHeight,
+        behavior: "smooth"
+      });
+    }
+  }, 100); // Throttle à 100ms
+
+  return (
+    <div className="md:w-1/2 flex justify-center md:justify-end space-x-6">
+      {links.map(({ href, label }, index) => (
+        <a
+          key={index}
+          href={href}
+          onClick={(e) => handleNavClick(e, href)}
+          className="text-gray-200 hover:text-[#FFD700] transition duration-200 ease-in-out tracking-wide uppercase"
+          style={{ letterSpacing: "1.5px" }}
+        >
+          {label}
+        </a>
+      ))}
+    </div>
+  );
+};

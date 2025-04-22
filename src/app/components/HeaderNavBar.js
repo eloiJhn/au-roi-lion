@@ -97,6 +97,41 @@ export function HeaderNavBar() {
     switchLanguage(locale);
   };
 
+  // Optimisation des animations
+  const animationStyles = {
+    '@keyframes notes': {
+      '0%': {
+        transform: 'translate(-50%, -50%) scale(1)',
+        opacity: 0,
+      },
+      '50%': {
+        opacity: 1,
+        transform: 'translate(-50%, -50%) scale(1.3)',
+      },
+      '100%': {
+        transform: 'translate(-50%, -50%) scale(1)',
+        opacity: 0,
+      },
+    },
+  };
+
+  // Utiliser will-change pour indiquer au navigateur les propriétés qui changeront
+  const noteStyle = (index) => ({
+    animation: `notes 2s infinite linear`,
+    animationDelay: `${index * 0.5}s`,
+    fontSize: "24px",
+    top: ["45%", "25%", "75%", "55%"][index],
+    left: ["20%", "40%", "60%", "80%"][index],
+    transform: "translate(-50%, -50%)",
+    willChange: "transform, opacity",
+    position: "absolute",
+    transition: "opacity 300ms",
+    opacity: 1
+  });
+
+  // Réduire le nombre de notes musicales en mobile
+  const noteCount = isMobile ? 2 : 4;
+
   return (
     <nav className="navbar-mobile bg-gradient-to-r from-[#003E50] to-[#5AA088] p-4 shadow-lg">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -111,20 +146,14 @@ export function HeaderNavBar() {
                 src="/assets/logo.png"
                 alt="Logo"
                 className={`w-full h-full rounded-full ${musicPlaying ? 'ring-2 ring-[#FFD700]' : ''}`}
+                loading="eager"
+                style={{ willChange: musicPlaying ? 'transform' : 'auto' }}
               />
               {musicPlaying &&
-                [...Array(4)].map((_, i) => (
+                [...Array(noteCount)].map((_, i) => (
                   <div
                     key={i}
-                    className="absolute transition-opacity duration-300 opacity-100"
-                    style={{
-                      animation: `notes 2s infinite linear`,
-                      animationDelay: `${i * 0.5}s`,
-                      fontSize: "24px",
-                      top: ["45%", "25%", "75%", "55%"][i],
-                      left: ["20%", "40%", "60%", "80%"][i],
-                      transform: "translate(-50%, -50%)",
-                    }}
+                    style={noteStyle(i)}
                   >
                     <Music
                       size={34}
@@ -133,7 +162,6 @@ export function HeaderNavBar() {
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                       }}
-                      className="hover:text-[#FFD700] transition-colors duration-300"
                     />
                   </div>
                 ))}
@@ -214,7 +242,7 @@ export function HeaderNavBar() {
         </div>
       )}
 
-      <style>{`
+      <style jsx>{`
         @keyframes notes {
           0% {
             transform: translate(-50%, -50%) scale(1);

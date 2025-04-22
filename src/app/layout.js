@@ -42,22 +42,29 @@ export default async function RootLayout({ children }) {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       
-      <link rel="icon" href="/logo.ico" />
+      <link rel="icon" href="/logo.ico" sizes="any" />
       <link rel="shortcut icon" href="/logo.ico" />
       <link rel="apple-touch-icon" href="/logo.ico" />
-      </head>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-          <Analytics />
-          <SpeedInsights />
-          
-          <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX" 
-            strategy="lazyOnload"
-          />
-        </NextIntlClientProvider>
-      </body>
+      
+      {/* Preload critical assets */}
+      <link rel="preload" href="/assets/logo.png" as="image" />
+    </head>
+    <body>
+      <NextIntlClientProvider messages={messages}>
+        {children}
+        
+        {/* Différer le chargement des outils d'analyse */}
+        <Analytics strategy="afterInteraction" />
+        <SpeedInsights strategy="afterInteraction" />
+        
+        {/* Utiliser defer pour différer le chargement du script Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX" 
+          strategy="afterInteraction"
+          defer
+        />
+      </NextIntlClientProvider>
+    </body>
     </html>
   );
 }
