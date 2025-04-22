@@ -10,14 +10,10 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     minimumCacheTTL: 60,
   },
-  // Optimisation du JavaScript
-  swcMinify: true,
   // Compression Gzip
   compress: process.env.NODE_ENV === 'production',
   // Cache des pages statiques
   staticPageGenerationTimeout: 120,
-  // Optimisation des polices
-  optimizeFonts: true,
   // Configuration du cache
 };
 

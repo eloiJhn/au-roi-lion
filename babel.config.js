@@ -3,4 +3,8 @@ module.exports = {
     ["@babel/preset-env", { targets: { node: "current" } }],
     "@babel/preset-react"
   ],
+  plugins: [
+    "@babel/plugin-syntax-import-attributes",
+    "styled-jsx/babel"
+  ]
 };

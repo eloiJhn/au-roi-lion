@@ -29,14 +29,20 @@ let redis;
 let localLimiter;
 let useLocalLimiter = false;
 
-try {
-  redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
-} catch (error) {
-  logger.warn("Failed to initialize Redis, falling back to local rate limiter", { error: error.message });
+// En mode développement, utiliser directement le limiter local
+if (process.env.NODE_ENV === 'development') {
   useLocalLimiter = true;
+  logger.info("Development mode: using local rate limiter");
+} else {
+  try {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  } catch (error) {
+    logger.warn("Failed to initialize Redis, falling back to local rate limiter", { error: error.message });
+    useLocalLimiter = true;
+  }
 }
 
 export function rateLimit(options = {}) {
@@ -54,9 +60,9 @@ export function rateLimit(options = {}) {
   return {
     check: async (request, limit, token) => {
       try {
-        const identifier = token || request.headers.get('x-forwarded-for') || 'anonymous';
+        const identifier = token || request.headers?.get('x-forwarded-for') || 'anonymous';
         
-        if (useLocalLimiter) {
+        if (useLocalLimiter || process.env.NODE_ENV === 'development') {
           logger.debug("Using local rate limiter", { identifier });
           const allowed = await localLimiter.check(identifier, limit);
           if (!allowed) {
@@ -96,13 +102,19 @@ export function rateLimit(options = {}) {
           }
         }
       } catch (error) {
-        if (error.message === 'Too Many Requests') {
-          throw error;
-        }
-        logger.error("Rate limit check error", { 
+        logger.error("Rate limit check failed", { 
           error: error.message,
           stack: error.stack 
         });
+        
+        // En cas d'erreur et en développement, on laisse passer la requête
+        if (process.env.NODE_ENV === 'development') {
+          return;
+        }
+        
+        if (error.message === 'Too Many Requests') {
+          throw error;
+        }
         // En cas d'erreur, on laisse passer la requête
         return;
       }

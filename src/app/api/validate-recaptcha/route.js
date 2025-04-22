@@ -78,6 +78,15 @@ export async function POST(request) {
 async function verifyRecaptcha(token) {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
   if (!secretKey) {
+    logger.warn("RECAPTCHA_SECRET_KEY is not set");
+    // En mode développement, on accepte les tokens sans vérification
+    if (process.env.NODE_ENV === 'development') {
+      return {
+        success: true,
+        score: 0.9,
+        action: 'contact'
+      };
+    }
     throw new Error("Server configuration error");
   }
 
@@ -90,7 +99,7 @@ async function verifyRecaptcha(token) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: `secret=${secretKey}&response=${token}`,
-      signal: AbortSignal.timeout(1000) // Timeout après 1 seconde
+      signal: AbortSignal.timeout(3000) // Augmenté à 3 secondes
     });
 
     if (!response.ok) {
@@ -99,8 +108,13 @@ async function verifyRecaptcha(token) {
 
     return await response.json();
   } catch (error) {
-    if (error.name === 'AbortError') {
-      // En cas de timeout, on considère le token comme valide pour ne pas bloquer l'utilisateur
+    logger.error("Error during reCAPTCHA verification", { 
+      error: error.message, 
+      stack: error.stack 
+    });
+
+    // En mode développement ou en cas d'erreur réseau, on accepte le token
+    if (process.env.NODE_ENV === 'development' || error.name === 'AbortError' || error.message.includes('fetch failed')) {
       return {
         success: true,
         score: 0.7,

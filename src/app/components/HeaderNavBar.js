@@ -32,6 +32,7 @@ export function HeaderNavBar() {
       }
     } else if (rotationAnimation.current) {
       rotationAnimation.current.pause();
+      rotationAnimation.current.cancel();
     }
   
   }, [musicPlaying]);

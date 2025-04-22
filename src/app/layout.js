@@ -10,6 +10,7 @@ export const metadata = {
   title: 'Au Roi Lion',
   description: 'Appartement de charme de 60m² du XVIIe siècle au centre historique de Dijon, vue sur l\'église Saint Michel',
   keywords: 'location, Dijon, appartement, charme, centre ville, vacances',
+  metadataBase: new URL('http://localhost:3000'),
   icons: {
     icon: '/logo.ico', // Mettre à jour ici
     apple: '/logo.ico', // Et ici
