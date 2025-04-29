@@ -7,5 +7,13 @@
         "installCommand": "npm install --legacy-peer-deps"
       }
     }
+  ],
+  "routes": [
+    {
+      "src": "/api/health",
+      "dest": "/api/health",
+      "continue": true,
+      "override": true
+    }
   ]
 } 
