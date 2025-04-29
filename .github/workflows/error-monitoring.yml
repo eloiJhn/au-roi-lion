@@ -71,8 +71,8 @@ jobs:
         id: health-check
         run: |
           # Vérifier la santé de l'application 
-          # Remplacer l'URL par celle de votre application déployée
-          HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://votre-app.vercel.app/api/health || echo "failed")
+          # URL de votre application déployée
+          HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://au-roi-lion.vercel.app/api/health || echo "failed")
           echo "health_status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
           
           if [[ "$HEALTH_STATUS" != "200" ]]; then
@@ -84,6 +84,8 @@ jobs:
       - name: Create GitHub Issue for health check failure
         if: steps.health-check.outputs.health_error == 'true'
         uses: actions/github-script@v6
+        env:
+          HEALTH_STATUS: ${{ steps.health-check.outputs.health_status }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
