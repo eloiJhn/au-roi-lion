@@ -1,4 +1,4 @@
-import { logger } from '@/utils/logger';
+import { logger } from '../../src/utils/logger';
 
 export default function handler(req, res) {
   try {

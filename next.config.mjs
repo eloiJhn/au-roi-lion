@@ -1,4 +1,5 @@
 import createNextIntlPlugin from 'next-intl/plugin';
+import path from 'path';
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -15,6 +16,12 @@ const nextConfig = {
   // Cache des pages statiques
   staticPageGenerationTimeout: 120,
   // Configuration du cache
+  
+  // Configuration des alias de chemin
+  webpack: (config) => {
+    config.resolve.alias['@'] = path.join(process.cwd(), 'src');
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);
