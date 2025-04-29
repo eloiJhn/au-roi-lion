@@ -7,7 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from 'next/script';
 
 export const metadata = {
-  title: '🦁 Au Roi Lion | Appartement de charme au cœur de Dijon',
+  title: 'Au Roi Lion',
   description: 'Vivez l\'expérience exceptionnelle d\'un séjour dans un appartement du XVIIe siècle. Vue imprenable sur l\'église Saint Michel, décoration raffinée et prestations haut de gamme.',
   keywords: 'location prestige, Dijon, appartement luxe, charme, centre historique, église Saint Michel, 17ème siècle, vacances Bourgogne',
   metadataBase: new URL('https://www.auroilion.com'),
@@ -17,14 +17,15 @@ export const metadata = {
     shortcut: '/assets/logo.png',
   },
   openGraph: {
-    title: '🦁 Au Roi Lion | Luxe & Charme au cœur de Dijon',
+    title: 'Au Roi Lion',
     description: 'Vivez comme un roi dans ce somptueux appartement du XVIIe siècle en plein centre historique! Décoration raffinée vert émeraude et or, prestations haut de gamme, vue imprenable sur l\'église Saint Michel. Réservez maintenant!',
     images: [
       {
-        url: '/assets/logo.png',
-        width: 1200,
-        height: 1200,
+        url: 'https://www.auroilion.com/assets/logo.png',
+        width: 800,
+        height: 800,
         alt: 'Logo Au Roi Lion - Lion élégant habillé en costume vert sur fond bleu',
+        type: 'image/png'
       }
     ],
     type: 'website',
@@ -34,9 +35,9 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '🦁 Au Roi Lion | Séjournez dans l\'élégance à Dijon',
+    title: 'Au Roi Lion | Séjournez dans l\'élégance à Dijon',
     description: 'Un appartement royal où tradition et modernité se rencontrent. Décoré avec goût dans les tons vert émeraude et or, vous tomberez sous le charme dès les premiers instants.',
-    images: ['/assets/logo.png'],
+    images: ['https://www.auroilion.com/assets/logo.png'],
     creator: '@AuRoiLion',
   },
   other: {
