@@ -72,8 +72,8 @@ export async function POST(request) {
       // Liste des origines autorisées
       const allowedOrigins = [
         'https://au-roi-lion.vercel.app',
-        'https://www.au-roi-lion.fr', 
-        'https://au-roi-lion.fr'
+        'https://www.auroilion.com',
+        'https://auroilion.com'
       ];
       
       // Vérifier l'origine de la requête
