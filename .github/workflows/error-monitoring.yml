@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: '0 */6 * * *'  # Exécuté toutes les 6 heures
 
+# Ajout des permissions nécessaires
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   monitor:
     runs-on: ubuntu-latest
