@@ -15,7 +15,7 @@ permissions:
   # Définir les variables d'environnement
 env:
   # URL de l'application déployée (à modifier selon votre URL de déploiement)
-  VERCEL_URL: 'au-roi-lion-e6sz0snmo-eloijhns-projects.vercel.app'
+  VERCEL_URL: 'www.aurolion.com'
   # Domaine personnalisé (commenté, décommentez pour l'utiliser à la place)
   # VERCEL_URL: 'www.aurolion.com'
 
