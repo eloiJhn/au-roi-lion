@@ -91,8 +91,8 @@ jobs:
             echo "health_status=deployment_not_found" >> $GITHUB_OUTPUT
             echo "L'application n'est pas encore déployée sur Vercel, ignorant la vérification de santé."
           else
-            # Vérifier la santé de l'application 
-            HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $DEPLOY_URL/api/health || echo "failed")
+            # Vérifier la santé de l'application (utilisant le nouveau endpoint /health)
+            HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $DEPLOY_URL/health || echo "failed")
             echo "health_status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
             echo "deployment_exists=true" >> $GITHUB_OUTPUT
             echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
@@ -119,7 +119,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: '🔴 Problème détecté sur l\'application',
-              body: `Le health check a échoué avec le statut: ${status}\n\nURL vérifiée: ${deployUrl}/api/health\n\nVérification effectuée le ${new Date().toISOString()}.`,
+              body: `Le health check a échoué avec le statut: ${status}\n\nURL vérifiée: ${deployUrl}/health\n\nVérification effectuée le ${new Date().toISOString()}.`,
               labels: ['bug', 'high-priority', 'automated-report']
             });
             console.log('Issue créée pour le problème de health check'); 
