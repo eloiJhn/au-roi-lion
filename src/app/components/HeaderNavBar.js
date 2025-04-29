@@ -83,8 +83,8 @@ export function HeaderNavBar() {
   const navItems = [
     { href: "#photos-section", label: messages.HeaderNavBar?.photos || "Photos" },
     { href: "#history-section", label: messages.HeaderNavBar?.history || "History" },
-    { href: "#link-section", label: messages.HeaderNavBar?.links || "Links" },
     { href: "#contact-form", label: messages.HeaderNavBar?.contact || "Contact" },
+    { href: "#link-section", label: messages.HeaderNavBar?.links || "Links" },
   ];
 
   // Gestion du clic sur un lien avec défilement fluide
@@ -95,15 +95,30 @@ export function HeaderNavBar() {
       const targetId = href.substring(1);
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
-        const navbarHeight = 70; // Hauteur approximative de la navbar
+        // Trouver la hauteur réelle de la navbar en fonction du mode (mobile ou desktop)
+        const navbarElement = document.querySelector(".navbar-mobile");
+        // Sur mobile, ajouter la hauteur du lecteur audio
+        const mobileAudioPlayer = isMobile ? document.querySelector(".md\\:hidden.w-full.px-4.mt-2")?.offsetHeight || 0 : 0;
+        const navbarHeight = navbarElement ? navbarElement.offsetHeight + mobileAudioPlayer : 70;
+        
+        // Calculate position to scroll to the middle of the section
         const rect = targetElement.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const targetTop = rect.top + scrollTop;
-        window.scrollTo({
-          top: targetTop - navbarHeight,
-          behavior: "smooth",
-        });
-        // Ferme le menu mobile après clic
+        const elementTop = rect.top + scrollTop;
+        const offset = navbarHeight + 20; // Add some additional offset
+        
+        // Fermer le menu mobile avant de scroller
+        setIsOpen(false);
+        
+        // Petit délai pour s'assurer que le menu est fermé avant de calculer la position
+        setTimeout(() => {
+          window.scrollTo({
+            top: elementTop - offset,
+            behavior: "smooth"
+          });
+        }, 10);
+      } else {
+        // Ferme le menu mobile après clic même si l'élément n'est pas trouvé
         setIsOpen(false);
       }
     }

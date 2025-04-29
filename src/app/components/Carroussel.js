@@ -86,12 +86,11 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto mt-20 relative">
+    <div className="max-w-6xl mx-auto mt-20 relative" id="photos-section">
       <div className="flex justify-end mb-4">
         <div
           className="fullscreen-icon mr-4 mb-4 sm:mr-2 sm:mb-2 hover:bg-gradient-to-r hover:from-[#003E50] hover:to-[#FFD700] transition-all duration-300 p-2 rounded-full cursor-pointer"
           onClick={() => handleOpenModal(activeIndex)}
-          id="photos-section"
         >
           <ArrowsPointingInIcon className="h-6 w-6 text-white" />
         </div>
