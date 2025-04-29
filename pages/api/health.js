@@ -1,5 +1,13 @@
 import { logger } from '../../src/utils/logger';
 
+// Désactivation de la vérification d'authentification pour cet endpoint
+export const config = {
+  api: {
+    // Désactive les middlewares par défaut pour ce endpoint
+    externalResolver: true,
+  },
+};
+
 export default function handler(req, res) {
   try {
     
