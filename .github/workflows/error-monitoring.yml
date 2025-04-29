@@ -11,6 +11,13 @@ permissions:
   contents: read
   issues: write
 
+# Définir les variables d'environnement
+env:
+  # URL de l'application déployée (à modifier selon votre URL de déploiement)
+  VERCEL_URL: 'au-roi-lion-e6sz0snmo-eloijhns-projects.vercel.app'
+  # Domaine personnalisé (commenté, décommentez pour l'utiliser à la place)
+  # VERCEL_URL: 'www.aurolion.com'
+
 jobs:
   monitor:
     runs-on: ubuntu-latest
@@ -70,31 +77,48 @@ jobs:
       - name: Application Health Check
         id: health-check
         run: |
-          # Vérifier la santé de l'application 
-          # URL de votre application déployée
-          HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://au-roi-lion.vercel.app/api/health || echo "failed")
-          echo "health_status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+          # Définir l'URL complète de l'application
+          DEPLOY_URL="https://${VERCEL_URL}"
+          echo "Vérification de l'application à l'URL: $DEPLOY_URL"
           
-          if [[ "$HEALTH_STATUS" != "200" ]]; then
-            echo "health_error=true" >> $GITHUB_OUTPUT
-          else
+          # Vérifier d'abord si l'application est déployée
+          DEPLOYMENT_CHECK=$(curl -s -o /dev/null -w "%{http_code}" $DEPLOY_URL || echo "failed")
+          
+          if [[ "$DEPLOYMENT_CHECK" == "404" && $(curl -s $DEPLOY_URL | grep -c "DEPLOYMENT_NOT_FOUND") -gt 0 ]]; then
+            echo "deployment_exists=false" >> $GITHUB_OUTPUT
             echo "health_error=false" >> $GITHUB_OUTPUT
+            echo "health_status=deployment_not_found" >> $GITHUB_OUTPUT
+            echo "L'application n'est pas encore déployée sur Vercel, ignorant la vérification de santé."
+          else
+            # Vérifier la santé de l'application 
+            HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $DEPLOY_URL/api/health || echo "failed")
+            echo "health_status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+            echo "deployment_exists=true" >> $GITHUB_OUTPUT
+            echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+            
+            if [[ "$HEALTH_STATUS" != "200" ]]; then
+              echo "health_error=true" >> $GITHUB_OUTPUT
+            else
+              echo "health_error=false" >> $GITHUB_OUTPUT
+            fi
           fi
 
       - name: Create GitHub Issue for health check failure
-        if: steps.health-check.outputs.health_error == 'true'
-        uses: actions/github-script@v6
+        if: steps.health-check.outputs.health_error == 'true' && steps.health-check.outputs.deployment_exists == 'true'
         env:
           HEALTH_STATUS: ${{ steps.health-check.outputs.health_status }}
+          DEPLOY_URL: ${{ steps.health-check.outputs.deploy_url }}
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const status = process.env.HEALTH_STATUS;
+            const deployUrl = process.env.DEPLOY_URL;
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: '🔴 Problème détecté sur l\'application',
-              body: `Le health check a échoué avec le statut: ${status}\n\nVérification effectuée le ${new Date().toISOString()}.`,
+              body: `Le health check a échoué avec le statut: ${status}\n\nURL vérifiée: ${deployUrl}/api/health\n\nVérification effectuée le ${new Date().toISOString()}.`,
               labels: ['bug', 'high-priority', 'automated-report']
             });
             console.log('Issue créée pour le problème de health check'); 
