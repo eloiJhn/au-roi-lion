@@ -7,7 +7,7 @@ export function middleware(request) {
   // Déterminer si nous sommes en production
   const isProduction = process.env.NODE_ENV === 'production';
 
-  // Headers de sécurité
+  // Headers de sécurité de base
   const securityHeaders = {
     'X-DNS-Prefetch-Control': 'on',
     'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
@@ -15,7 +15,10 @@ export function middleware(request) {
     'X-Frame-Options': 'SAMEORIGIN',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+    'Cross-Origin-Opener-Policy': 'same-origin',
+    'Cross-Origin-Resource-Policy': 'same-origin',
+    'Cross-Origin-Embedder-Policy': isProduction ? 'require-corp' : 'unsafe-none',
   };
 
   // CSP différente pour production et développement
@@ -23,22 +26,26 @@ export function middleware(request) {
     // CSP plus stricte en production
     securityHeaders['Content-Security-Policy'] = `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://*.vercel-scripts.com https://*.vercel-analytics.com https://*.vercel-insights.com https://va.vercel-analytics.com;
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https:;
-      font-src 'self' data:;
+      script-src 'self' https://www.google.com https://www.gstatic.com https://*.vercel-scripts.com https://*.vercel-analytics.com https://*.vercel-insights.com https://va.vercel-analytics.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      img-src 'self' data: https: blob:;
+      font-src 'self' data: https://fonts.gstatic.com;
       connect-src 'self' https://www.google.com https://*.vercel-scripts.com https://*.vercel-insights.com https://va.vercel-analytics.com https://*.vercel-analytics.com;
-      frame-src 'self' https://www.google.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
+      frame-src 'self' https://www.google.com https://recaptcha.google.com;
       base-uri 'self';
       form-action 'self';
+      frame-ancestors 'self';
+      object-src 'none';
+      upgrade-insecure-requests;
+      block-all-mixed-content;
     `.replace(/\s+/g, ' ').trim();
   } else {
     // CSP plus permissive en développement
     securityHeaders['Content-Security-Policy'] = `
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:;
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: http: https:;
+      style-src 'self' 'unsafe-inline' https:;
+      img-src 'self' data: http: https: blob:;
       font-src 'self' data: http: https:;
       connect-src 'self' http: https:;
       frame-src 'self' http: https:;
@@ -63,9 +70,10 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - public files (robots.txt, etc)
      */
     {
-      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+      source: '/((?!api|_next/static|_next/image|assets|favicon.ico).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

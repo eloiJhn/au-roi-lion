@@ -1,4 +1,3 @@
-
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -12,14 +11,16 @@ jest.mock("react-google-recaptcha-v3", () => ({
 }));
 
 const mockShow = jest.fn();
-jest.mock("primereact/toast", () => ({
-  Toast: React.forwardRef((props, ref) => {
+jest.mock("primereact/toast", () => {
+  const ToastComponent = React.forwardRef((props, ref) => {
     React.useImperativeHandle(ref, () => ({
       show: mockShow,
     }));
     return <div>{props.children}</div>;
-  }),
-}));
+  });
+  ToastComponent.displayName = "Toast";
+  return { Toast: ToastComponent };
+});
 
 const mockMessages = {
   ContactForm: {

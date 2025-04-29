@@ -44,7 +44,7 @@ const transports = [
   }),
   // Fichier de logs d'erreur avec rotation
   new winston.transports.DailyRotateFile({
-    filename: path.join(process.cwd(), 'logs', 'error-%DATE%.log'),
+    filename: 'logs/error-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '20m',
@@ -53,7 +53,7 @@ const transports = [
   }),
   // Fichier de logs combinés avec rotation
   new winston.transports.DailyRotateFile({
-    filename: path.join(process.cwd(), 'logs', 'combined-%DATE%.log'),
+    filename: 'logs/combined-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '20m',

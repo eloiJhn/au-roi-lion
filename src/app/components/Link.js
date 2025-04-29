@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import { ChevronUpIcon } from "@heroicons/react/24/solid";
 import { TranslationContext } from "../utils/TranslationContext";
+import Image from 'next/image';
 
 export function Section4({ handleAirbnbClick, handleBookingClick, showBackToTop }) {
   const handleBackToTop = (e) => {
@@ -36,21 +37,29 @@ export function Section4({ handleAirbnbClick, handleBookingClick, showBackToTop 
           className="cursor-pointer rounded-3xl overflow-hidden shadow-xl transform transition duration-500 hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r from-[#FFD700] to-[#FFA500]"
           onClick={handleAirbnbClick}
         >
-          <img
-            src="/assets/airbnb_logo.jpeg"
-            alt="Airbnb Logo"
-            className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 object-cover"
-          />
+          <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40">
+            <Image
+              src="/assets/airbnb_logo.jpeg"
+              alt="Airbnb Logo"
+              fill
+              sizes="(max-width: 640px) 6rem, (max-width: 768px) 8rem, (max-width: 1024px) 9rem, 10rem"
+              className="object-cover"
+            />
+          </div>
         </div>
         <div
           className="cursor-pointer rounded-3xl overflow-hidden shadow-xl transform transition duration-500 hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r from-[#FFD700] to-[#FFA500]"
           onClick={handleBookingClick}
         >
-          <img
-            src="/assets/booking_logo.png"
-            alt="Booking Logo"
-            className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 object-cover"
-          />
+          <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40">
+            <Image
+              src="/assets/booking_logo.png"
+              alt="Booking Logo"
+              fill
+              sizes="(max-width: 640px) 6rem, (max-width: 768px) 8rem, (max-width: 1024px) 9rem, 10rem"
+              className="object-cover"
+            />
+          </div>
         </div>
         {showBackToTop && (
           <div

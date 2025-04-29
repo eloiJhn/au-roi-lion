@@ -5,6 +5,8 @@ import { ArrowsPointingInIcon } from "@heroicons/react/24/solid";
 import "swiper/swiper-bundle.min.css";
 import Image from 'next/image';
 
+// Désactive la règle ESLint pour la ligne suivante
+// eslint-disable-next-line react-hooks/rules-of-hooks
 SwiperCore.use([EffectCoverflow, Pagination, Navigation, Autoplay]);
 
 // Define the gradient for SVG strokes
@@ -141,7 +143,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       >
         {images.map((src, index) => (
           <SwiperSlide key={index} className="flex justify-center items-center">
-            <div className="relative w-full h-96">
+            <div className="relative w-full h-64 sm:h-80 md:h-96">
               <Image
                 src={src}
                 alt={`Slide ${index}`}
@@ -164,7 +166,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       <div className="custom-swiper-pagination"></div>
 
       <button 
-        className="custom-arrow custom-arrow-prev absolute inset-y-0 left-2 my-auto flex items-center justify-center hidden sm:flex z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
+        className="custom-arrow custom-arrow-prev absolute inset-y-0 left-2 my-auto flex items-center justify-center z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
         style={{ height: '40px', width: '40px' }}
         onClick={() => {
           handleUserInteraction();
@@ -190,7 +192,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       </button>
 
       <button 
-        className="custom-arrow custom-arrow-next absolute inset-y-0 right-2 my-auto flex items-center justify-center hidden sm:flex z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
+        className="custom-arrow custom-arrow-next absolute inset-y-0 right-2 my-auto flex items-center justify-center z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
         style={{ height: '40px', width: '40px' }}
         onClick={() => {
           handleUserInteraction();
@@ -225,11 +227,13 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="modal-close absolute top-4 right-4 text-white text-2xl cursor-pointer z-10"
+              className="modal-close absolute top-4 right-4 text-white cursor-pointer z-10 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110"
               onClick={closeModal}
-              style={{ position: "fixed" }}
+              style={{ position: "fixed", width: '40px', height: '40px' }}
             >
-              &times;
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
             <div className="absolute inset-0 flex w-full h-full">
               <div
@@ -241,12 +245,16 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                 onClick={() => handleModalNavigation(1)}
               />
             </div>
-            <img
-              src={images[modalIndex]}
-              alt={`Image ${modalIndex}`}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full max-h-full object-contain"
-              style={{ position: "fixed" }}
-            />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full max-h-full" style={{ position: "fixed", width: '80vw', height: '80vh' }}>
+              <Image
+                src={images[modalIndex]}
+                alt={`Image ${modalIndex}`}
+                fill
+                sizes="(max-width: 640px) 95vw, 80vw"
+                className="object-contain"
+                priority
+              />
+            </div>
             <button
               className="custom-arrow custom-arrow-prev absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 focus:outline-none z-10"
               style={{ position: "fixed", height: '40px', width: '40px' }}
@@ -267,7 +275,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
               </svg>
             </button>
             <button
-              className="custom-arrow custom-arrow-next absolute top-1/2 right-8 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 focus:outline-none z-10"
+              className="custom-arrow custom-arrow-next absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 focus:outline-none z-10"
               style={{ position: "fixed", height: '40px', width: '40px' }}
               onClick={(e) => {
                 e.stopPropagation();

@@ -30,8 +30,62 @@ export function ContactForm({
     }));
   };
 
+  // Validation côté client avant soumission
+  const validateForm = () => {
+    // Validation simple du nom (2-50 caractères)
+    if (!formData.from_name || formData.from_name.trim().length < 2 || formData.from_name.trim().length > 50) {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erreur de validation",
+        detail: messages.ContactForm?.invalid_name || "Le nom doit contenir entre 2 et 50 caractères",
+        life: 3000,
+      });
+      return false;
+    }
+
+    // Validation simple de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.reply_to || !emailRegex.test(formData.reply_to)) {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erreur de validation",
+        detail: messages.ContactForm?.invalid_email || "Veuillez entrer une adresse email valide",
+        life: 3000,
+      });
+      return false;
+    }
+
+    // Validation simple du message (1-5000 caractères)
+    if (!formData.message || formData.message.trim().length < 1 || formData.message.trim().length > 5000) {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erreur de validation",
+        detail: messages.ContactForm?.invalid_message || "Le message doit contenir entre 1 et 5000 caractères",
+        life: 3000,
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  // Référence à un drapeau pour éviter les soumissions multiples
+  const isSubmitting = useRef(false);
+
   const handleSendEmail = async (e) => {
     e.preventDefault();
+
+    // Prévenir les doubles soumissions
+    if (isSubmitting.current || isSending) {
+      return;
+    }
+    isSubmitting.current = true;
+
+    // Validation du formulaire côté client
+    if (!validateForm()) {
+      isSubmitting.current = false;
+      return;
+    }
 
     if (!executeRecaptcha) {
       toast.current?.show({
@@ -40,6 +94,7 @@ export function ContactForm({
         detail: "Vérifiez que vous n'utilisez pas de bloqueur de publicités et réessayez.",
         life: 3000,
       });
+      isSubmitting.current = false;
       return;
     }
 
@@ -51,6 +106,7 @@ export function ContactForm({
         life: 3000,
         style: { zIndex: 9999 }
       });
+      isSubmitting.current = false;
       return;
     }
 
@@ -64,6 +120,7 @@ export function ContactForm({
         detail: messages.ContactForm?.wait_one_minute || "Vous devez attendre une minute avant d'envoyer un autre message.",
         life: 3000,
       });
+      isSubmitting.current = false;
       return;
     }
 
@@ -84,12 +141,23 @@ export function ContactForm({
           life: 3000,
         });
         setIsSending(false);
+        isSubmitting.current = false;
         return;
       }
 
+      // Création d'un objet avec des données sanitisées
+      const sanitizedData = {
+        from_name: formData.from_name.trim(),
+        reply_to: formData.reply_to.trim(),
+        message: formData.message.trim(),
+      };
+
       const recaptchaResponse = await fetch("/api/validate-recaptcha", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"  // Protection CSRF additionnelle
+        },
         body: JSON.stringify({ token }),
       });
 
@@ -100,8 +168,12 @@ export function ContactForm({
 
       const emailResponse = await fetch("/api/send-email-nodemailer", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,  // Utiliser le token comme authentification
+          "X-Requested-With": "XMLHttpRequest"  // Protection CSRF additionnelle
+        },
+        body: JSON.stringify(sanitizedData),
       });
 
       if (!emailResponse.ok) {
@@ -131,6 +203,7 @@ export function ContactForm({
       });
     } finally {
       setIsSending(false);
+      isSubmitting.current = false;
     }
   };
 

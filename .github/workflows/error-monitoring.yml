@@ -1,0 +1,93 @@
+name: Error Monitoring
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 */6 * * *'  # Exécuté toutes les 6 heures
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for new errors
+        id: error-check
+        run: |
+          # Vérifier les nouveaux logs d'erreur
+          if [ -f "error.log" ]; then
+            # Comparer avec les erreurs déjà connues
+            ERROR_HASH=$(md5sum error.log | cut -d ' ' -f 1)
+            echo "error_hash=$ERROR_HASH" >> $GITHUB_OUTPUT
+            
+            # Vérifier si l'erreur est nouvelle
+            if [ ! -f ".error_hash" ] || [ "$(cat .error_hash)" != "$ERROR_HASH" ]; then
+              echo "new_errors=true" >> $GITHUB_OUTPUT
+              ERROR_CONTENT=$(tail -n 20 error.log)
+              echo "error_content<<EOF" >> $GITHUB_OUTPUT
+              echo "$ERROR_CONTENT" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+              echo "$ERROR_HASH" > .error_hash
+            else
+              echo "new_errors=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "new_errors=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Issue for new errors
+        if: steps.error-check.outputs.new_errors == 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const errorContent = process.env.ERROR_CONTENT;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Nouvelles erreurs détectées dans l\'application',
+              body: `Des nouvelles erreurs ont été détectées dans l'application. Voici les dernières entrées du log :\n\`\`\`\n${errorContent}\n\`\`\`\n\nVerification effectuée le ${new Date().toISOString()}.`,
+              labels: ['bug', 'automated-report']
+            });
+            console.log('Issue créée pour les nouvelles erreurs');
+
+      - name: Application Health Check
+        id: health-check
+        run: |
+          # Vérifier la santé de l'application 
+          # Remplacer l'URL par celle de votre application déployée
+          HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://votre-app.vercel.app/api/health || echo "failed")
+          echo "health_status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+          
+          if [[ "$HEALTH_STATUS" != "200" ]]; then
+            echo "health_error=true" >> $GITHUB_OUTPUT
+          else
+            echo "health_error=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Issue for health check failure
+        if: steps.health-check.outputs.health_error == 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const status = process.env.HEALTH_STATUS;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔴 Problème détecté sur l\'application',
+              body: `Le health check a échoué avec le statut: ${status}\n\nVérification effectuée le ${new Date().toISOString()}.`,
+              labels: ['bug', 'high-priority', 'automated-report']
+            });
+            console.log('Issue créée pour le problème de health check'); 

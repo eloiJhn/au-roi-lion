@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { TranslationContext } from "../utils/TranslationContext";
 import ReactCountryFlag from "react-country-flag";
 import { AudioPlayer } from "./AudioPlayer";
+import Image from "next/image";
 
 export function HeaderNavBar() {  
   // États
@@ -158,11 +159,13 @@ export function HeaderNavBar() {
               data-testid="logo-element"
               onClick={handleLogoClick}
             >
-              <img
+              <Image
                 src="/assets/logo.png"
                 alt="Logo"
+                width={112}
+                height={112}
                 className={`w-full h-full rounded-full ${musicPlaying ? 'ring-4' : ''}`}
-                loading="eager"
+                priority
                 style={{ 
                   willChange: musicPlaying ? 'transform' : 'auto',
                   ...(musicPlaying && { borderColor: `${ringColor} !important` })

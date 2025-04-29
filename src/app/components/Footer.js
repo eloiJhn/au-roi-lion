@@ -76,19 +76,19 @@ const NavigationLinks = ({ links }) => {
   };
 
   const handleNavClick = throttledScroll((e, href) => {
-    e.preventDefault();
-    const targetId = href.substring(1);
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      const navbarElement = document.querySelector(".navbar-mobile");
-      const navbarHeight = navbarElement ? navbarElement.offsetHeight : 70;
+          e.preventDefault();
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            const navbarElement = document.querySelector(".navbar-mobile");
+            const navbarHeight = navbarElement ? navbarElement.offsetHeight : 70;
       
       // Calculer la position avec transform pour améliorer les performances
-      window.scrollTo({
+            window.scrollTo({
         top: targetElement.offsetTop - navbarHeight,
         behavior: "smooth"
-      });
-    }
+            });
+          }
   }, 100); // Throttle à 100ms
 
   return (
@@ -99,11 +99,11 @@ const NavigationLinks = ({ links }) => {
           href={href}
           onClick={(e) => handleNavClick(e, href)}
           className="text-gray-200 hover:text-[#FFD700] transition duration-200 ease-in-out tracking-wide uppercase"
-          style={{ letterSpacing: "1.5px" }}
-        >
-          {label}
-        </a>
-      ))}
-    </div>
-  );
+        style={{ letterSpacing: "1.5px" }}
+      >
+        {label}
+      </a>
+    ))}
+  </div>
+);
 };

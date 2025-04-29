@@ -3,6 +3,7 @@ import { analyzeContent } from '../../utils/contentAnalyzer';
 import { logger } from '../../utils/logger';
 import { rateLimit } from '../../utils/rateLimiter';
 import { validateEmail, validateName, validateMessage } from '../../utils/Validator';
+import { NextResponse } from 'next/server';
 
 // Création d'un pool de connexions SMTP optimisé
 const transporter = nodemailer.createTransport({
@@ -18,7 +19,6 @@ const transporter = nodemailer.createTransport({
   maxMessages: 100,
   rateDelta: 1000,
   rateLimit: 3,
-  // Optimisations pour la vitesse
   socketTimeout: 5000,
   connectionTimeout: 5000,
   greetingTimeout: 5000,
@@ -28,7 +28,9 @@ const transporter = nodemailer.createTransport({
 });
 
 // Pré-établir les connexions
-transporter.verify().catch(console.error);
+transporter.verify().catch(err => {
+  logger.error("SMTP connection verification failed", { error: err.message });
+});
 
 const limiter = rateLimit({
   uniqueTokenPerInterval: 500,
@@ -37,6 +39,7 @@ const limiter = rateLimit({
 
 // Fonction d'échappement HTML optimisée
 function escapeHtml(unsafe) {
+  if (typeof unsafe !== 'string') return '';
   return unsafe
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -53,21 +56,57 @@ function validateMessageLength(message) {
 
 export async function POST(request) {
   try {
+    // En développement, ignorer les vérifications d'origine
+    if (process.env.NODE_ENV !== 'development') {
+      // Utilisation de request.headers de manière synchrone
+      const referer = request.headers.get('referer') ?? '';
+      const origin = request.headers.get('origin') ?? '';
+      const requestedWith = request.headers.get('x-requested-with') ?? '';
+      
+      // Vérifier l'en-tête X-Requested-With
+      if (requestedWith !== 'XMLHttpRequest') {
+        logger.warn("Invalid request type blocked");
+        return new Response(JSON.stringify({ message: "Invalid request type" }), { status: 400 });
+      }
+      
+      // Liste des origines autorisées
+      const allowedOrigins = [
+        'https://au-roi-lion.vercel.app',
+        'https://www.au-roi-lion.fr', 
+        'https://au-roi-lion.fr'
+      ];
+      
+      // Vérifier l'origine de la requête
+      const isAllowedOrigin = allowedOrigins.some(allowed => 
+        origin.startsWith(allowed) || referer.startsWith(allowed)
+      );
+      
+      if (!isAllowedOrigin) {
+        logger.warn("Invalid origin request blocked");
+        return new Response(JSON.stringify({ message: "Unauthorized origin" }), { status: 403 });
+      }
+    }
+
+    // Récupérer le token Bearer
     let token = request.headers.get('Authorization');
     if (token && token.startsWith('Bearer ')) {
       token = token.slice(7);
+    } else {
+      return new Response(JSON.stringify({ message: "Authorization token required" }), { status: 401 });
     }
 
+    // Appliquer la limitation de débit
     await limiter.check(request, 5, token);
 
     const body = await request.json();
     const { from_name, reply_to, message } = body;
 
-    // Validation rapide
+    // Validation des champs requis
     if (!from_name || !reply_to || !message) {
       return new Response(JSON.stringify({ message: "Champs requis manquants" }), { status: 400 });
     }
 
+    // Validation complète des entrées
     if (!validateEmail(reply_to)) {
       return new Response(JSON.stringify({ message: "Adresse email invalide" }), { status: 400 });
     }
@@ -90,6 +129,7 @@ export async function POST(request) {
     ]);
 
     if (spamCheck === 'spam') {
+      logger.warn("Spam content detected", { email: escapedEmail });
       return new Response(JSON.stringify({ message: "Le contenu est détecté comme spam" }), { status: 400 });
     }
 
@@ -119,7 +159,7 @@ async function sendEmailWithNodemailer(reply_to, from_name, message) {
 
   try {
     const mailOptions = {
-      from: `"Le Roi Lion" <${fromEmail || toEmail}>`,
+      from: `\"Le Roi Lion\" <${fromEmail || toEmail}>`,
       to: toEmail,
       replyTo: reply_to,
       subject: `Nouveau message de ${from_name}`,
