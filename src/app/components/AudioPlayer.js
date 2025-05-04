@@ -39,6 +39,7 @@ export function AudioPlayer({ onStatusChange, id }) {
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
+    
     audio.volume = volume;
 
     return () => {

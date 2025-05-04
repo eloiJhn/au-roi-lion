@@ -84,7 +84,7 @@ const SectionItem = ({ Icon, text }) => (
 
 const GradientText = ({ text, additionalClasses }) => (
   <p
-    className={`${additionalClasses}`}
+    className={`${additionalClasses} blue-text-fix md:blue-text-fix-disabled`}
     style={{
       background: "linear-gradient(to right, #003E50, #5AA088)",
       WebkitBackgroundClip: "text",

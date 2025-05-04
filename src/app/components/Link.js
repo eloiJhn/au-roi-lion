@@ -18,7 +18,7 @@ export function Section4({ handleAirbnbClick, handleBookingClick, showBackToTop 
     <div id="link-section">
       <div className="text-center mt-10">
         <h1
-          className="text-2xl font-bold"
+          className="text-2xl font-bold blue-text-fix md:blue-text-fix-disabled"
           style={{
             fontFamily: "'Merienda One', cursive",
             background: "linear-gradient(to right, #003E50, #5AA088)",

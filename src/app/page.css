@@ -391,3 +391,22 @@ input[type="reset"]:hover,
   background: linear-gradient(to right, #003E50, #FFD700) !important;
   transition: background 0.3s ease;
 }
+
+/* Fix for blue text on dark background */
+.blue-text-fix {
+  color: #FFFFFF !important; /* White text for better visibility */
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.8); /* Adding slight shadow for better readability */
+  background: transparent !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  opacity: 1 !important;
+}
+
+@media (min-width: 768px) {
+  .md\:blue-text-fix-disabled {
+    color: transparent !important;
+    text-shadow: none !important;
+    background: linear-gradient(to right, #003E50, #5AA088) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+}
