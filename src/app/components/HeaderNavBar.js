@@ -194,6 +194,7 @@ export function HeaderNavBar() {
                   >
                     <Music
                       size={34}
+
                       className="blue-text-fix md:blue-text-fix-disabled"
                       style={{
                         color: "#FFD700",

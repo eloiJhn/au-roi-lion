@@ -16,6 +16,9 @@ export const metadata = {
     apple: '/assets/logo.png',
     shortcut: '/assets/logo.png',
   },
+  alternates: {
+    canonical: 'https://www.auroilion.com',
+  },
   openGraph: {
     title: 'Au Roi Lion',
     description: 'Vivez comme un roi dans ce somptueux appartement du XVIIe siècle en plein centre historique! Décoration raffinée vert émeraude et or, prestations haut de gamme, vue imprenable sur l\'église Saint Michel. Réservez maintenant!',
@@ -36,7 +39,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Au Roi Lion | Séjournez dans l\'élégance à Dijon',
-    description: 'Un appartement royal où tradition et modernité se rencontrent. Décoré avec goût dans les tons vert émeraude et or, vous tomberez sous le charme dès les premiers instants.',
+    description: 'Un appartement royal où tradition et modernité se rencontrent. Décoré avec goût dans les tons vert émeraude et or, vous tomberez sous le charme dès les premiers instants. Idéal pour découvrir Dijon et la Bourgogne.',
     images: ['https://www.auroilion.com/assets/logo.png'],
     creator: '@AuRoiLion',
   },
@@ -76,6 +79,10 @@ export default async function RootLayout({ children }) {
       <meta property="og:price:amount" content="80" />
       <meta property="og:price:currency" content="EUR" />
       <meta property="og:availability" content="instock" />
+      <meta name="robots" content="index, follow" />
+      <meta name="geo.region" content="FR-21" />
+      <meta name="geo.placename" content="Dijon" />
+      <link rel="canonical" href="https://www.auroilion.com" />
       
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -101,6 +108,38 @@ export default async function RootLayout({ children }) {
           strategy="afterInteraction"
           defer
         />
+        {/* Structured data for rich results */}
+        <Script id="structured-data" type="application/ld+json" strategy="afterInteraction">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "LodgingBusiness",
+              "name": "Au Roi Lion",
+              "url": "https://www.auroilion.com",
+              "description": "Appartement de luxe du XVIIe siècle au cœur de Dijon avec vue sur l'église Saint Michel",
+              "telephone": "+33600000000",
+              "priceRange": "€€",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Centre Historique",
+                "addressLocality": "Dijon",
+                "postalCode": "21000",
+                "addressCountry": "FR"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "47.322047",
+                "longitude": "5.04148"
+              },
+              "image": "https://www.auroilion.com/assets/logo.png",
+              "starRating": {
+                "@type": "Rating",
+                "ratingValue": "4.8",
+                "bestRating": "5"
+              }
+            }
+          `}
+        </Script>
       </NextIntlClientProvider>
     </body>
     </html>
