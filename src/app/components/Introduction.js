@@ -41,7 +41,7 @@ const ContentSection = ({ description }) => (
     style={{ borderColor: "#003E50 #5AA088" }}
   >
     <p
-      className="text-lg font-lora mb-4 text-center blue-text-fix md:blue-text-fix-disabled"
+      className="text-lg font-lora mb-4 text-center"
       style={{
         background: "linear-gradient(to right, #003E50, #5AA088)",
         WebkitBackgroundClip: "text",
