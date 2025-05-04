@@ -17,7 +17,6 @@ const nextConfig = {
   staticPageGenerationTimeout: 120,
   // Optimisation pour le référencement
   poweredByHeader: false,
-  swcMinify: true,
   
   // Configuration des alias de chemin
   webpack: (config) => {
