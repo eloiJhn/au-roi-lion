@@ -1,14 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper";
+import { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper";
 import { ArrowsPointingInIcon } from "@heroicons/react/24/solid";
 import "swiper/swiper-bundle.min.css";
 import Image from 'next/image';
-
-// Register Swiper modules
-SwiperCore.use([EffectCoverflow, Pagination, Navigation, Autoplay]);
 
 // Define the gradient for SVG strokes
 const svgGradient = (
@@ -29,6 +26,15 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
   const [swiperInstance, setSwiperInstance] = useState(null);
+
+  // Créer des versions stables des fonctions avec useCallback
+  const stableCloseModal = useCallback(() => {
+    if (closeModal) closeModal();
+  }, [closeModal]);
+
+  const handleModalNavigation = useCallback((direction) => {
+    setModalIndex((prev) => (prev + direction + images.length) % images.length);
+  }, [images.length]);
 
   // Fonction getSlidesPerView sécurisée pour SSR
   function getSlidesPerView() {
@@ -62,7 +68,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener('keydown', handleKeyNavigation);
     };
-  }, []);
+  }, [modalOpen]);
 
   useEffect(() => {
     swiperRef.current?.swiper?.update();
@@ -170,21 +176,17 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       } else if (e.key === 'ArrowRight') {
         handleModalNavigation(1);
       } else if (e.key === 'Escape') {
-        closeModal();
+        stableCloseModal();
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [modalOpen]);
+  }, [modalOpen, handleModalNavigation, stableCloseModal]);
 
   const handleSlideChange = (swiper) => {
     console.log("[DEBUG] Slide changed to index", swiper.realIndex);
     setActiveIndex(swiper.realIndex);
-  };
-  
-  const handleModalNavigation = (direction) => {
-    setModalIndex((prev) => (prev + direction + images.length) % images.length);
   };
 
   const handleOpenModal = (index) => {
@@ -224,6 +226,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       </div>
 
       <Swiper
+        modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
         ref={swiperRef}
         effect="coverflow"
         grabCursor
@@ -358,7 +361,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       {modalOpen && (
         <div
           className="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-          onClick={closeModal}
+          onClick={stableCloseModal}
         >
           <div
             className="modal-content relative w-full h-full max-w-4xl max-h-4xl"
@@ -366,7 +369,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
           >
             <div
               className="modal-close absolute top-4 right-4 text-white cursor-pointer z-10 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110"
-              onClick={closeModal}
+              onClick={stableCloseModal}
               style={{ position: "fixed", width: '40px', height: '40px' }}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

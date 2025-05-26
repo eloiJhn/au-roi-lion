@@ -8,17 +8,49 @@ import Script from 'next/script';
 import ClientThemeProvider from './ClientThemeProvider';
 
 export const metadata = {
-  title: 'Au Roi Lion',
+  title: {
+    default: 'Au Roi Lion',
+    template: '%s | Au Roi Lion Dijon'
+  },
   description: 'Vivez l\'expérience exceptionnelle d\'un séjour dans un appartement du XVIIe siècle. Vue imprenable sur l\'église Saint Michel, décoration raffinée et prestations haut de gamme.',
-  keywords: 'location prestige, Dijon, appartement luxe, charme, centre historique, église Saint Michel, 17ème siècle, vacances Bourgogne',
+  keywords: [
+    'location prestige Dijon',
+    'appartement luxe Dijon',
+    'centre historique Dijon',
+    'église Saint Michel',
+    '17ème siècle',
+    'vacances Bourgogne',
+    'hébergement de charme',
+    'Airbnb Dijon',
+    'Booking Dijon',
+    'location courte durée',
+    'appartement historique',
+    'Dijon tourisme',
+    'Bourgogne séjour',
+    'location meublée Dijon'
+  ],
+  authors: [{ name: 'Au Roi Lion' }],
+  creator: 'Au Roi Lion',
+  publisher: 'Au Roi Lion',
   metadataBase: new URL('https://www.auroilion.com'),
+  manifest: '/manifest.json',
   icons: {
-    icon: '/assets/logo.png',
-    apple: '/assets/logo.png',
+    icon: [
+      { url: '/assets/logo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/assets/logo.png', sizes: '16x16', type: 'image/png' }
+    ],
+    apple: [
+      { url: '/assets/logo.png', sizes: '180x180', type: 'image/png' }
+    ],
     shortcut: '/assets/logo.png',
   },
   alternates: {
     canonical: 'https://www.auroilion.com',
+    languages: {
+      'fr': 'https://www.auroilion.com/fr',
+      'en': 'https://www.auroilion.com/en',
+      'de': 'https://www.auroilion.com/de',
+    },
   },
   openGraph: {
     title: 'Au Roi Lion',
@@ -80,10 +112,33 @@ export default async function RootLayout({ children }) {
       <meta property="og:price:amount" content="80" />
       <meta property="og:price:currency" content="EUR" />
       <meta property="og:availability" content="instock" />
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="bingbot" content="index, follow" />
       <meta name="geo.region" content="FR-21" />
       <meta name="geo.placename" content="Dijon" />
+      <meta name="geo.position" content="47.322047;5.04148" />
+      <meta name="ICBM" content="47.322047, 5.04148" />
+      <meta name="DC.title" content="Au Roi Lion - Appartement de Luxe à Dijon" />
+      <meta name="DC.creator" content="Au Roi Lion" />
+      <meta name="DC.subject" content="Location appartement luxe Dijon" />
+      <meta name="DC.description" content="Appartement de prestige du XVIIe siècle à Dijon" />
+      <meta name="rating" content="general" />
+      <meta name="distribution" content="global" />
+      <meta name="revisit-after" content="7 days" />
+      <meta name="language" content="fr" />
+      <meta name="coverage" content="Worldwide" />
+      <meta name="target" content="all" />
+      <meta name="HandheldFriendly" content="True" />
+      <meta name="MobileOptimized" content="320" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       <link rel="canonical" href="https://www.auroilion.com" />
+      <link rel="alternate" hrefLang="fr" href="https://www.auroilion.com/fr" />
+      <link rel="alternate" hrefLang="en" href="https://www.auroilion.com/en" />
+      <link rel="alternate" hrefLang="de" href="https://www.auroilion.com/de" />
+      <link rel="alternate" hrefLang="x-default" href="https://www.auroilion.com" />
+      <link rel="alternate" type="application/rss+xml" title="Au Roi Lion RSS Feed" href="https://www.auroilion.com/feed.xml" />
       
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -142,33 +197,92 @@ export default async function RootLayout({ children }) {
           {/* Structured data for rich results */}
           <Script id="structured-data" type="application/ld+json" strategy="afterInteraction">
             {`
-              {
-                "@context": "https://schema.org",
-                "@type": "LodgingBusiness",
-                "name": "Au Roi Lion",
-                "url": "https://www.auroilion.com",
-                "description": "Appartement de luxe du XVIIe siècle au cœur de Dijon avec vue sur l'église Saint Michel",
-                "telephone": "+33600000000",
-                "priceRange": "€€",
-                "address": {
-                  "@type": "PostalAddress",
-                  "streetAddress": "Centre Historique",
-                  "addressLocality": "Dijon",
-                  "postalCode": "21000",
-                  "addressCountry": "FR"
+              [
+                {
+                  "@context": "https://schema.org",
+                  "@type": "LodgingBusiness",
+                  "name": "Au Roi Lion",
+                  "url": "https://www.auroilion.com",
+                  "description": "Appartement de luxe du XVIIe siècle au cœur de Dijon avec vue sur l'église Saint Michel",
+                  "telephone": "+33600000000",
+                  "priceRange": "€€€",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Centre Historique",
+                    "addressLocality": "Dijon",
+                    "postalCode": "21000",
+                    "addressCountry": "FR",
+                    "addressRegion": "Bourgogne-Franche-Comté"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": "47.322047",
+                    "longitude": "5.04148"
+                  },
+                  "image": [
+                    "https://www.auroilion.com/assets/logo.png",
+                    "https://www.auroilion.com/assets/salon.jpeg",
+                    "https://www.auroilion.com/assets/chambre.jpeg"
+                  ],
+                  "starRating": {
+                    "@type": "Rating",
+                    "ratingValue": "4.8",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                  },
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "Vue sur église Saint Michel",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "Appartement historique XVIIe siècle",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "Centre historique",
+                      "value": true
+                    }
+                  ],
+                  "checkinTime": "15:00",
+                  "checkoutTime": "11:00",
+                  "petsAllowed": false,
+                  "smokingAllowed": false
                 },
-                "geo": {
-                  "@type": "GeoCoordinates",
-                  "latitude": "47.322047",
-                  "longitude": "5.04148"
+                {
+                  "@context": "https://schema.org",
+                  "@type": "WebSite",
+                  "name": "Au Roi Lion",
+                  "url": "https://www.auroilion.com",
+                  "description": "Location d'appartement de luxe à Dijon",
+                  "inLanguage": ["fr", "en", "de"],
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://www.auroilion.com/search?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                  }
                 },
-                "image": "https://www.auroilion.com/assets/logo.png",
-                "starRating": {
-                  "@type": "Rating",
-                  "ratingValue": "4.8",
-                  "bestRating": "5"
+                {
+                  "@context": "https://schema.org",
+                  "@type": "Organization",
+                  "name": "Au Roi Lion",
+                  "url": "https://www.auroilion.com",
+                  "logo": "https://www.auroilion.com/assets/logo.png",
+                  "description": "Spécialiste de la location d'appartements de prestige à Dijon",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Dijon",
+                    "addressCountry": "FR"
+                  },
+                  "sameAs": [
+                    "https://www.airbnb.fr/rooms/1020299057539782769",
+                    "https://www.booking.com/hotel/fr/au-roi-lion-place-saint-michel.fr.html"
+                  ]
                 }
-              }
+              ]
             `}
           </Script>
         </ClientThemeProvider>

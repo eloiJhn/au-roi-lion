@@ -1,0 +1,44 @@
+{
+  "name": "Au Roi Lion",
+  "short_name": "Au Roi Lion",
+  "description": "Vivez l'expérience exceptionnelle d'un séjour dans un appartement du XVIIe siècle au cœur de Dijon. Vue imprenable sur l'église Saint Michel, décoration raffinée et prestations haut de gamme.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#003E50",
+  "theme_color": "#003E50",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["travel", "accommodation", "luxury"],
+  "icons": [
+    {
+      "src": "/assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/salon.jpeg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Salon élégant avec vue sur l'église Saint Michel"
+    },
+    {
+      "src": "/assets/chambre.jpeg",
+      "sizes": "750x1334",
+      "type": "image/jpeg",
+      "platform": "narrow",
+      "label": "Chambre luxueuse du XVIIe siècle"
+    }
+  ]
+} 

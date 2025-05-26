@@ -27,6 +27,27 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     scrollRestoration: true,
+    optimizePackageImports: ['@vercel/analytics', '@vercel/speed-insights'],
+  },
+  
+  // Optimisations SEO supplémentaires
+  trailingSlash: false,
+  generateEtags: true,
+  
+  // Configuration pour les redirections SEO
+  async redirects() {
+    return [
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/index',
+        destination: '/',
+        permanent: true,
+      },
+    ];
   },
   async headers() {
     return [
@@ -50,6 +71,18 @@ const nextConfig = {
             value: process.env.NODE_ENV === 'production' 
               ? 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800'
               : 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
           },
         ],
       },
