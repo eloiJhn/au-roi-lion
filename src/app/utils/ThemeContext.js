@@ -6,53 +6,52 @@ export const ThemeContext = createContext();
 export function ThemeProvider({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Détecter le thème initial du système et appliquer le thème
+  // Détecter le thème initial du système et synchroniser avec l'état
   useEffect(() => {
     // S'assurer que le code s'exécute uniquement côté client
     if (typeof window === 'undefined') return;
     
-    // Fonction pour appliquer le thème sombre
-    const enableDarkMode = () => {
-      const htmlElement = document.documentElement;
-      htmlElement.classList.add('dark-mode');
-      htmlElement.classList.remove('light-mode');
-      setIsDarkMode(true);
-      document.body.style.backgroundColor = '#121212';
-      document.body.style.color = '#e0e0e0';
-    };
-    
-    // Fonction pour appliquer le thème clair
-    const disableDarkMode = () => {
-      const htmlElement = document.documentElement;
-      htmlElement.classList.remove('dark-mode');
-      htmlElement.classList.add('light-mode');
-      setIsDarkMode(false);
-      document.body.style.backgroundColor = '';
-      document.body.style.color = '';
-    };
-    
     try {
       // Vérifier la préférence enregistrée dans localStorage
       const savedTheme = localStorage.getItem('theme');
+      const htmlElement = document.documentElement;
       
-      if (savedTheme) {
-        // Si une préférence utilisateur est définie, l'appliquer
+      // Déterminer le thème actuel basé sur les classes déjà appliquées par le script initial
+      const isDarkModeActive = htmlElement.classList.contains('dark-mode');
+      
+      // Synchroniser l'état React avec ce qui est déjà appliqué
+      setIsDarkMode(isDarkModeActive);
+      
+      // Si aucune classe n'est présente, appliquer le thème par défaut
+      if (!htmlElement.classList.contains('dark-mode') && !htmlElement.classList.contains('light-mode')) {
         if (savedTheme === 'dark') {
-          enableDarkMode();
+          htmlElement.classList.add('dark-mode');
+          setIsDarkMode(true);
+          document.body.style.backgroundColor = '#121212';
+          document.body.style.color = '#e0e0e0';
+        } else if (savedTheme === 'light') {
+          htmlElement.classList.add('light-mode');
+          setIsDarkMode(false);
+          document.body.style.backgroundColor = '';
+          document.body.style.color = '';
         } else {
-          disableDarkMode();
-        }
-      } else {
-        // Pas de préférence sauvegardée : utiliser la préférence système
-        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (prefersDarkMode) {
-          enableDarkMode();
-        } else {
-          disableDarkMode();
+          // Utiliser la préférence système
+          const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (prefersDarkMode) {
+            htmlElement.classList.add('dark-mode');
+            setIsDarkMode(true);
+            document.body.style.backgroundColor = '#121212';
+            document.body.style.color = '#e0e0e0';
+          } else {
+            htmlElement.classList.add('light-mode');
+            setIsDarkMode(false);
+            document.body.style.backgroundColor = '';
+            document.body.style.color = '';
+          }
         }
       }
     } catch (error) {
-      console.error('Erreur lors de l\'application du thème:', error);
+      console.error('Erreur lors de la synchronisation du thème:', error);
     }
   }, []);
 

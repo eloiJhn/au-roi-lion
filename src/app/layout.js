@@ -150,6 +150,48 @@ export default async function RootLayout({ children }) {
       {/* Preload critical assets */}
       <link rel="preload" href="/assets/logo.png" as="image" />
       
+      {/* Style initial pour éviter le flash */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          /* Style initial pour éviter le flash de thème */
+          html {
+            background-color: #fff;
+            color: #333;
+          }
+          
+          /* Si l'utilisateur préfère le mode sombre */
+          @media (prefers-color-scheme: dark) {
+            html:not(.light-mode) {
+              background-color: #121212 !important;
+              color: #e0e0e0 !important;
+            }
+            html:not(.light-mode) body {
+              background-color: #121212 !important;
+              color: #e0e0e0 !important;
+            }
+          }
+          
+          /* Styles pour les classes appliquées par JavaScript */
+          html.dark-mode {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+          }
+          html.dark-mode body {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+          }
+          
+          html.light-mode {
+            background-color: #fff !important;
+            color: #333 !important;
+          }
+          html.light-mode body {
+            background-color: #fff !important;
+            color: #333 !important;
+          }
+        `
+      }} />
+      
       {/* Script pour prévenir le flash de contenu en mode sombre */}
       <script
         dangerouslySetInnerHTML={{
@@ -158,21 +200,40 @@ export default async function RootLayout({ children }) {
               try {
                 // Vérifier si le thème est dans le localStorage
                 var storedTheme = localStorage.getItem('theme');
+                var htmlElement = document.documentElement;
+                
+                // Fonction pour appliquer le thème sombre
+                function enableDarkMode() {
+                  htmlElement.classList.add('dark-mode');
+                  htmlElement.classList.remove('light-mode');
+                  document.body.style.backgroundColor = '#121212';
+                  document.body.style.color = '#e0e0e0';
+                }
+                
+                // Fonction pour appliquer le thème clair
+                function disableDarkMode() {
+                  htmlElement.classList.remove('dark-mode');
+                  htmlElement.classList.add('light-mode');
+                  document.body.style.backgroundColor = '';
+                  document.body.style.color = '';
+                }
                 
                 if (storedTheme === 'dark') {
-                  document.documentElement.classList.add('dark');
+                  enableDarkMode();
                 } else if (storedTheme === 'light') {
-                  document.documentElement.classList.remove('dark');
+                  disableDarkMode();
                 } else {
                   // Sinon, utiliser les préférences du système
                   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                   if (prefersDark) {
-                    document.documentElement.classList.add('dark');
+                    enableDarkMode();
+                  } else {
+                    disableDarkMode();
                   }
                 }
               } catch (e) {
                 // En cas d'erreur (par exemple en SSR), ne rien faire
-                console.error('Error applying dark mode:', e);
+                console.error('Error applying theme:', e);
               }
             })();
           `,
