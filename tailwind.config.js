@@ -5,6 +5,7 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: 'media',
   theme: {
     extend: {
       backgroundImage: {
@@ -15,6 +16,21 @@ module.exports = {
       scale: {
         '200': '2', 
         '250': '2.5'
+      },
+      colors: {
+        primary: {
+          DEFAULT: 'var(--heading-color)',
+        },
+        text: {
+          DEFAULT: 'var(--text-color)',
+        },
+        background: {
+          DEFAULT: 'var(--background-color)',
+          card: 'var(--card-background)',
+        },
+        border: {
+          DEFAULT: 'var(--border-color)',
+        },
       },
     },
   },

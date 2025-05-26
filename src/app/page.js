@@ -9,6 +9,7 @@ import { Section4 } from "./components/Link";
 import { Footer } from "./components/Footer";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { TranslationProvider, TranslationContext } from "./utils/TranslationContext";
+import { ThemeProvider } from "./utils/ThemeContext";
 
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -128,35 +129,37 @@ export default function Home() {
 
   return (
     <TranslationProvider>
-      <HomeContent
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        showBackToTop={showBackToTop}
-        setShowBackToTop={setShowBackToTop}
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        initialSlide={initialSlide}
-        setInitialSlide={setInitialSlide}
-        lastEmailSentTime={lastEmailSentTime}
-        setLastEmailSentTime={setLastEmailSentTime}
-        isSending={isSending}
-        setIsSending={setIsSending}
-        emailQueue={emailQueue}
-        setEmailQueue={setEmailQueue}
-        autoClickRef={autoClickRef}
-        showPriceInfo={showPriceInfo}
-        setShowPriceInfo={setShowPriceInfo}
-        isHovering={isHovering}
-        setIsHovering={setIsHovering}
-        cursorPosition={cursorPosition}
-        images={images}
-        openModal={openModal}
-        closeModal={closeModal}
-        navigateSlide={navigateSlide}
-        handleAirbnbClick={handleAirbnbClick}
-        handleBookingClick={handleBookingClick}
-        togglePriceInfo={togglePriceInfo}
-      />
+      <ThemeProvider>
+        <HomeContent
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          showBackToTop={showBackToTop}
+          setShowBackToTop={setShowBackToTop}
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          initialSlide={initialSlide}
+          setInitialSlide={setInitialSlide}
+          lastEmailSentTime={lastEmailSentTime}
+          setLastEmailSentTime={setLastEmailSentTime}
+          isSending={isSending}
+          setIsSending={setIsSending}
+          emailQueue={emailQueue}
+          setEmailQueue={setEmailQueue}
+          autoClickRef={autoClickRef}
+          showPriceInfo={showPriceInfo}
+          setShowPriceInfo={setShowPriceInfo}
+          isHovering={isHovering}
+          setIsHovering={setIsHovering}
+          cursorPosition={cursorPosition}
+          images={images}
+          openModal={openModal}
+          closeModal={closeModal}
+          navigateSlide={navigateSlide}
+          handleAirbnbClick={handleAirbnbClick}
+          handleBookingClick={handleBookingClick}
+          togglePriceInfo={togglePriceInfo}
+        />
+      </ThemeProvider>
     </TranslationProvider>
   );
 }
@@ -222,8 +225,6 @@ function HomeContent(props) {
           openModal={props.openModal}
           modalOpen={props.modalOpen}
           closeModal={props.closeModal}
-          initialSlide={props.initialSlide}
-          navigateSlide={props.navigateSlide}
         />
         <Section3 />
         <ContactForm

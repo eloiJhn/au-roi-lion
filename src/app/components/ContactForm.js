@@ -261,7 +261,7 @@ export function ContactForm({
             id="from_name"
             value={formData.from_name}
             onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300 dark:text-white"
             required
           />
         </div>
@@ -283,7 +283,7 @@ export function ContactForm({
             id="reply_to"
             value={formData.reply_to}
             onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300 dark:text-white"
             required
           />
         </div>
@@ -305,7 +305,7 @@ export function ContactForm({
             rows="4"
             value={formData.message}
             onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md hover:border-[#FFD700] focus:border-[#FFD700] focus:ring focus:ring-[#FFD700] focus:ring-opacity-50 transition-all duration-300 dark:text-white"
             required
           ></textarea>
         </div>

@@ -47,7 +47,9 @@ const nextConfig = {
           },
           {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
+            value: process.env.NODE_ENV === 'production' 
+              ? 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800'
+              : 'no-cache, no-store, must-revalidate',
           },
         ],
       },

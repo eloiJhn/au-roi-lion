@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Music } from "lucide-react";
+import { Music, Sun, Moon } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { TranslationContext } from "../utils/TranslationContext";
+import { useTheme } from "../utils/ThemeContext";
 import ReactCountryFlag from "react-country-flag";
 import { AudioPlayer } from "./AudioPlayer";
 import Image from "next/image";
@@ -19,6 +20,7 @@ export function HeaderNavBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { currentLocale, messages, switchLanguage } = useContext(TranslationContext);
+  const { isDarkMode, toggleTheme } = useTheme();
 
   // Function to reset ring color to original
   const resetRingColor = () => {
@@ -222,21 +224,58 @@ export function HeaderNavBar() {
               {item.label}
             </a>
           ))}
+          
+          {/* Bouton thème */}
           <button
-            className="text-white ml-4 py-2 px-4 rounded-lg border border-white hover:bg-[#FFD700] hover:text-[#003E50] transition duration-300 ease-in-out"
+            className="text-white ml-4 py-2 px-4 rounded-lg border border-white hover:bg-[#FFD700] hover:text-[#003E50] transition duration-300 ease-in-out flex items-center justify-center w-[55px] h-[55px]"
+            onClick={toggleTheme}
+            aria-label={isDarkMode ? "Passer au mode clair" : "Passer au mode sombre"}
+            title={isDarkMode ? "Activer le mode clair" : "Activer le mode sombre"}
+          >
+            {isDarkMode ? (
+              <Sun size={28} />
+            ) : (
+              <Moon size={28} />
+            )}
+          </button>
+          
+          {/* Bouton langue */}
+          <button
+            className="text-white ml-4 py-2 px-4 rounded-lg border border-white hover:bg-[#FFD700] hover:text-[#003E50] transition duration-300 ease-in-out flex items-center justify-center w-[55px] h-[55px]"
             onClick={() => switchLanguage(currentLocale === 'fr' ? 'en' : 'fr')}
           >
             {currentLocale === "fr" ? (
-              <ReactCountryFlag countryCode="FR" svg style={{ width: "24px", height: "24px" }} title="Français" />
+              <ReactCountryFlag countryCode="FR" svg style={{ width: "28px", height: "28px" }} title="Français" />
             ) : (
-              <ReactCountryFlag countryCode="GB" svg style={{ width: "24px", height: "24px" }} title="English" />
+              <ReactCountryFlag countryCode="GB" svg style={{ width: "28px", height: "28px" }} title="English" />
             )}
           </button>
         </div>
 
         <div className="md:hidden flex items-center">
+          {/* Bouton thème - mobile */}
           <button
-            className="text-white ml-4 py-2 px-4 rounded-lg border border-white hover:bg-[#FFD700] hover:text-[#003E50] transition duration-300 ease-in-out"
+            className="text-white mr-2 py-2 px-4 rounded-lg border border-white hover:bg-[#FFD700] hover:text-[#003E50] transition duration-300 ease-in-out flex items-center justify-center w-[48px] h-[48px]"
+            onClick={toggleTheme}
+            aria-label={isDarkMode ? "Passer au mode clair" : "Passer au mode sombre"}
+            title={isDarkMode ? "Activer le mode clair" : "Activer le mode sombre"}
+          >
+            {isDarkMode ? (
+              <>
+                <Sun size={24} />
+                <span className="sr-only">Mode clair</span>
+              </>
+            ) : (
+              <>
+                <Moon size={24} />
+                <span className="sr-only">Mode sombre</span>
+              </>
+            )}
+          </button>
+          
+          {/* Bouton langue - mobile */}
+          <button
+            className="text-white ml-2 py-2 px-4 rounded-lg border border-white hover:bg-[#FFD700] hover:text-[#003E50] transition duration-300 ease-in-out flex items-center justify-center w-[48px] h-[48px]"
             onClick={() => switchLanguage(currentLocale === 'fr' ? 'en' : 'fr')}
           >
             {currentLocale === "fr" ? (
@@ -245,9 +284,10 @@ export function HeaderNavBar() {
               <ReactCountryFlag countryCode="GB" svg style={{ width: "24px", height: "24px" }} title="English" />
             )}
           </button>
+          
           <button
             onClick={toggleMenu}
-            className="text-white p-2 focus:outline-none hover:text-[#FFD700]"
+            className="text-white p-2 focus:outline-none hover:text-[#FFD700] ml-2"
           >
             {isOpen ? <XMarkIcon className="h-6 w-6 hover:text-[#FFD700] transition-colors duration-300" /> : <Bars3Icon className="h-6 w-6 hover:text-[#FFD700] transition-colors duration-300" />}
           </button>

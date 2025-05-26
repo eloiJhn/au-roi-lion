@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper";
@@ -5,8 +7,7 @@ import { ArrowsPointingInIcon } from "@heroicons/react/24/solid";
 import "swiper/swiper-bundle.min.css";
 import Image from 'next/image';
 
-// Désactive la règle ESLint pour la ligne suivante
-// eslint-disable-next-line react-hooks/rules-of-hooks
+// Register Swiper modules
 SwiperCore.use([EffectCoverflow, Pagination, Navigation, Autoplay]);
 
 // Define the gradient for SVG strokes
@@ -21,21 +22,46 @@ const svgGradient = (
 
 export function Carousel({ images, openModal, modalOpen, closeModal }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [slidesPerView, setSlidesPerView] = useState(getSlidesPerView());
+  const [slidesPerView, setSlidesPerView] = useState(3);
   const [modalIndex, setModalIndex] = useState(0);
   const [autoplayEnabled, setAutoplayEnabled] = useState(true);
   const swiperRef = useRef(null);
+  const navigationPrevRef = useRef(null);
+  const navigationNextRef = useRef(null);
+  const [swiperInstance, setSwiperInstance] = useState(null);
 
+  // Fonction getSlidesPerView sécurisée pour SSR
   function getSlidesPerView() {
+    if (typeof window === 'undefined') return 3;
     if (window.innerWidth < 640) return 1;
     if (window.innerWidth < 1024) return 2;
     return 3;
   }
 
   useEffect(() => {
+    // Initialiser slidesPerView après le montage du composant
+    setSlidesPerView(getSlidesPerView());
+    
     const handleResize = debounce(() => setSlidesPerView(getSlidesPerView()), 100);
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    
+    // Ajouter des écouteurs d'événements de navigation avec clavier pour le carousel principal
+    const handleKeyNavigation = (e) => {
+      if (modalOpen) return; // Ne pas interférer avec la navigation du modal
+      
+      if (e.key === 'ArrowLeft') {
+        handlePrevClick();
+      } else if (e.key === 'ArrowRight') {
+        handleNextClick();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyNavigation);
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('keydown', handleKeyNavigation);
+    };
   }, []);
 
   useEffect(() => {
@@ -54,7 +80,108 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
     };
   }, [modalOpen]);
 
-  const handleSlideChange = (swiper) => setActiveIndex(swiper.realIndex);
+  // Initialize and update navigation when Swiper instance is ready
+  useEffect(() => {
+    console.log("[DEBUG] swiperInstance effect triggered", { 
+      hasInstance: !!swiperInstance,
+      hasNavigation: !!(swiperInstance?.navigation),
+    });
+    
+    if (swiperInstance) {
+      if (swiperInstance.navigation) {
+        swiperInstance.navigation.init();
+        swiperInstance.navigation.update();
+      }
+      
+      // Reconfigurer les éléments de navigation
+      console.log("[DEBUG] Reconfiguring navigation", {
+        prevElExists: !!navigationPrevRef.current,
+        nextElExists: !!navigationNextRef.current,
+      });
+      
+      swiperInstance.params.navigation.prevEl = navigationPrevRef.current;
+      swiperInstance.params.navigation.nextEl = navigationNextRef.current;
+      swiperInstance.navigation.destroy();
+      swiperInstance.navigation.init();
+      swiperInstance.navigation.update();
+      
+      console.log("[DEBUG] Navigation reconfigured");
+    }
+  }, [swiperInstance]);
+
+  // Gestionnaires de navigation manuels
+  const handlePrevClick = () => {
+    console.log("[DEBUG] handlePrevClick called", { 
+      hasSwiperRef: !!swiperRef.current,
+      hasSwiper: !!(swiperRef.current?.swiper),
+      isLoop: swiperRef.current?.swiper?.params?.loop,
+      activeIndex: swiperRef.current?.swiper?.activeIndex
+    });
+    
+    if (swiperRef.current && swiperRef.current.swiper) {
+      const swiper = swiperRef.current.swiper;
+      
+      // Méthode alternative pour naviguer
+      const currentIndex = swiper.activeIndex;
+      swiper.slideTo(currentIndex - 1);
+      
+      // Forcer une mise à jour
+      setTimeout(() => {
+        swiper.update();
+        console.log("[DEBUG] After slidePrev with update", { 
+          newIndex: swiper.activeIndex 
+        });
+      }, 10);
+    }
+  };
+
+  const handleNextClick = () => {
+    console.log("[DEBUG] handleNextClick called", { 
+      hasSwiperRef: !!swiperRef.current,
+      hasSwiper: !!(swiperRef.current?.swiper),
+      isLoop: swiperRef.current?.swiper?.params?.loop,
+      activeIndex: swiperRef.current?.swiper?.activeIndex
+    });
+    
+    if (swiperRef.current && swiperRef.current.swiper) {
+      const swiper = swiperRef.current.swiper;
+      
+      // Méthode alternative pour naviguer
+      const currentIndex = swiper.activeIndex;
+      swiper.slideTo(currentIndex + 1);
+      
+      // Forcer une mise à jour
+      setTimeout(() => {
+        swiper.update();
+        console.log("[DEBUG] After slideNext with update", { 
+          newIndex: swiper.activeIndex 
+        });
+      }, 10);
+    }
+  };
+
+  // Navigation avec clavier
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!modalOpen) return;
+      
+      if (e.key === 'ArrowLeft') {
+        handleModalNavigation(-1);
+      } else if (e.key === 'ArrowRight') {
+        handleModalNavigation(1);
+      } else if (e.key === 'Escape') {
+        closeModal();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modalOpen]);
+
+  const handleSlideChange = (swiper) => {
+    console.log("[DEBUG] Slide changed to index", swiper.realIndex);
+    setActiveIndex(swiper.realIndex);
+  };
   
   const handleModalNavigation = (direction) => {
     setModalIndex((prev) => (prev + direction + images.length) % images.length);
@@ -67,7 +194,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
 
   const handleUserInteraction = () => {
     setAutoplayEnabled(false);
-    if (swiperRef.current && swiperRef.current.swiper) {
+    if (swiperRef.current?.swiper?.autoplay) {
       swiperRef.current.swiper.autoplay.stop();
     }
   };
@@ -111,30 +238,42 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
           modifier: 1,
           slideShadows: true,
         }}
-        modules={[Navigation, Pagination, Autoplay]}
         onSlideChange={handleSlideChange}
         autoplay={{
           delay: 5000,
           disableOnInteraction: true,
           pauseOnMouseEnter: true,
         }}
-        onAutoplayStart={() => {
-          setAutoplayEnabled(true);
-        }}
-        onAutoplayStop={() => {
-          setAutoplayEnabled(false);
-        }}
-        navigation={{
-          nextEl: '.custom-arrow-next',
-          prevEl: '.custom-arrow-prev',
+        onAutoplayStart={() => setAutoplayEnabled(true)}
+        onAutoplayStop={() => setAutoplayEnabled(false)}
+        onSwiper={(swiper) => {
+          console.log("[DEBUG] onSwiper called", { 
+            isSwiper: !!swiper,
+            hasNavigation: !!swiper.navigation, 
+          });
+          
+          setSwiperInstance(swiper);
+          // S'assurer que les références de navigation sont définies après initialisation
+          swiper.params.navigation.prevEl = navigationPrevRef.current;
+          swiper.params.navigation.nextEl = navigationNextRef.current;
+          swiper.navigation.init();
+          swiper.navigation.update();
+          
+          // Reconfigurer le comportement de boucle
+          swiper.loopDestroy();
+          swiper.loopCreate();
+          swiper.update();
+          
+          console.log("[DEBUG] Swiper initialized");
         }}
         pagination={{
           el: '.custom-swiper-pagination',
           clickable: true,
         }}
+        navigation={false} // Désactiver la navigation automatique pour utiliser notre propre implémentation
         onTouchStart={handleUserInteraction}
         onReachEnd={() => {
-          if (autoplayEnabled && swiperRef.current && swiperRef.current.swiper) {
+          if (autoplayEnabled && swiperRef.current?.swiper) {
             swiperRef.current.swiper.autoplay.start();
           }
         }}
@@ -165,12 +304,12 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       <div className="custom-swiper-pagination"></div>
 
       <button 
+        ref={navigationPrevRef}
         className="custom-arrow custom-arrow-prev absolute inset-y-0 left-2 my-auto flex items-center justify-center z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
         style={{ height: '40px', width: '40px' }}
-        onClick={() => {
-          handleUserInteraction();
-          swiperRef.current?.swiper?.slidePrev();
-        }}
+        aria-label="Précédent"
+        onClick={handlePrevClick}
+        type="button"
       >
         <svg
           width="24"
@@ -191,12 +330,12 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       </button>
 
       <button 
+        ref={navigationNextRef}
         className="custom-arrow custom-arrow-next absolute inset-y-0 right-2 my-auto flex items-center justify-center z-10 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 transform hover:scale-110 focus:outline-none"
         style={{ height: '40px', width: '40px' }}
-        onClick={() => {
-          handleUserInteraction();
-          swiperRef.current?.swiper?.slideNext();
-        }}
+        aria-label="Suivant"
+        onClick={handleNextClick}
+        type="button"
       >
          <svg
           width="24"
@@ -234,16 +373,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                 <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <div className="absolute inset-0 flex w-full h-full">
-              <div
-                className="w-1/2 h-full cursor-pointer"
-                onClick={() => handleModalNavigation(-1)}
-              />
-              <div
-                className="w-1/2 h-full cursor-pointer"
-                onClick={() => handleModalNavigation(1)}
-              />
-            </div>
+            
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full max-h-full" style={{ position: "fixed", width: '80vw', height: '80vh' }}>
               <Image
                 src={images[modalIndex]}
@@ -254,17 +384,20 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                 priority
               />
             </div>
+            
             <button
-              className="custom-arrow custom-arrow-prev absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 focus:outline-none z-10"
-              style={{ position: "fixed", height: '40px', width: '40px' }}
+              className="custom-arrow custom-arrow-prev absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-3 transition-all duration-300 focus:outline-none z-10 hover:scale-110"
+              style={{ position: "fixed", height: '50px', width: '50px' }}
               onClick={(e) => {
                 e.stopPropagation();
                 handleModalNavigation(-1);
               }}
+              aria-label="Image précédente"
+              type="button"
             >
               <svg
-                width="24" 
-                height="24"
+                width="30" 
+                height="30"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -273,17 +406,20 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                 <path d="M15 18L9 12L15 6" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
+            
             <button
-              className="custom-arrow custom-arrow-next absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-300 focus:outline-none z-10"
-              style={{ position: "fixed", height: '40px', width: '40px' }}
+              className="custom-arrow custom-arrow-next absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-3 transition-all duration-300 focus:outline-none z-10 hover:scale-110"
+              style={{ position: "fixed", height: '50px', width: '50px' }}
               onClick={(e) => {
                 e.stopPropagation();
                 handleModalNavigation(1);
               }}
+              aria-label="Image suivante"
+              type="button"
             >
               <svg
-                width="24" 
-                height="24"
+                width="30" 
+                height="30"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -292,6 +428,10 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
                 <path d="M9 18L15 12L9 6" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
+            
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 px-4 py-2 rounded-full text-white text-sm z-10" style={{ position: "fixed" }}>
+              {modalIndex + 1} / {images.length}
+            </div>
           </div>
         </div>
       )}

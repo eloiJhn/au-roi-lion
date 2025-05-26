@@ -9,7 +9,7 @@
 
 .swiper-button-prev,
 .swiper-button-next {
-  background: rgba(255, 255, 255, 0.9x);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -18,7 +18,7 @@
   justify-content: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s;
-  color: black;
+  color: var(--text-color);
 }
 
 .swiper-button-prev:hover,
@@ -277,6 +277,190 @@ body {
   }
 }
 
+/* Toast styles for dark mode */
+.dark-mode .p-toast .p-toast-message,
+html.dark-mode .p-toast .p-toast-message {
+  background-color: #2a2a2a !important;
+  border: 1px solid #444 !important;
+  color: #e0e0e0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-mode .p-toast .p-toast-message .p-toast-message-content,
+html.dark-mode .p-toast .p-toast-message .p-toast-message-content {
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .p-toast .p-toast-message .p-toast-summary,
+html.dark-mode .p-toast .p-toast-message .p-toast-summary {
+  color: #ffffff !important;
+  font-weight: bold !important;
+}
+
+.dark-mode .p-toast .p-toast-message .p-toast-detail,
+html.dark-mode .p-toast .p-toast-message .p-toast-detail {
+  color: #e0e0e0 !important;
+}
+
+/* Success toast in dark mode */
+.dark-mode .p-toast .p-toast-message.p-toast-message-success,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-success {
+  background-color: #1b4332 !important;
+  border-color: #2d5a3d !important;
+}
+
+.dark-mode .p-toast .p-toast-message.p-toast-message-success .p-toast-icon,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-success .p-toast-icon {
+  color: #4ade80 !important;
+}
+
+/* Error toast in dark mode */
+.dark-mode .p-toast .p-toast-message.p-toast-message-error,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-error {
+  background-color: #4c1d1d !important;
+  border-color: #7f2d2d !important;
+}
+
+.dark-mode .p-toast .p-toast-message.p-toast-message-error .p-toast-icon,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-error .p-toast-icon {
+  color: #ef4444 !important;
+}
+
+/* Info toast in dark mode */
+.dark-mode .p-toast .p-toast-message.p-toast-message-info,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-info {
+  background-color: #1e3a5f !important;
+  border-color: #2563eb !important;
+}
+
+.dark-mode .p-toast .p-toast-message.p-toast-message-info .p-toast-icon,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-info .p-toast-icon {
+  color: #3b82f6 !important;
+}
+
+/* Warning toast in dark mode */
+.dark-mode .p-toast .p-toast-message.p-toast-message-warn,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-warn {
+  background-color: #4c3d1a !important;
+  border-color: #ca8a04 !important;
+}
+
+.dark-mode .p-toast .p-toast-message.p-toast-message-warn .p-toast-icon,
+html.dark-mode .p-toast .p-toast-message.p-toast-message-warn .p-toast-icon {
+  color: #eab308 !important;
+}
+
+/* Toast close button in dark mode */
+.dark-mode .p-toast .p-toast-message .p-toast-icon-close,
+html.dark-mode .p-toast .p-toast-message .p-toast-icon-close {
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .p-toast .p-toast-message .p-toast-icon-close:hover,
+html.dark-mode .p-toast .p-toast-message .p-toast-icon-close:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Toast styles for light mode */
+.light-mode .p-toast .p-toast-message,
+html.light-mode .p-toast .p-toast-message,
+.p-toast .p-toast-message {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  color: #374151 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-mode .p-toast .p-toast-message .p-toast-message-content,
+html.light-mode .p-toast .p-toast-message .p-toast-message-content,
+.p-toast .p-toast-message .p-toast-message-content {
+  color: #374151 !important;
+}
+
+.light-mode .p-toast .p-toast-message .p-toast-summary,
+html.light-mode .p-toast .p-toast-message .p-toast-summary,
+.p-toast .p-toast-message .p-toast-summary {
+  color: #111827 !important;
+  font-weight: bold !important;
+}
+
+.light-mode .p-toast .p-toast-message .p-toast-detail,
+html.light-mode .p-toast .p-toast-message .p-toast-detail,
+.p-toast .p-toast-message .p-toast-detail {
+  color: #374151 !important;
+}
+
+/* Success toast in light mode */
+.light-mode .p-toast .p-toast-message.p-toast-message-success,
+html.light-mode .p-toast .p-toast-message.p-toast-message-success,
+.p-toast .p-toast-message.p-toast-message-success {
+  background-color: #f0fdf4 !important;
+  border-color: #22c55e !important;
+}
+
+.light-mode .p-toast .p-toast-message.p-toast-message-success .p-toast-icon,
+html.light-mode .p-toast .p-toast-message.p-toast-message-success .p-toast-icon,
+.p-toast .p-toast-message.p-toast-message-success .p-toast-icon {
+  color: #16a34a !important;
+}
+
+/* Error toast in light mode */
+.light-mode .p-toast .p-toast-message.p-toast-message-error,
+html.light-mode .p-toast .p-toast-message.p-toast-message-error,
+.p-toast .p-toast-message.p-toast-message-error {
+  background-color: #fef2f2 !important;
+  border-color: #ef4444 !important;
+}
+
+.light-mode .p-toast .p-toast-message.p-toast-message-error .p-toast-icon,
+html.light-mode .p-toast .p-toast-message.p-toast-message-error .p-toast-icon,
+.p-toast .p-toast-message.p-toast-message-error .p-toast-icon {
+  color: #dc2626 !important;
+}
+
+/* Info toast in light mode */
+.light-mode .p-toast .p-toast-message.p-toast-message-info,
+html.light-mode .p-toast .p-toast-message.p-toast-message-info,
+.p-toast .p-toast-message.p-toast-message-info {
+  background-color: #eff6ff !important;
+  border-color: #3b82f6 !important;
+}
+
+.light-mode .p-toast .p-toast-message.p-toast-message-info .p-toast-icon,
+html.light-mode .p-toast .p-toast-message.p-toast-message-info .p-toast-icon,
+.p-toast .p-toast-message.p-toast-message-info .p-toast-icon {
+  color: #2563eb !important;
+}
+
+/* Warning toast in light mode */
+.light-mode .p-toast .p-toast-message.p-toast-message-warn,
+html.light-mode .p-toast .p-toast-message.p-toast-message-warn,
+.p-toast .p-toast-message.p-toast-message-warn {
+  background-color: #fffbeb !important;
+  border-color: #f59e0b !important;
+}
+
+.light-mode .p-toast .p-toast-message.p-toast-message-warn .p-toast-icon,
+html.light-mode .p-toast .p-toast-message.p-toast-message-warn .p-toast-icon,
+.p-toast .p-toast-message.p-toast-message-warn .p-toast-icon {
+  color: #d97706 !important;
+}
+
+/* Toast close button in light mode */
+.light-mode .p-toast .p-toast-message .p-toast-icon-close,
+html.light-mode .p-toast .p-toast-message .p-toast-icon-close,
+.p-toast .p-toast-message .p-toast-icon-close {
+  color: #6b7280 !important;
+}
+
+.light-mode .p-toast .p-toast-message .p-toast-icon-close:hover,
+html.light-mode .p-toast .p-toast-message .p-toast-icon-close:hover,
+.p-toast .p-toast-message .p-toast-icon-close:hover {
+  color: #374151 !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
 body, a, button, [role="button"], input[type="submit"], input[type="button"], input[type="reset"] {
   cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOSIgaGVpZ2h0PSIyOSIgdmlld0JveD0iMCAwIDI5IDI5Ij4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iY3Vyc29yLWdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDNFNTA7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzVBQTA4ODtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGZpbGw9InVybCgjY3Vyc29yLWdyYWRpZW50KSIgZD0iTTUsMS41IEw1LDIzLjUgTDExLjUsMTcgTDE1LDI1LjUgTDE5LjUsMjIuNSBMMTYsMTQuNSBMMjMuNSwxNC41IFoiIC8+CiAgPHBhdGggZmlsbD0id2hpdGUiIGQ9Ik03LDUgTDcsMjAgTDExLjUsMTUuNSBMMTQuNSwyMiBMMTYuNSwyMC41IEwxMy41LDE0LjUgTDIwLDE0LjUgWiIgLz4KPC9zdmc+") 5 0, auto;
 }
@@ -390,4 +574,118 @@ input[type="reset"]:hover,
 .btn-gradient:hover {
   background: linear-gradient(to right, #003E50, #FFD700) !important;
   transition: background 0.3s ease;
+}
+
+/* Styles forts pour le mode sombre */
+.dark-mode,
+html.dark-mode,
+html.dark-mode *,
+.dark-mode * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Styles forts pour le mode clair explicite */
+.light-mode,
+html.light-mode,
+html.light-mode *,
+.light-mode * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Fond sombre pour le corps de la page */
+.dark-mode,
+html.dark-mode {
+  background-color: #121212 !important;
+}
+
+/* Fond clair pour le corps de la page */
+.light-mode,
+html.light-mode {
+  background-color: #fff !important;
+}
+
+/* Couleurs de texte en mode sombre */
+.dark-mode body,
+html.dark-mode body {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+/* Couleurs de texte en mode sombre */
+.dark-mode p,
+.dark-mode span,
+.dark-mode div,
+.dark-mode li,
+html.dark-mode p,
+html.dark-mode span,
+html.dark-mode div,
+html.dark-mode li {
+  color: #e0e0e0 !important;
+}
+
+/* Titres en mode sombre */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode h5,
+html.dark-mode h6 {
+  color: #65c6d8 !important;
+}
+
+/* Champs de formulaire en mode sombre */
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select,
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+  background-color: #2a2a2a !important;
+  color: white !important;
+  border-color: #444 !important;
+}
+
+/* Champs de formulaire en mode clair */
+.light-mode input,
+.light-mode textarea,
+.light-mode select,
+html.light-mode input,
+html.light-mode textarea,
+html.light-mode select,
+input,
+textarea,
+select {
+  background-color: white !important;
+  color: #000000 !important;
+  border-color: #d1d5db !important;
+}
+
+/* Labels en mode clair */
+.light-mode label,
+html.light-mode label,
+label {
+  color: #374151 !important;
+}
+
+/* Labels en mode sombre */
+.dark-mode label,
+html.dark-mode label {
+  color: #e0e0e0 !important;
+}
+
+/* Autres éléments spécifiques en mode sombre */
+.dark-mode .card,
+.dark-mode .section,
+.dark-mode .form,
+html.dark-mode .card,
+html.dark-mode .section,
+html.dark-mode .form {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
 }

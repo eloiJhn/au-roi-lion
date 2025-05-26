@@ -6,27 +6,81 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --heading-color: #003E50;
+  --text-color: #333;
+  --background-color: #fff;
+  --card-background: #f8f8f8;
+  --border-color: #e0e0e0;
+  --input-text-color: #333;
 }
 
+/* Les styles du mode sombre automatique via prefers-color-scheme */
 @media (prefers-color-scheme: dark) {
-  :root {
-    /* --foreground-rgb: 255, 255, 255;
+  /* Ces styles s'appliquent UNIQUEMENT si l'utilisateur n'a pas fait de choix explicite */
+  :root:not(.light-mode) {
+    --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0; */
+    --background-end-rgb: 0, 0, 0;
+    --heading-color: #65c6d8;
+    --text-color: #e0e0e0;
+    --background-color: #121212;
+    --card-background: #1e1e1e;
+    --border-color: #333;
+    --input-text-color: #ffffff;
   }
 }
 
+/* Styles pour basculement explicite vers le mode sombre */
+.dark-mode {
+  --foreground-rgb: 255, 255, 255 !important;
+  --background-start-rgb: 0, 0, 0 !important;
+  --background-end-rgb: 0, 0, 0 !important;
+  --heading-color: #65c6d8 !important;
+  --text-color: #e0e0e0 !important;
+  --background-color: #121212 !important;
+  --card-background: #1e1e1e !important;
+  --border-color: #333 !important;
+  --input-text-color: #ffffff !important;
+}
+
+/* Styles pour basculement explicite vers le mode clair */
+.light-mode {
+  /* Rétablir les valeurs d'origine */
+  --foreground-rgb: 0, 0, 0 !important;
+  --background-start-rgb: 214, 219, 220 !important;
+  --background-end-rgb: 255, 255, 255 !important;
+  --heading-color: #003E50 !important;
+  --text-color: #333 !important;
+  --background-color: #fff !important;
+  --card-background: #f8f8f8 !important;
+  --border-color: #e0e0e0 !important;
+  --input-text-color: #333 !important;
+}
+
+.dark-mode body {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--text-color);
+  background: var(--background-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
+  transition: color 0.3s ease;
+}
+
+/* Style spécifique pour les champs de formulaire */
+input, textarea, select {
+  color: var(--input-text-color);
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 @layer utilities {
   .text-balance {
+    text-wrap: balance;
   }
 }

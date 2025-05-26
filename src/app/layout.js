@@ -1,10 +1,11 @@
 import React from 'react';
 import './globals.css';
-import {NextIntlClientProvider} from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import {getLocale, getMessages} from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from 'next/script';
+import ClientThemeProvider from './ClientThemeProvider';
 
 export const metadata = {
   title: 'Au Roi Lion',
@@ -69,7 +70,7 @@ export default async function RootLayout({ children }) {
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
     <head>
       <meta name="theme-color" content="#003E50" />
       <meta name="msapplication-TileColor" content="#003E50" />
@@ -93,53 +94,84 @@ export default async function RootLayout({ children }) {
       
       {/* Preload critical assets */}
       <link rel="preload" href="/assets/logo.png" as="image" />
+      
+      {/* Script pour prévenir le flash de contenu en mode sombre */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                // Vérifier si le thème est dans le localStorage
+                var storedTheme = localStorage.getItem('theme');
+                
+                if (storedTheme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else if (storedTheme === 'light') {
+                  document.documentElement.classList.remove('dark');
+                } else {
+                  // Sinon, utiliser les préférences du système
+                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                  }
+                }
+              } catch (e) {
+                // En cas d'erreur (par exemple en SSR), ne rien faire
+                console.error('Error applying dark mode:', e);
+              }
+            })();
+          `,
+        }}
+      />
     </head>
     <body>
-      <NextIntlClientProvider messages={messages}>
-        {children}
-        
-        {/* Différer le chargement des outils d'analyse */}
-        <Analytics strategy="afterInteraction" />
-        <SpeedInsights strategy="afterInteraction" />
-        
-        {/* Utiliser defer pour différer le chargement du script Google Analytics */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX" 
-          strategy="afterInteraction"
-          defer
-        />
-        {/* Structured data for rich results */}
-        <Script id="structured-data" type="application/ld+json" strategy="afterInteraction">
-          {`
-            {
-              "@context": "https://schema.org",
-              "@type": "LodgingBusiness",
-              "name": "Au Roi Lion",
-              "url": "https://www.auroilion.com",
-              "description": "Appartement de luxe du XVIIe siècle au cœur de Dijon avec vue sur l'église Saint Michel",
-              "telephone": "+33600000000",
-              "priceRange": "€€",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Centre Historique",
-                "addressLocality": "Dijon",
-                "postalCode": "21000",
-                "addressCountry": "FR"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": "47.322047",
-                "longitude": "5.04148"
-              },
-              "image": "https://www.auroilion.com/assets/logo.png",
-              "starRating": {
-                "@type": "Rating",
-                "ratingValue": "4.8",
-                "bestRating": "5"
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <ClientThemeProvider>
+          {children}
+          
+          {/* Différer le chargement des outils d'analyse */}
+          <Analytics strategy="afterInteraction" />
+          <SpeedInsights strategy="afterInteraction" />
+          
+          {/* Utiliser defer pour différer le chargement du script Google Analytics */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX" 
+            strategy="afterInteraction"
+            defer
+          />
+          {/* Structured data for rich results */}
+          <Script id="structured-data" type="application/ld+json" strategy="afterInteraction">
+            {`
+              {
+                "@context": "https://schema.org",
+                "@type": "LodgingBusiness",
+                "name": "Au Roi Lion",
+                "url": "https://www.auroilion.com",
+                "description": "Appartement de luxe du XVIIe siècle au cœur de Dijon avec vue sur l'église Saint Michel",
+                "telephone": "+33600000000",
+                "priceRange": "€€",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Centre Historique",
+                  "addressLocality": "Dijon",
+                  "postalCode": "21000",
+                  "addressCountry": "FR"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": "47.322047",
+                  "longitude": "5.04148"
+                },
+                "image": "https://www.auroilion.com/assets/logo.png",
+                "starRating": {
+                  "@type": "Rating",
+                  "ratingValue": "4.8",
+                  "bestRating": "5"
+                }
               }
-            }
-          `}
-        </Script>
+            `}
+          </Script>
+        </ClientThemeProvider>
       </NextIntlClientProvider>
     </body>
     </html>
