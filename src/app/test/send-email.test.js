@@ -1,5 +1,5 @@
 import { createMocks } from "node-mocks-http";
-import { POST as sendEmailRoute } from "../api/send-email/route";
+import { POST as sendEmailRoute } from "../api/send-email-nodemailer/route";
 import fetch from "node-fetch";
 
 jest.mock("node-fetch");
