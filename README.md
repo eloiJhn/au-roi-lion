@@ -97,5 +97,4 @@ au-roi-lion/
 Copyright © 2025 Au Roi Lion. Tous droits réservés.
 
 ---
-Développé avec ❤️ par [Eloi Jahan](https://www.linkedin.com/in/eloi-jahan/
-)
+Développé avec ❤️ par [Eloi Jahan](https://www.linkedin.com/in/eloi-jahan/)
