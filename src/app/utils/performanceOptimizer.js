@@ -1,4 +1,5 @@
 // Optimisations de performance pour améliorer le SEO
+import { logger } from './logger';
 
 export const preloadCriticalResources = () => {
   if (typeof window === 'undefined') return;
@@ -135,10 +136,10 @@ export const optimizeServiceWorker = () => {
   // Enregistrer un service worker pour la mise en cache
   navigator.serviceWorker.register('/sw.js')
     .then(registration => {
-      console.log('Service Worker enregistré:', registration);
+      logger.info('Service Worker enregistré', { registration });
     })
     .catch(error => {
-      console.log('Erreur Service Worker:', error);
+      logger.warn('Erreur Service Worker', { error });
     });
 };
 
