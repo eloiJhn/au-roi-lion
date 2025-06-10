@@ -1,22 +1,16 @@
-import winston from 'winston';
+// Lightweight logger wrapper that avoids Node.js-specific dependencies.
+// Uses console methods under the hood so it works in both Node and browser
+// environments without requiring modules like 'fs'.
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  defaultMeta: { service: 'contact-form' },
-  transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
-  ],
-});
+const noop = () => {};
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple(),
-  }));
-}
+const isProd = process.env.NODE_ENV === 'production';
 
-export { logger };
+export const logger = {
+  debug: isProd ? noop : console.debug.bind(console),
+  info: console.info.bind(console),
+  warn: console.warn.bind(console),
+  error: console.error.bind(console),
+};
+
+export default logger;
