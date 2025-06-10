@@ -71,7 +71,7 @@ const validateMessage = (message) => {
 const validateURL = (url) => {
   if (typeof url !== 'string') return false;
   
-  const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+  const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([^/]*\/?)*$/;
   const sanitizedUrl = escapeSpecialChars(url.trim());
   
   return urlPattern.test(sanitizedUrl);
