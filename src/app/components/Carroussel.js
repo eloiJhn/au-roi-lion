@@ -6,6 +6,7 @@ import { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper";
 import { ArrowsPointingInIcon } from "@heroicons/react/24/solid";
 import "swiper/swiper-bundle.min.css";
 import Image from 'next/image';
+import { logger } from '../utils/logger';
 
 // Define the gradient for SVG strokes
 const svgGradient = (
@@ -88,7 +89,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
 
   // Initialize and update navigation when Swiper instance is ready
   useEffect(() => {
-    console.log("[DEBUG] swiperInstance effect triggered", { 
+    logger.debug("swiperInstance effect triggered", {
       hasInstance: !!swiperInstance,
       hasNavigation: !!(swiperInstance?.navigation),
     });
@@ -100,7 +101,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       }
       
       // Reconfigurer les éléments de navigation
-      console.log("[DEBUG] Reconfiguring navigation", {
+      logger.debug("Reconfiguring navigation", {
         prevElExists: !!navigationPrevRef.current,
         nextElExists: !!navigationNextRef.current,
       });
@@ -111,13 +112,13 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       swiperInstance.navigation.init();
       swiperInstance.navigation.update();
       
-      console.log("[DEBUG] Navigation reconfigured");
+      logger.debug("Navigation reconfigured");
     }
   }, [swiperInstance]);
 
   // Gestionnaires de navigation manuels
   const handlePrevClick = () => {
-    console.log("[DEBUG] handlePrevClick called", { 
+    logger.debug("handlePrevClick called", {
       hasSwiperRef: !!swiperRef.current,
       hasSwiper: !!(swiperRef.current?.swiper),
       isLoop: swiperRef.current?.swiper?.params?.loop,
@@ -134,15 +135,15 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       // Forcer une mise à jour
       setTimeout(() => {
         swiper.update();
-        console.log("[DEBUG] After slidePrev with update", { 
-          newIndex: swiper.activeIndex 
+        logger.debug("After slidePrev with update", {
+          newIndex: swiper.activeIndex
         });
       }, 10);
     }
   };
 
   const handleNextClick = () => {
-    console.log("[DEBUG] handleNextClick called", { 
+    logger.debug("handleNextClick called", {
       hasSwiperRef: !!swiperRef.current,
       hasSwiper: !!(swiperRef.current?.swiper),
       isLoop: swiperRef.current?.swiper?.params?.loop,
@@ -159,8 +160,8 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
       // Forcer une mise à jour
       setTimeout(() => {
         swiper.update();
-        console.log("[DEBUG] After slideNext with update", { 
-          newIndex: swiper.activeIndex 
+        logger.debug("After slideNext with update", {
+          newIndex: swiper.activeIndex
         });
       }, 10);
     }
@@ -185,7 +186,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
   }, [modalOpen, handleModalNavigation, stableCloseModal]);
 
   const handleSlideChange = (swiper) => {
-    console.log("[DEBUG] Slide changed to index", swiper.realIndex);
+    logger.debug("Slide changed", { index: swiper.realIndex });
     setActiveIndex(swiper.realIndex);
   };
 
@@ -250,9 +251,9 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
         onAutoplayStart={() => setAutoplayEnabled(true)}
         onAutoplayStop={() => setAutoplayEnabled(false)}
         onSwiper={(swiper) => {
-          console.log("[DEBUG] onSwiper called", { 
+          logger.debug("onSwiper called", {
             isSwiper: !!swiper,
-            hasNavigation: !!swiper.navigation, 
+            hasNavigation: !!swiper.navigation,
           });
           
           setSwiperInstance(swiper);
@@ -267,7 +268,7 @@ export function Carousel({ images, openModal, modalOpen, closeModal }) {
           swiper.loopCreate();
           swiper.update();
           
-          console.log("[DEBUG] Swiper initialized");
+          logger.debug("Swiper initialized");
         }}
         pagination={{
           el: '.custom-swiper-pagination',
