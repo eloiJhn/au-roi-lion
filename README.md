@@ -14,7 +14,7 @@ Bienvenue dans notre appartement de charme "Au Roi Lion", un joyau architectural
 ## 🛠 Technologies Utilisées
 
 ### Frontend
-- **Next.js 14** - Framework React moderne
+- **Next.js 15** - Framework React moderne
 - **Tailwind CSS** - Framework CSS utilitaire
 - **Swiper** - Carrousel d'images responsive
 - **PrimeIcons** - Icônes vectorielles
